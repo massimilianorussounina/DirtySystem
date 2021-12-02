@@ -76,6 +76,7 @@ class ObstaclePhysicsComponent extends PhysicsComponent{
         PositionComponent positionComponent= (TrianglePositionComponet) owner.getComponent(ComponentType.Position);
         bdef.setPosition(positionComponent.coordinate_x, positionComponent.coordinate_y);
         bdef.setType(BodyType.staticBody);
+        bdef.setAngle(1.5708f);
         GameWorld gameWorld = gameObject.gameWorld;
         this.body = gameWorld.world.createBody(bdef);
         body.setUserData(this);
@@ -144,5 +145,29 @@ class BarrelPhysicsComponent extends PhysicsComponent{
         fixturedef.delete();
         bdef.delete();
         circleShape.delete();
+    }
+}
+
+
+class SeaPhysicsComponent extends PhysicsComponent{
+
+
+    SeaPhysicsComponent(GameObject gameObject){
+        super();
+        this.owner = gameObject;
+        BodyDef bdef = new BodyDef();
+        bdef.setAngle(1.5708f);
+        bdef.setType(BodyType.staticBody);
+        StaticPositionComponent staticPositionComponent = (StaticPositionComponent) gameObject.getComponent(ComponentType.Position);
+        bdef.setPosition(staticPositionComponent.coordinate_x, staticPositionComponent.coordinate_y);
+        GameWorld gameWorld = gameObject.gameWorld;
+        this.body = gameWorld.world.createBody(bdef);
+        this.body.setUserData(this);
+        PolygonShape box = new PolygonShape();
+        SeaDrawableComponent seaDrawableComponent = (SeaDrawableComponent) gameObject.getComponent(ComponentType.Drawable);
+        box.setAsBox(seaDrawableComponent.width/2 , seaDrawableComponent.height/2);
+        body.createFixture(box, 0);
+        bdef.delete();
+        box.delete();
     }
 }

@@ -58,15 +58,10 @@ public class MainActivity extends AppCompatActivity {
         Box screenSize   = new Box(0, 0, metrics.widthPixels, metrics.heightPixels);
         GameWorld gw = new GameWorld(physicalSize, screenSize, this);
         gw.setGravity(-10,0);
-        gw.addGameObject(GameObject.createObstacle(-10.5f,-16.5f,0,-2,1.4f,4,0,7,gw));
-        gw.addGameObject(GameObject.createObstacle(-10.5f,13f,0,-2,1.4f,4,0,8,gw));
-        gw.addGameObject(GameObject.createObstacle(-10.5f,8f,0,-2,1.4f,4,0,10,gw));
-        gw.addGameObject(GameObject.createObstacle(-10.5f,-10f,0,-2,1.4f,4,0,12,gw));
-        gw.addGameObject(GameObject.createObstacle(-10.5f,0,0,-2,1.4f,4,0,16,gw));
-        gw.addGameObject(GameObject.createObstacle(-10.5f,-21.5f,0,0,1.4f,4,0,12,gw));
-        gw.addGameObject(GameObject.createObstacle(-11.5f,-21.5f,0,0,3f,0,0,6,gw));
-        gw.addGameObject(GameObject.createObstacle(-11.5f,21.5f,0,0,3f,0,0,-6,gw));
-        gw.addGameObject(GameObject.createGround(-11.5f,0,gw));
+
+
+
+        gw.addGameObject(GameObject.createSea(-13.4f,0f,-12.5f,0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,7.0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,-7.0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,-14.0f,gw));
@@ -74,12 +69,18 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createGround(-11.5f,17.0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,-17.0f,gw));
 
+        gw.addGameObject(GameObject.createObstacle(0,-8.5f,-4.5f,2f,-1f,2f,1f,-2f,1f,gw));
+
+        gw.addGameObject(GameObject.createObstacle(1,-8.5f,4.5f,-2f,-1f,-2f,1f,2f,1f,gw));
+
+        //gw.addGameObject(GameObject.createObstacle(-9.5f,-6.5f,4f,4f,0f,4f,0f,0f,gw));
+
 
         gw.addGameObject(GameObject.createIncinerator(-12.5f,-22.7f,-10.5f,-22.7f,gw));
         gw.addGameObject(GameObject.createIncinerator(-12.5f,22.7f,-10.5f,22.7f,gw));
 
-        gw.addGameObject(GameObject.createBarrel(0f,0f,gw));
-
+        gw.addGameObject(GameObject.createBarrel(-7f,3f,gw));
+        gw.addGameObject(GameObject.createBarrel(-7f,-3f,gw));
 
 
 

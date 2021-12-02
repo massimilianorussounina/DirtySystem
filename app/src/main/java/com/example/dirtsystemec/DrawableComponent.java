@@ -165,24 +165,36 @@ class ObstacleDrawableComponent extends DrawableComponent {
     private float screen_y2;
     private float screen_y3;
 
-    ObstacleDrawableComponent(GameObject gameObject){
+    ObstacleDrawableComponent(GameObject gameObject,int i){
         super();
         this.owner = gameObject;
-        GameWorld gw= gameObject.gameWorld;
-        this.canvas = new Canvas(gw.buffer);
-        this.width=2f;
-        PositionComponent positionComponent= (TrianglePositionComponet) owner.getComponent(ComponentType.Position);
-        screen_semi_width = gw.toPixelsXLength(width);
-        this.screen_x1 = gw.toPixelsXLength(positionComponent.x1_local);
-        this.screen_x2 = gw.toPixelsXLength(positionComponent.x2_local);
-        this.screen_x3 = gw.toPixelsXLength(positionComponent.x3_local);
-        this.screen_y1 = gw.toPixelsYLength(positionComponent.y1_local);
-        this.screen_y2 = gw.toPixelsYLength(positionComponent.y2_local);
-        this.screen_y3 = gw.toPixelsYLength(positionComponent.y3_local);
+        GameWorld gameWorld= gameObject.gameWorld;
+        this.canvas = new Canvas(gameWorld.buffer);
+        this.width=4f;
+        this.height=2f;
+        if(i == 1){
+            BitmapFactory.Options b = new BitmapFactory.Options();
+            b.inScaled = false;
+            bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.right_bridge, b);
+        }else{
+            BitmapFactory.Options b = new BitmapFactory.Options();
+            b.inScaled = false;
+            bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.left_bridge, b);
+        }
+
+        PositionComponent positionComponent = (TrianglePositionComponet) owner.getComponent(ComponentType.Position);
+        screen_semi_width = gameWorld.toPixelsXLength(width)/2;
+        screen_semi_height = gameWorld.toPixelsYLength(height)/2;
+       /* this.screen_x1 = gameWorld.toPixelsXLength(positionComponent.x1_local);
+        this.screen_x2 = gameWorld.toPixelsXLength(positionComponent.x2_local);
+        this.screen_x3 = gameWorld.toPixelsXLength(positionComponent.x3_local);
+        this.screen_y1 = gameWorld.toPixelsYLength(positionComponent.y1_local);
+        this.screen_y2 = gameWorld.toPixelsYLength(positionComponent.y2_local);
+        this.screen_y3 = gameWorld.toPixelsYLength(positionComponent.y3_local);*/
         int color = Color.argb(250, 133, 133, 131);
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-
+        src.set(0, 0, 423, 208);
     }
 
 
@@ -191,14 +203,19 @@ class ObstacleDrawableComponent extends DrawableComponent {
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
         canvas.save();
         canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
+        dest.left = coordinate_x - screen_semi_width;
+        dest.bottom = coordinate_y + screen_semi_height;
+        dest.right = coordinate_x + screen_semi_width;
+        dest.top = coordinate_y - screen_semi_height;
+        /*
         path.reset();
         path.moveTo(coordinate_x+screen_x1, coordinate_y+screen_y1);
         path.lineTo(coordinate_x+screen_x2, coordinate_y+screen_y2);
         path.lineTo(coordinate_x+screen_x3, coordinate_y+screen_y3);
         path.lineTo(coordinate_x+screen_x1, coordinate_y+screen_y1);
-        canvas.drawPath(path, paint);
+        canvas.drawPath(path, paint);*/
+        canvas.drawBitmap(bitmap, src, dest, null);
         canvas.restore();
-
     }
 }
 
@@ -235,3 +252,31 @@ class BarrelDrawableComponent extends DrawableComponent {
         canvas.restore();
     }
 }
+
+class SeaDrawableComponent extends DrawableComponent {
+
+    private SeaSprite seaSprite;
+
+    SeaDrawableComponent(GameObject gameObject,float sea_coordinate_x, float sea_coordinate_y){
+        super();
+        this.owner = gameObject;
+        GameWorld gameWorld = gameObject.gameWorld;
+        this.canvas = new Canvas(gameWorld.buffer);
+        this.width = 5.3f;
+        this.height = 0.1f;
+        screen_semi_width = gameWorld.toPixelsXLength(width)/2;
+        screen_semi_height = gameWorld.toPixelsYLength(height)/2;
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inScaled = false;
+        Bitmap bitmapSea = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.sea, o);
+        seaSprite = new SeaSprite(gameWorld,new Spritesheet(bitmapSea,18),sea_coordinate_x,sea_coordinate_y);
+    }
+
+
+    @Override
+    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+       seaSprite.draw(System.currentTimeMillis());
+    }
+}
+
+

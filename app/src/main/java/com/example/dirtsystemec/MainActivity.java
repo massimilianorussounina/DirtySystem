@@ -79,10 +79,11 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createIncinerator(-12.5f,-22.7f,-10.5f,-22.7f,gw));
         gw.addGameObject(GameObject.createIncinerator(-12.5f,22.7f,-10.5f,22.7f,gw));
 
+        /*
         gw.addGameObject(GameObject.createBarrel(-7f,3f,gw));
         gw.addGameObject(GameObject.createBarrel(-7f,-3f,gw));
-
-        gw.addGameObject(GameObject.createBulldozer(0,0,gw));
+*/
+        gw.addGameObject(GameObject.createBulldozer(0,-17f,gw));
 
 
 

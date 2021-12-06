@@ -116,18 +116,48 @@ class BulldozerDrawableComponent extends DrawableComponent {
         int color = Color.argb(200, 255, green, 0);
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-
     }
 
 
     @Override
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+        canvas.save();
+        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
         canvas.drawRect(coordinate_x- screen_semi_width, coordinate_y- screen_semi_height, coordinate_x + screen_semi_width, coordinate_y + screen_semi_height, paint);
-        canvas.drawCircle((coordinate_x- screen_semi_width)+radius,coordinate_y- screen_semi_height,radius,paint);
-        canvas.drawCircle((coordinate_x+ screen_semi_width)-radius,coordinate_y- screen_semi_height,radius,paint);
         canvas.restore();
+        //canvas.drawCircle((coordinate_x- screen_semi_width)+radius,coordinate_y- screen_semi_height,radius,paint);
+        //canvas.drawCircle((coordinate_x+ screen_semi_width)-radius,coordinate_y- screen_semi_height,radius,paint);
+
     }
+
+
+    class WheelDrawableComponent extends DrawableComponent{
+
+        public WheelDrawableComponent(GameObject gameObject) {
+            super();
+            this.owner = gameObject;
+            GameWorld gameWorld= gameObject.gameWorld;
+            this.canvas = new Canvas(gameWorld.buffer);
+            this.width = 0.5f;
+            this.height = 0.5f;
+            radius = gameWorld.toPixelsYLength(0.5f);
+            int green = (int)(255*Math.random());
+            int color = Color.argb(200, 255, green, 0);
+            paint.setColor(color);
+            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        }
+
+        @Override
+        public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+            canvas.save();
+            canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
+            canvas.drawCircle(coordinate_x,coordinate_y,radius,paint);
+            canvas.restore();
+        }
+    }
+
+
+
 }
 
 

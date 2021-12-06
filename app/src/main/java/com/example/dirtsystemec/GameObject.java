@@ -61,11 +61,36 @@ public class GameObject extends Entity{
     public static GameObject createBulldozer(float coordinate_x, float coordinate_y,GameWorld gameWorld) {
 
         GameObject gameObject = new GameObject(gameWorld);
+        GameObject gameObjectWheelSx =  new GameObject(gameWorld);
+        GameObject gameObjectWheelDx =  new GameObject(gameWorld);
+
         gameObject.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObject));
-        gameObject.addComponent(new BulldozerDrawableComponent(gameObject));
-        gameObject.addComponent(new BulldozerPhysicsComponent(gameObject));
+        BulldozerDrawableComponent bulldozerDrawableComponent = new BulldozerDrawableComponent(gameObject);
+        gameObject.addComponent(bulldozerDrawableComponent);
+        BulldozerPhysicsComponent bulldozerPhysicsComponent = new BulldozerPhysicsComponent(gameObject);
+        gameObject.addComponent(bulldozerPhysicsComponent);
+
+
+        gameObjectWheelSx.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectWheelSx));
+        gameObjectWheelSx.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelSx));
+        gameObjectWheelSx.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSx,bulldozerDrawableComponent,WheelPosition.LEFT,bulldozerPhysicsComponent));
+        gameWorld.addGameObject(gameObjectWheelSx);
+
+
+        gameObjectWheelDx.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectWheelDx));
+        gameObjectWheelDx.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelDx));
+        gameObjectWheelDx.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelDx,bulldozerDrawableComponent,WheelPosition.RIGHT,bulldozerPhysicsComponent));
+        gameWorld.addGameObject(gameObjectWheelDx);
+
+
+
+
+
+
         return gameObject;
     }
+
+
 
 
 }

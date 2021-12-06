@@ -100,10 +100,22 @@ class GroundDrawableComponent extends DrawableComponent {
 
 
 class BulldozerDrawableComponent extends DrawableComponent {
+    float radius;
 
     BulldozerDrawableComponent(GameObject gameObject){
         super();
         this.owner = gameObject;
+        GameWorld gameWorld= gameObject.gameWorld;
+        this.canvas = new Canvas(gameWorld.buffer);
+        this.width=4f;
+        this.height=2f;
+        this.screen_semi_width = gameWorld.toPixelsXLength(width)/2;
+        this.screen_semi_height = gameWorld.toPixelsYLength(height)/2;
+        radius=gameWorld.toPixelsYLength(0.5f);
+        int green = (int)(255*Math.random());
+        int color = Color.argb(200, 255, green, 0);
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
 
     }
@@ -111,7 +123,10 @@ class BulldozerDrawableComponent extends DrawableComponent {
 
     @Override
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-
+        canvas.drawRect(coordinate_x- screen_semi_width, coordinate_y- screen_semi_height, coordinate_x + screen_semi_width, coordinate_y + screen_semi_height, paint);
+        canvas.drawCircle((coordinate_x- screen_semi_width)+radius,coordinate_y- screen_semi_height,radius,paint);
+        canvas.drawCircle((coordinate_x+ screen_semi_width)-radius,coordinate_y- screen_semi_height,radius,paint);
+        canvas.restore();
     }
 }
 

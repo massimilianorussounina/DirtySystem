@@ -6,6 +6,8 @@ import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.CircleShape;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
+import com.google.fpl.liquidfun.RevoluteJoint;
+import com.google.fpl.liquidfun.RevoluteJointDef;
 
 public class PhysicsComponent  extends Component{
 
@@ -57,11 +59,84 @@ class GroundPhysicsComponent extends PhysicsComponent{
 
 
 class BulldozerPhysicsComponent extends PhysicsComponent{
+    protected Body chassis,wheelsSx,wheelsDx;
 
-
-    BulldozerPhysicsComponent(GameObject go){
+    BulldozerPhysicsComponent(GameObject gameObject){
         super();
-        this.owner = go;
+        this.owner = gameObject;
+        BodyDef chassisDef = new BodyDef();
+        chassisDef.setType(BodyType.dynamicBody);
+        DynamicPositionComponent dinamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
+        chassisDef.setPosition(dinamicPositionComponent.coordinate_x, dinamicPositionComponent.coordinate_y);
+        GameWorld gameWorld = gameObject.gameWorld;
+        chassis = gameWorld.world.createBody(chassisDef);
+        chassis.setUserData(this);
+        PolygonShape ch = new PolygonShape();
+        BulldozerDrawableComponent bulldozerDrawableComponent = (BulldozerDrawableComponent) gameObject.getComponent(ComponentType.Drawable);
+        ch.setAsBox(bulldozerDrawableComponent.width/2 , bulldozerDrawableComponent.height/2);
+       // chassis.createFixture(ch, 0);
+
+
+        BodyDef wheelsSxdef = new BodyDef();
+        wheelsSxdef.setType(BodyType.dynamicBody);
+        wheelsSxdef.setPosition((dinamicPositionComponent.coordinate_x-(bulldozerDrawableComponent.width/2))+0.5f, dinamicPositionComponent.coordinate_y-(bulldozerDrawableComponent.height/2));
+        wheelsSx = gameWorld.world.createBody(wheelsSxdef);
+        wheelsSx.setUserData(this);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(0.5f);
+        FixtureDef fixturedef = new FixtureDef();
+        fixturedef.setShape(circleShape);
+        fixturedef.setFriction(0.5f);
+        fixturedef.setRestitution(0.1f);
+        fixturedef.setDensity(2f);
+        wheelsSx.createFixture(fixturedef);
+
+        BodyDef wheelsDxdef = new BodyDef();
+        wheelsDxdef.setType(BodyType.dynamicBody);
+        wheelsDxdef.setPosition((dinamicPositionComponent.coordinate_x+(bulldozerDrawableComponent.width/2))-0.5f, dinamicPositionComponent.coordinate_y-(bulldozerDrawableComponent.height/2));
+        wheelsDx = gameWorld.world.createBody(wheelsSxdef);
+        wheelsDx.setUserData(this);
+        CircleShape circleShapeDx = new CircleShape();
+        circleShape.setRadius(0.5f);
+        FixtureDef fixturedefDx = new FixtureDef();
+        fixturedefDx.setShape(circleShapeDx);
+        fixturedefDx.setFriction(0.5f);
+        fixturedefDx.setRestitution(0.1f);
+        fixturedefDx.setDensity(2f);
+        wheelsDx.createFixture(fixturedef);
+
+        chassisDef.delete();
+        ch.delete();
+        wheelsDxdef.delete();
+        wheelsSxdef.delete();
+        wheelsSx.delete();
+        wheelsDx.delete();
+        fixturedef.delete();
+        fixturedefDx.delete();
+
+        RevoluteJointDef jointDef = new RevoluteJointDef();
+        jointDef.setBodyA(chassis);
+        jointDef.setBodyB(wheelsSx);
+        jointDef.setLocalAnchorA(-bulldozerDrawableComponent.width/2+0.5f, -bulldozerDrawableComponent.height/2);
+        jointDef.setLocalAnchorB(0, 0);
+        jointDef.setEnableMotor(true);
+        jointDef.setMotorSpeed(0);
+        jointDef.setMaxMotorTorque(8f);
+        RevoluteJoint joint = (RevoluteJoint) gameWorld.world.createJoint(jointDef);
+        jointDef.delete();
+
+        RevoluteJointDef jointDefDx = new RevoluteJointDef();
+        jointDef.setBodyA(chassis);
+        jointDef.setBodyB(wheelsDx);
+        jointDefDx.setLocalAnchorA(+bulldozerDrawableComponent.width/2-0.5f, -bulldozerDrawableComponent.height/2);
+        jointDefDx.setLocalAnchorB(0, 0);
+        jointDefDx.setEnableMotor(true);
+        jointDefDx.setMotorSpeed(0);
+        jointDefDx.setMaxMotorTorque(8f);
+        RevoluteJoint joint2 = (RevoluteJoint) gameWorld.world.createJoint(jointDef);
+        jointDef.delete();
+
+
     }
 }
 
@@ -171,3 +246,4 @@ class SeaPhysicsComponent extends PhysicsComponent{
         box.delete();
     }
 }
+

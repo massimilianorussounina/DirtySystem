@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createBarrel(-7f,3f,gw));
         gw.addGameObject(GameObject.createBarrel(-7f,-3f,gw));
 
+        gw.addGameObject(GameObject.createBulldozer(0,0,gw));
 
 
 

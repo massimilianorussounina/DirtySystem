@@ -58,5 +58,14 @@ public class GameObject extends Entity{
         return gameObject;
     }
 
+    public static GameObject createBulldozer(float coordinate_x, float coordinate_y,GameWorld gameWorld) {
+
+        GameObject gameObject = new GameObject(gameWorld);
+        gameObject.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObject));
+        gameObject.addComponent(new BulldozerDrawableComponent(gameObject));
+        gameObject.addComponent(new BulldozerPhysicsComponent(gameObject));
+        return gameObject;
+    }
+
 
 }

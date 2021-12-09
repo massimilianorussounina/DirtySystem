@@ -69,6 +69,7 @@ public class GameObject extends Entity{
         GameObject gameObjectDrapper2 = new GameObject(gameWorld);
         GameObject gameObjectDrapper3 = new GameObject(gameWorld);
         GameObject gameObjectDrapper4 = new GameObject(gameWorld);
+        GameObject gameObjectShovel = new GameObject(gameWorld);
 
 
         gameObject.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObject));
@@ -122,6 +123,11 @@ public class GameObject extends Entity{
         gameObjectWheelSx2.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelSx2,bulldozerDrawableComponent));
         gameObjectWheelSx2.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSx2,bulldozerDrawableComponent,bulldozerPhysicsComponent,4,gameObjectDrapper4));
         gameWorld.addGameObject(gameObjectWheelSx2);
+
+        gameObjectShovel.addComponent(new DynamicPositionComponent(-7,-14f,gameObjectShovel));
+        gameObjectShovel.addComponent(bulldozerDrawableComponent.new ShovelDrawableComponent(gameObjectShovel,bulldozerDrawableComponent));
+        gameObjectShovel.addComponent(bulldozerPhysicsComponent.new ShovelPhysicsComponent(gameObjectShovel,bulldozerDrawableComponent,bulldozerPhysicsComponent));
+        gameWorld.addGameObject(gameObjectShovel);
 
 
 

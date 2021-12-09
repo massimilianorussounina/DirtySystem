@@ -227,8 +227,8 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             jointDef.setLocalAnchorA(local_x1,local_y1);
             jointDef.setLocalAnchorB(local_x2, local_y2);
             jointDef.setEnableMotor(true);
-            jointDef.setMotorSpeed(0f);
-            jointDef.setMaxMotorTorque(20f);
+            jointDef.setMotorSpeed(40f);
+            jointDef.setMaxMotorTorque(60f);
             gameWorld.world.createJoint(jointDef);
             jointDef.delete();
             return  jointDef;
@@ -322,6 +322,8 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
 
 
         }
+
+
         private PrismaticJointDef createVincolo(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2){
             PrismaticJointDef jointDef = new PrismaticJointDef();
             jointDef.setBodyA(a);
@@ -348,6 +350,66 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
 
         }
 
+    }
+    class ShovelPhysicsComponent extends PhysicsComponent{
+        GameWorld gameWorld;
+        public ShovelPhysicsComponent(GameObject gameObject,BulldozerDrawableComponent bulldozerDrawableComponent,BulldozerPhysicsComponent bulldozerPhysicsComponent){
+            super();
+            this.owner = gameObject;
+            BodyDef shovelDef = new BodyDef();
+            shovelDef.setAngle(1.5708f);
+            shovelDef.setType(BodyType.dynamicBody);
+            DynamicPositionComponent dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
+            shovelDef.setPosition(dynamicPositionComponent.coordinate_x, dynamicPositionComponent.coordinate_y);
+            gameWorld = gameObject.gameWorld;
+            this.body = gameWorld.world.createBody(shovelDef);
+            this.body.setUserData(this);
+            body.setSleepingAllowed(false);
+            this.body.setUserData(this);
+            PolygonShape box1Shape = new PolygonShape();
+            PolygonShape box2Shape = new PolygonShape();
+            PolygonShape box3Shape = new PolygonShape();
+
+            box1Shape.setAsBox(0.8f,0.25f,0,0,0);
+            FixtureDef fixtureBox1def = new FixtureDef();
+            fixtureBox1def.setShape(box1Shape);
+            fixtureBox1def.setDensity(4f);
+            body.createFixture(fixtureBox1def);
+            fixtureBox1def.delete();
+            box1Shape.delete();
+
+           box2Shape.setAsBox(0.25f,0.8f,-0.8f,-0.8f,0);
+            FixtureDef fixtureBox2def = new FixtureDef();
+            fixtureBox2def.setShape(box2Shape);
+            fixtureBox2def.setDensity(4f);
+            body.createFixture(fixtureBox2def);
+            fixtureBox2def.delete();
+            box2Shape.delete();
+
+           box3Shape.setAsBox(0.5f,0.25f,-1.6f,-1.8f,0);
+            FixtureDef fixtureBox3def = new FixtureDef();
+            fixtureBox3def.setShape(box3Shape);
+            fixtureBox3def.setDensity(4f);
+            body.createFixture(fixtureBox3def);
+            fixtureBox2def.delete();
+            fixtureBox3def.delete();
+            box3Shape.delete();
+
+            shovelDef.delete();
+            createVincolo(bulldozerPhysicsComponent.body,body,bulldozerDrawableComponent.width-2, 0,-1.2f,-1.5f);
+
+        }
+        private RevoluteJointDef createVincolo(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2){
+            RevoluteJointDef jointDef = new RevoluteJointDef();
+            jointDef.setBodyA(a);
+            jointDef.setBodyB(b);
+            jointDef.setLocalAnchorA(local_x1,local_y1);
+            jointDef.setLocalAnchorB(local_x2, local_y2);
+            jointDef.setEnableMotor(true);
+            gameWorld.world.createJoint(jointDef);
+            jointDef.delete();
+            return  jointDef;
+        }
     }
 
 }

@@ -111,7 +111,7 @@ class BulldozerDrawableComponent extends DrawableComponent {
         this.owner = gameObject;
         GameWorld gameWorld= gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
-        this.width=2.4f;
+        this.width=4.4f;
         this.height=Math.round(((width* 79.545)/100f)*100f)/100f;
         box1_x=width;
         box1_y=Math.round(((height*34.285f)/100f)*100f)/100f;
@@ -205,6 +205,54 @@ class BulldozerDrawableComponent extends DrawableComponent {
         }
     }
 
+    class ShovelDrawableComponent extends DrawableComponent{
+       private float box_1_x,box_1_y,box_2_x,box_2_y,box_3_x,box_3_y;
+       private float coordinate_x1,coordinate_y1,coordinate_x2,coordinate_y2;
+       private float screenBox1_x,screenBox1_y,screenBox2_x,screenBox2_y,screenBox3_x,screenBox3_y;
+        public ShovelDrawableComponent(GameObject gameObject,BulldozerDrawableComponent bulldozerDrawableComponent) {
+            super();
+            this.owner = gameObject;
+            GameWorld gameWorld = gameObject.gameWorld;
+            this.canvas = new Canvas(gameWorld.buffer);
+            box_1_x =2f;
+            box_1_y=0.5f;
+            box_2_x=0.5f;
+            box_2_y=1.6f;
+            box_3_x=1f;
+            box_3_y=0.5f;
+            screenBox1_x= gameWorld.toPixelsXLength(box_1_x)/2;
+            screenBox1_y= gameWorld.toPixelsYLength(box_1_y)/2;
+            screenBox2_x= gameWorld.toPixelsXLength(box_2_x)/2;
+            screenBox2_y= gameWorld.toPixelsYLength(box_2_y)/2;
+            screenBox3_x= gameWorld.toPixelsXLength(box_3_x)/2;
+            screenBox3_y= gameWorld.toPixelsYLength(box_3_y)/2;
+            int green = (int)(255*Math.random());
+            int color = Color.argb(200, 255, green, 0);
+            paint.setColor(color);
+            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            coordinate_y1=-gameWorld.toPixelsYLength( 1f);
+            coordinate_x1=-gameWorld.toPixelsXLength(0.8f);
+            coordinate_x2=-gameWorld.toPixelsXLength(0.25f);
+            coordinate_y2=-gameWorld.toPixelsYLength(1f);
+        }
+
+        @Override
+        public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+            canvas.save();
+            canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
+            paint.setColor(Color.argb(200,255,0,0));
+            canvas.drawRect(coordinate_x- screenBox1_x ,coordinate_y-screenBox1_y, coordinate_x + screenBox1_x, coordinate_y +screenBox1_y, paint);
+            paint.setColor(Color.argb(200,0,255,0));
+            coordinate_x=coordinate_x+coordinate_x1;
+            coordinate_y=coordinate_y+coordinate_y1;
+            canvas.drawRect(coordinate_x- screenBox2_x ,coordinate_y-screenBox2_y, coordinate_x + screenBox2_x, coordinate_y +screenBox2_y, paint);
+            paint.setColor(Color.argb(200,0,0,255));
+            coordinate_x=coordinate_x+coordinate_x2;
+            coordinate_y=coordinate_y+coordinate_y2;
+            canvas.drawRect(coordinate_x- screenBox3_x ,coordinate_y-screenBox3_y, coordinate_x + screenBox3_x, coordinate_y +screenBox3_y, paint);
+            canvas.restore();
+        }
+    }
 
 }
 

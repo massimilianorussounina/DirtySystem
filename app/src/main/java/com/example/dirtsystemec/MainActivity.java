@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         Box physicalSize = new Box(XMIN, YMIN, XMAX, YMAX);
         Box screenSize   = new Box(0, 0, metrics.widthPixels, metrics.heightPixels);
         GameWorld gw = new GameWorld(physicalSize, screenSize, this);
-        gw.setGravity(-10,0);
+        gw.setGravity(-5,0);
 
 
 
@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createBarrel(-7f,3f,gw));
         gw.addGameObject(GameObject.createBarrel(-7f,-3f,gw));
 */
-        gw.addGameObject(GameObject.createBulldozer(0,-17f,gw));
+        gw.addGameObject(GameObject.createBulldozer(0,-19f,gw));
+        /*gw.addGameObject(GameObject.createBarrel(2f,-17f,gw));
+        gw.addGameObject(GameObject.createBarrel(3f,-16.5f,gw));*/
 
 
 

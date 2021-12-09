@@ -227,8 +227,8 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             jointDef.setLocalAnchorA(local_x1,local_y1);
             jointDef.setLocalAnchorB(local_x2, local_y2);
             jointDef.setEnableMotor(true);
-            jointDef.setMotorSpeed(40f);
-            jointDef.setMaxMotorTorque(60f);
+            jointDef.setMotorSpeed(0f);
+            jointDef.setMaxMotorTorque(20f);
             gameWorld.world.createJoint(jointDef);
             jointDef.delete();
             return  jointDef;
@@ -329,18 +329,19 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             jointDef.setLocalAnchorA(local_x1, local_y1);
             jointDef.setLocalAnchorB(local_x2 ,local_y2);
             jointDef.setLocalAxisA(0,1);
-           jointDef.setEnableMotor(false);
-           jointDef.setEnableLimit(true);
-          /* jointDef.setMotorSpeed(1f);
-           jointDef.setMaxMotorForce(this.body.getMass()*8.5f);*/
+           jointDef.setEnableMotor(true);
+           jointDef.setEnableLimit(false);
+           jointDef.setUpperTranslation(0);
+           jointDef.setMaxMotorForce(this.body.getMass()*8.5f);
 
           gameWorld.world.createJoint(jointDef);
-            DistanceJointDef mollaDef = new DistanceJointDef();
+           DistanceJointDef mollaDef = new DistanceJointDef();
             mollaDef.setBodyA(a);
             mollaDef.setBodyB(b);
             mollaDef.setLocalAnchorA(local_x1, local_y1);
             mollaDef.setLocalAnchorB(local_x2 ,local_y2);
-            mollaDef.setDampingRatio(0.5f);
+            mollaDef.setDampingRatio(0.7f);
+            mollaDef.setFrequencyHz(2f);
             mollaDef.setLength(-Math.round(((bulldozerDrawableComponent.width*4.545f)/100f)*100f)/100f);
             gameWorld.world.createJoint(mollaDef);
             return  jointDef;

@@ -31,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("liquidfun");
         System.loadLibrary("liquidfun_jni");
         TAG = getString(R.string.app_name);
+        TAG = getString(R.string.app_name);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         currentApiVersion = Build.VERSION.SDK_INT;
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         gw.setGravity(-5,0);
 
 
-
+        Log.i("prop"," :"+BulldozerDrawableComponent.proportionalToBulldozzer(2.2f));
         gw.addGameObject(GameObject.createSea(-13.4f,0f,-12.5f,0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,7.0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,-7.0f,gw));
@@ -83,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createBarrel(-7f,3f,gw));
         gw.addGameObject(GameObject.createBarrel(-7f,-3f,gw));
 */
-        gw.addGameObject(GameObject.createBulldozer(-7,-17f,gw));
-        /*gw.addGameObject(GameObject.createBarrel(2f,-17f,gw));
-        gw.addGameObject(GameObject.createBarrel(3f,-16.5f,gw));*/
+        gw.addGameObject(GameObject.createBulldozer(-7,+17f,gw));
+        gw.addGameObject(GameObject.createBarrel(2f,-22f,gw));
+        gw.addGameObject(GameObject.createBarrel(3f,-17.5f,gw));
 
 
 

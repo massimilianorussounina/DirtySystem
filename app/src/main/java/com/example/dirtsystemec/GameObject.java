@@ -70,6 +70,7 @@ public class GameObject extends Entity{
         GameObject gameObjectDrapper3 = new GameObject(gameWorld);
         GameObject gameObjectDrapper4 = new GameObject(gameWorld);
         GameObject gameObjectShovel = new GameObject(gameWorld);
+        GameObject gameObjectWheelShovel = new GameObject(gameWorld);
 
 
         gameObject.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObject));
@@ -124,10 +125,16 @@ public class GameObject extends Entity{
         gameObjectWheelSx2.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSx2,bulldozerDrawableComponent,bulldozerPhysicsComponent,4,gameObjectDrapper4));
         gameWorld.addGameObject(gameObjectWheelSx2);
 
-        gameObjectShovel.addComponent(new DynamicPositionComponent(-7,-14f,gameObjectShovel));
-        gameObjectShovel.addComponent(bulldozerDrawableComponent.new ShovelDrawableComponent(gameObjectShovel,bulldozerDrawableComponent));
-        gameObjectShovel.addComponent(bulldozerPhysicsComponent.new ShovelPhysicsComponent(gameObjectShovel,bulldozerDrawableComponent,bulldozerPhysicsComponent));
+        gameObjectShovel.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectShovel));
+        BulldozerDrawableComponent.ShovelDrawableComponent shovelDrawableComponent=bulldozerDrawableComponent.new ShovelDrawableComponent(gameObjectShovel,bulldozerDrawableComponent);
+        BulldozerPhysicsComponent.ShovelPhysicsComponent shovelPhysicsComponent = bulldozerPhysicsComponent.new ShovelPhysicsComponent(gameObjectShovel,bulldozerDrawableComponent,bulldozerPhysicsComponent);
+        gameObjectShovel.addComponent(shovelDrawableComponent);
+        gameObjectShovel.addComponent(shovelPhysicsComponent);
         gameWorld.addGameObject(gameObjectShovel);
+
+        gameObjectWheelShovel.addComponent(shovelDrawableComponent.new WheelShovelDrawableComponent(gameObjectWheelShovel));
+        gameObjectWheelShovel.addComponent(shovelPhysicsComponent.new WheelShovelPhysicsComponent(gameObjectWheelShovel));
+        gameWorld.addGameObject(gameObjectWheelShovel);
 
 
 

@@ -29,6 +29,23 @@ public class GameObject extends Entity{
 
     }
 
+    public static void createBridge(float coordinate_x,float coordinate_y,GameWorld gameWorld,GameObject){
+        GameObject gameObjectBridgeLeft= new GameObject(gameWorld);
+        GameObject gameObjectBridgeRight= new GameObject(gameWorld);
+        gameObjectBridgeLeft.addComponent(new DynamicPositionComponent(0,0,gameObjectBridgeLeft));
+        gameObjectBridgeLeft.addComponent(new BridgeDrawableComponet(gameObjectBridgeLeft));
+        gameObjectBridgeLeft.addComponent(new BridgePhysicsComponent(gameObjectBridgeLeft,BridgePosition.LEFT));
+        gameWorld.addGameObject(gameObjectBridgeLeft);
+        gameObjectBridgeRight.addComponent(new DynamicPositionComponent(0,0,gameObjectBridgeRight));
+        gameObjectBridgeRight.addComponent(new BridgeDrawableComponet(gameObjectBridgeRight));
+        gameObjectBridgeRight.addComponent(new BridgePhysicsComponent(gameObjectBridgeRight,BridgePosition.RIGTH));
+        gameWorld.addGameObject(gameObjectBridgeRight);
+
+
+
+
+    }
+
 
     public static GameObject createIncinerator(float coordinate_x, float coordinate_y,float fire_coordinate_x, float fire_coordinate_y,GameWorld gameWorld) {
 
@@ -71,6 +88,7 @@ public class GameObject extends Entity{
         GameObject gameObjectDrapper4 = new GameObject(gameWorld);
         GameObject gameObjectShovel = new GameObject(gameWorld);
         GameObject gameObjectWheelShovel = new GameObject(gameWorld);
+
 
 
         gameObject.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObject));

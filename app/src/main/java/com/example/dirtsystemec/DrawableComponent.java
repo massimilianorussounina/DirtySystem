@@ -427,7 +427,7 @@ class SeaDrawableComponent extends DrawableComponent {
 
     private SeaSprite seaSprite;
 
-    SeaDrawableComponent(GameObject gameObject,float sea_coordinate_x, float sea_coordinate_y){
+    public SeaDrawableComponent(GameObject gameObject,float sea_coordinate_x, float sea_coordinate_y){
         super();
         this.owner = gameObject;
         GameWorld gameWorld = gameObject.gameWorld;
@@ -446,6 +446,33 @@ class SeaDrawableComponent extends DrawableComponent {
     @Override
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
        seaSprite.draw(System.currentTimeMillis());
+    }
+}
+
+class BridgeDrawableComponet extends DrawableComponent{
+    float width,height;
+    public BridgeDrawableComponet (GameObject gameObject){
+        super();
+        this.owner = gameObject;
+        GameWorld gameWorld = gameObject.gameWorld;
+        this.canvas = new Canvas(gameWorld.buffer);
+        this.width = 2.65f;
+        this.height = 0.4f;
+        this.screen_semi_width = gameWorld.toPixelsXLength(this.width)/2;
+        this.screen_semi_height = gameWorld.toPixelsYLength(this.height)/2;
+        int green = (int)(255*Math.random());
+        int color = Color.argb(200, 255, green, 0);
+        this.paint.setColor(color);
+        this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+    }
+
+    @Override
+    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+        canvas.save();
+        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
+        canvas.drawRect(coordinate_x- this.screen_semi_width ,coordinate_y- this.screen_semi_height, coordinate_x + this.screen_semi_width, coordinate_y + this.screen_semi_height, this.paint);
+        canvas.restore();
     }
 }
 

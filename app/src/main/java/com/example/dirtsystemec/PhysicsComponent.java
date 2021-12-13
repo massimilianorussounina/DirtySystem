@@ -550,5 +550,29 @@ class SeaPhysicsComponent extends PhysicsComponent{
         bdef.delete();
         box.delete();
     }
+
+}
+
+class BridgePhysicsComponent extends PhysicsComponent{
+
+   public BridgePhysicsComponent (GameObject gameObject,BridgePosition bridgePosition){
+       this.owner = gameObject;
+       BodyDef bdef = new BodyDef();
+       bdef.setAngle(1.5708f);
+       bdef.setType(BodyType.dynamicBody);
+       DynamicPositionComponent  dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
+       bdef.setPosition(dynamicPositionComponent.coordinate_x, dynamicPositionComponent.coordinate_y);
+       GameWorld gameWorld = gameObject.gameWorld;
+       this.body = gameWorld.world.createBody(bdef);
+       this.body.setUserData(this);
+       PolygonShape box = new PolygonShape();
+       BridgeDrawableComponet bridgeDrawableComponet = (BridgeDrawableComponet) gameObject.getComponent(ComponentType.Drawable);
+       box.setAsBox(bridgeDrawableComponet.width/2 , bridgeDrawableComponet.height/2);
+       body.createFixture(box, 0);
+       bdef.delete();
+       box.delete();
+
+
+   }
 }
 

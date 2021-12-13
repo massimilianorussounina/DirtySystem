@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.impl.MultiTouchHandler;
 
 public class MainActivity extends AppCompatActivity {
@@ -72,9 +73,6 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createGround(-11.5f,17.0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,-17.0f,gw));
 
-        gw.addGameObject(GameObject.createObstacle(0,-8.5f,-4.5f,2f,-1f,2f,1f,-2f,1f,gw));
-
-        gw.addGameObject(GameObject.createObstacle(1,-8.5f,4.5f,-2f,-1f,-2f,1f,2f,1f,gw));
 
         //gw.addGameObject(GameObject.createObstacle(-9.5f,-6.5f,4f,4f,0f,4f,0f,0f,gw));
 
@@ -89,7 +87,12 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createBulldozer(-7,+17f,gw));
         gw.addGameObject(GameObject.createBarrel(2f,-22f,gw));
         gw.addGameObject(GameObject.createBarrel(3f,-17.5f,gw));
-        GameObject.createBridge(0,0,gw);
+
+        GameObject.createBridge(0,0,-8.5f,4.5f,-2f,
+                               -1f,-2f,1f,2f,1f,BridgePosition.RIGHT,gw);
+
+        GameObject.createBridge(0,7,-8.5f,-4.5f,2f,
+                            -1f,2f,1f,-2f,1f,BridgePosition.LEFT,gw);
 
 
 

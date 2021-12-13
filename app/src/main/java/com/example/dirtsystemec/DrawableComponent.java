@@ -185,8 +185,8 @@ class BulldozerDrawableComponent extends DrawableComponent {
         }
     }
 
-    class DrapperDrawableComponent extends DrawableComponent{
-        public DrapperDrawableComponent(GameObject gameObject) {
+    class DamperDrawableComponent extends DrawableComponent{
+        public DamperDrawableComponent(GameObject gameObject) {
             super();
             this.owner = gameObject;
             GameWorld gameWorld = gameObject.gameWorld;
@@ -327,22 +327,16 @@ class IncineratorDrawableComponent extends DrawableComponent {
 
 
 
-class ObstacleDrawableComponent extends DrawableComponent {
-    private float screen_x1;
-    private float screen_x2;
-    private float screen_x3;
-    private float screen_y1;
-    private float screen_y2;
-    private float screen_y3;
+class TowerDrawableComponent extends DrawableComponent {
 
-    ObstacleDrawableComponent(GameObject gameObject,int i){
+    TowerDrawableComponent(GameObject gameObject,BridgePosition bridgePosition){
         super();
         this.owner = gameObject;
         GameWorld gameWorld= gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
-        this.width=4f;
-        this.height=2f;
-        if(i == 1){
+        this.width = 4f;
+        this.height = 2f;
+        if(bridgePosition == BridgePosition.RIGHT){
             BitmapFactory.Options b = new BitmapFactory.Options();
             b.inScaled = false;
             bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.right_bridge, b);
@@ -355,12 +349,6 @@ class ObstacleDrawableComponent extends DrawableComponent {
         PositionComponent positionComponent = (TrianglePositionComponet) owner.getComponent(ComponentType.Position);
         screen_semi_width = gameWorld.toPixelsXLength(width)/2;
         screen_semi_height = gameWorld.toPixelsYLength(height)/2;
-       /* this.screen_x1 = gameWorld.toPixelsXLength(positionComponent.x1_local);
-        this.screen_x2 = gameWorld.toPixelsXLength(positionComponent.x2_local);
-        this.screen_x3 = gameWorld.toPixelsXLength(positionComponent.x3_local);
-        this.screen_y1 = gameWorld.toPixelsYLength(positionComponent.y1_local);
-        this.screen_y2 = gameWorld.toPixelsYLength(positionComponent.y2_local);
-        this.screen_y3 = gameWorld.toPixelsYLength(positionComponent.y3_local);*/
         int color = Color.argb(250, 133, 133, 131);
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -377,13 +365,6 @@ class ObstacleDrawableComponent extends DrawableComponent {
         dest.bottom = coordinate_y + screen_semi_height;
         dest.right = coordinate_x + screen_semi_width;
         dest.top = coordinate_y - screen_semi_height;
-        /*
-        path.reset();
-        path.moveTo(coordinate_x+screen_x1, coordinate_y+screen_y1);
-        path.lineTo(coordinate_x+screen_x2, coordinate_y+screen_y2);
-        path.lineTo(coordinate_x+screen_x3, coordinate_y+screen_y3);
-        path.lineTo(coordinate_x+screen_x1, coordinate_y+screen_y1);
-        canvas.drawPath(path, paint);*/
         canvas.drawBitmap(bitmap, src, dest, null);
         canvas.restore();
     }
@@ -456,7 +437,7 @@ class BridgeDrawableComponet extends DrawableComponent{
         this.owner = gameObject;
         GameWorld gameWorld = gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
-        this.width = 2.65f;
+        this.width = 2.2f;
         this.height = 0.4f;
         this.screen_semi_width = gameWorld.toPixelsXLength(this.width)/2;
         this.screen_semi_height = gameWorld.toPixelsYLength(this.height)/2;

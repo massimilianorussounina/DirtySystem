@@ -19,30 +19,28 @@ public class GameObject extends Entity{
         return gameObject;
     }
 
-    public static GameObject createObstacle( int i,float coordinate_x,float coordinate_y,float x1_local, float y1_local,float x2_local, float y2_local,float x3_local, float y3_local,GameWorld gameWorld){
 
-        GameObject gameObject = new GameObject(gameWorld);
-        gameObject.addComponent(new TrianglePositionComponet(coordinate_x,coordinate_y,x1_local,y1_local,x2_local,y2_local,x3_local,y3_local,gameObject));
-        gameObject.addComponent(new ObstacleDrawableComponent(gameObject,i));
-        gameObject.addComponent(new ObstaclePhysicsComponent(gameObject));
-        return gameObject;
+    public static void createBridge(float bridgeCoordinateX,float bridgeCoordinateY,
+                                    float towerCoordinateX, float towerCoordinateY,
+                                    float towerBodyCoordinateX1, float towerBodyCoordinateY1,
+                                    float towerBodyCoordinateX2, float towerBodyCoordinateY2,
+                                    float towerBodyCoordinateX3, float towerBodyCoordinateY3,
+                                    BridgePosition bridgePosition, GameWorld gameWorld){
 
-    }
-
-    public static void createBridge(float coordinate_x,float coordinate_y,GameWorld gameWorld,GameObject){
-        GameObject gameObjectBridgeLeft= new GameObject(gameWorld);
-        GameObject gameObjectBridgeRight= new GameObject(gameWorld);
-        gameObjectBridgeLeft.addComponent(new DynamicPositionComponent(0,0,gameObjectBridgeLeft));
-        gameObjectBridgeLeft.addComponent(new BridgeDrawableComponet(gameObjectBridgeLeft));
-        gameObjectBridgeLeft.addComponent(new BridgePhysicsComponent(gameObjectBridgeLeft,BridgePosition.LEFT));
-        gameWorld.addGameObject(gameObjectBridgeLeft);
-        gameObjectBridgeRight.addComponent(new DynamicPositionComponent(0,0,gameObjectBridgeRight));
-        gameObjectBridgeRight.addComponent(new BridgeDrawableComponet(gameObjectBridgeRight));
-        gameObjectBridgeRight.addComponent(new BridgePhysicsComponent(gameObjectBridgeRight,BridgePosition.RIGTH));
-        gameWorld.addGameObject(gameObjectBridgeRight);
+        GameObject gameObjectTower = new GameObject(gameWorld);
+        gameObjectTower.addComponent(new TrianglePositionComponet(towerCoordinateX,towerCoordinateY,towerBodyCoordinateX1,towerBodyCoordinateY1,
+                                towerBodyCoordinateX2,towerBodyCoordinateY2,towerBodyCoordinateX3,towerBodyCoordinateY3,gameObjectTower));
+        gameObjectTower.addComponent(new TowerDrawableComponent(gameObjectTower,bridgePosition));
+        TowerPhysicsComponent towerPhysicsComponent = new TowerPhysicsComponent(gameObjectTower);
+        gameObjectTower.addComponent(towerPhysicsComponent);
+        gameWorld.addGameObject(gameObjectTower);
 
 
-
+        GameObject gameObjectBridge = new GameObject(gameWorld);
+        gameObjectBridge.addComponent(new DynamicPositionComponent(bridgeCoordinateX,bridgeCoordinateY,gameObjectBridge));
+        gameObjectBridge.addComponent(new BridgeDrawableComponet(gameObjectBridge));
+        gameObjectBridge.addComponent(new BridgePhysicsComponent(gameObjectBridge,bridgePosition,towerPhysicsComponent));
+        gameWorld.addGameObject(gameObjectBridge);
 
     }
 
@@ -82,10 +80,10 @@ public class GameObject extends Entity{
         GameObject gameObjectWheelDx =  new GameObject(gameWorld);
         GameObject gameObjectWheelSx2 =  new GameObject(gameWorld);
         GameObject gameObjectWheelDx2 =  new GameObject(gameWorld);
-        GameObject gameObjectDrapper1 = new GameObject(gameWorld);
-        GameObject gameObjectDrapper2 = new GameObject(gameWorld);
-        GameObject gameObjectDrapper3 = new GameObject(gameWorld);
-        GameObject gameObjectDrapper4 = new GameObject(gameWorld);
+        GameObject gameObjectDamper1 = new GameObject(gameWorld);
+        GameObject gameObjectDamper2 = new GameObject(gameWorld);
+        GameObject gameObjectDamper3 = new GameObject(gameWorld);
+        GameObject gameObjectDamper4 = new GameObject(gameWorld);
         GameObject gameObjectShovel = new GameObject(gameWorld);
         GameObject gameObjectWheelShovel = new GameObject(gameWorld);
 
@@ -99,48 +97,48 @@ public class GameObject extends Entity{
 
 
 
-        gameObjectDrapper1.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDrapper1));
-        gameObjectDrapper1.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject));
-        gameObjectDrapper1.addComponent(bulldozerPhysicsComponent.new DrapperPhysicsComponent(gameObjectDrapper1,bulldozerDrawableComponent,bulldozerPhysicsComponent,1));
-        gameWorld.addGameObject(gameObjectDrapper1);
+        gameObjectDamper1.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDamper1));
+        gameObjectDamper1.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObject));
+        gameObjectDamper1.addComponent(bulldozerPhysicsComponent.new DamperPhysicsComponent(gameObjectDamper1,bulldozerDrawableComponent,bulldozerPhysicsComponent,1));
+        gameWorld.addGameObject(gameObjectDamper1);
 
-      gameObjectDrapper2.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDrapper2));
-        gameObjectDrapper2.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject));
-        gameObjectDrapper2.addComponent(bulldozerPhysicsComponent.new DrapperPhysicsComponent(gameObjectDrapper2,bulldozerDrawableComponent,bulldozerPhysicsComponent,2));
-        gameWorld.addGameObject(gameObjectDrapper2);
+        gameObjectDamper2.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDamper2));
+        gameObjectDamper2.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObject));
+        gameObjectDamper2.addComponent(bulldozerPhysicsComponent.new DamperPhysicsComponent(gameObjectDamper2,bulldozerDrawableComponent,bulldozerPhysicsComponent,2));
+        gameWorld.addGameObject(gameObjectDamper2);
 
         gameObjectWheelSx.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectWheelSx));
         gameObjectWheelSx.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelSx,bulldozerDrawableComponent));
-        gameObjectWheelSx.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSx,bulldozerDrawableComponent,bulldozerPhysicsComponent,1,gameObjectDrapper1));
+        gameObjectWheelSx.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSx,bulldozerDrawableComponent,bulldozerPhysicsComponent,1,gameObjectDamper1));
         gameWorld.addGameObject(gameObjectWheelSx);
 
 
         gameObjectWheelDx.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectWheelDx));
         gameObjectWheelDx.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelDx,bulldozerDrawableComponent));
-        gameObjectWheelDx.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelDx,bulldozerDrawableComponent,bulldozerPhysicsComponent,2,gameObjectDrapper2));
+        gameObjectWheelDx.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelDx,bulldozerDrawableComponent,bulldozerPhysicsComponent,2,gameObjectDamper2));
         gameWorld.addGameObject(gameObjectWheelDx);
 
-       gameObjectDrapper3.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDrapper3));
-        gameObjectDrapper3.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject));
-        gameObjectDrapper3.addComponent(bulldozerPhysicsComponent.new DrapperPhysicsComponent(gameObjectDrapper3,bulldozerDrawableComponent,bulldozerPhysicsComponent,3));
-        gameWorld.addGameObject(gameObjectDrapper3);
+        gameObjectDamper3.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDamper3));
+        gameObjectDamper3.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObject));
+        gameObjectDamper3.addComponent(bulldozerPhysicsComponent.new DamperPhysicsComponent(gameObjectDamper3,bulldozerDrawableComponent,bulldozerPhysicsComponent,3));
+        gameWorld.addGameObject(gameObjectDamper3);
 
-        gameObjectDrapper4.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDrapper4));
-        gameObjectDrapper4.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject));
-        gameObjectDrapper4.addComponent(bulldozerPhysicsComponent.new DrapperPhysicsComponent(gameObjectDrapper4,bulldozerDrawableComponent,bulldozerPhysicsComponent,4));
-        gameWorld.addGameObject(gameObjectDrapper4);
+        gameObjectDamper4.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDamper4));
+        gameObjectDamper4.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObject));
+        gameObjectDamper4.addComponent(bulldozerPhysicsComponent.new DamperPhysicsComponent(gameObjectDamper4,bulldozerDrawableComponent,bulldozerPhysicsComponent,4));
+        gameWorld.addGameObject(gameObjectDamper4);
 
 
 
 
         gameObjectWheelDx2.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectWheelDx2));
         gameObjectWheelDx2.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelDx2,bulldozerDrawableComponent));
-        gameObjectWheelDx2.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelDx2,bulldozerDrawableComponent,bulldozerPhysicsComponent,3,gameObjectDrapper3));
+        gameObjectWheelDx2.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelDx2,bulldozerDrawableComponent,bulldozerPhysicsComponent,3,gameObjectDamper3));
         gameWorld.addGameObject(gameObjectWheelDx2);
 
         gameObjectWheelSx2.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectWheelSx2));
         gameObjectWheelSx2.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelSx2,bulldozerDrawableComponent));
-        gameObjectWheelSx2.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSx2,bulldozerDrawableComponent,bulldozerPhysicsComponent,4,gameObjectDrapper4));
+        gameObjectWheelSx2.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSx2,bulldozerDrawableComponent,bulldozerPhysicsComponent,4,gameObjectDamper4));
         gameWorld.addGameObject(gameObjectWheelSx2);
 
         gameObjectShovel.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectShovel));

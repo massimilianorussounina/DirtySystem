@@ -105,7 +105,7 @@ class BulldozerDrawableComponent extends DrawableComponent {
     float box1_x,box1_y,box2_x,box2_y,box3_x,box3_y;
     float screenBox1_x,screenBox1_y,screenBox2_x,screenBox2_y,screenBox3_x,screenBox3_y;
     float coordinate_x1,coordinate_y1,coordinate_x2,coordinate_y2;
-    static final float width = 2.8f;
+    static final float width = 2.8f; //2.8f
     int invert;
 
     BulldozerDrawableComponent(GameObject gameObject){
@@ -437,7 +437,7 @@ class BridgeDrawableComponet extends DrawableComponent{
         this.owner = gameObject;
         GameWorld gameWorld = gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
-        this.width = 2.2f;
+        this.width = 2.4f;
         this.height = 0.4f;
         this.screen_semi_width = gameWorld.toPixelsXLength(this.width)/2;
         this.screen_semi_height = gameWorld.toPixelsYLength(this.height)/2;

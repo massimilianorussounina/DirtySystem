@@ -224,8 +224,8 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             jointDef.setLocalAnchorA(local_x1,local_y1);
             jointDef.setLocalAnchorB(local_x2, local_y2);
             jointDef.setEnableMotor(true);
-            jointDef.setMotorSpeed(invert * 20f);
-            jointDef.setMaxMotorTorque(60f);
+            jointDef.setMotorSpeed(invert * 3f);
+            jointDef.setMaxMotorTorque(20f);
             gameWorld.world.createJoint(jointDef);
             jointDef.delete();
             return  jointDef;
@@ -292,18 +292,18 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
 
           switch (count){
                 case 1:
-                    createJoint(bulldozerPhysicsComponent.body,body,- BulldozerDrawableComponent.width /2+bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2,0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
+                    createJoint(bulldozerPhysicsComponent.body,body,- BulldozerDrawableComponent.width /2+bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2+BulldozerDrawableComponent.proportionalToBulldozer(0.3f),0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
                     break;
                 case 2:
-                    createJoint(bulldozerPhysicsComponent.body,body,+ BulldozerDrawableComponent.width /2-bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2,0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
+                    createJoint(bulldozerPhysicsComponent.body,body,+ BulldozerDrawableComponent.width /2-bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2+BulldozerDrawableComponent.proportionalToBulldozer(0.3f),0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
                     break;
                 case 3:
                     //createVincolo(bulldozerPhysicsComponent.body,body,+bulldozerDrawableComponent.width/2-(bulldozerPhysicsComponent.radius*2)-0.6f, +bulldozerDrawableComponent.height/2-(Math.round((bulldozerDrawableComponent.height*24.285)*100f)/100f)/100f,0,0);
-                    createJoint(bulldozerPhysicsComponent.body,body,+ BulldozerDrawableComponent.width /2-(bulldozerPhysicsComponent.radius*2)- BulldozerDrawableComponent.proportionalToBulldozer(0.6f), +bulldozerDrawableComponent.height/2,0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
+                    createJoint(bulldozerPhysicsComponent.body,body,+ BulldozerDrawableComponent.width /2-(bulldozerPhysicsComponent.radius*2)- BulldozerDrawableComponent.proportionalToBulldozer(0.6f), +bulldozerDrawableComponent.height/2+BulldozerDrawableComponent.proportionalToBulldozer(0.3f),0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
                     break;
                 case 4:
                     //createVincolo(bulldozerPhysicsComponent.body,body,-bulldozerDrawableComponent.width/2+(bulldozerPhysicsComponent.radius*2)+0.6f, +bulldozerDrawableComponent.height/2-(Math.round((bulldozerDrawableComponent.height*24.285)*100f)/100f)/100f,0,0);
-                    createJoint(bulldozerPhysicsComponent.body,body,- BulldozerDrawableComponent.width /2+(bulldozerPhysicsComponent.radius*2)+ BulldozerDrawableComponent.proportionalToBulldozer(0.6f), +bulldozerDrawableComponent.height/2,0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
+                    createJoint(bulldozerPhysicsComponent.body,body,- BulldozerDrawableComponent.width /2+(bulldozerPhysicsComponent.radius*2)+ BulldozerDrawableComponent.proportionalToBulldozer(0.6f), +bulldozerDrawableComponent.height/2+BulldozerDrawableComponent.proportionalToBulldozer(0.3f),0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
                     break;
 
                 default:
@@ -333,9 +333,9 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             mollaDef.setBodyB(b);
             mollaDef.setLocalAnchorA(local_x1, local_y1);
             mollaDef.setLocalAnchorB(local_x2 ,local_y2);
-            mollaDef.setDampingRatio(0.7f);
-            mollaDef.setFrequencyHz(4f);
-            mollaDef.setLength(-Math.round(((BulldozerDrawableComponent.width *4.545f)/100f)*100f)/100f);
+            mollaDef.setDampingRatio(0.8f);
+            mollaDef.setFrequencyHz(2f);
+            mollaDef.setLength(-BulldozerDrawableComponent.proportionalToBulldozer(0.2f));
             gameWorld.world.createJoint(mollaDef);
             return  jointDef;
         }
@@ -379,7 +379,7 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             box2Shape.delete();
 
             shovelDef.delete();
-            createJoint(bulldozerPhysicsComponent.body,body,invert*(BulldozerDrawableComponent.width -BulldozerDrawableComponent.proportionalToBulldozer(2)), 0,invert*(-BulldozerDrawableComponent.proportionalToBulldozer(0.8f)),-BulldozerDrawableComponent.proportionalToBulldozer(0.6f));
+            createJoint(bulldozerPhysicsComponent.body,body,invert*(BulldozerDrawableComponent.width -BulldozerDrawableComponent.proportionalToBulldozer(2)), +BulldozerDrawableComponent.proportionalToBulldozer(0.2f),invert*(-BulldozerDrawableComponent.proportionalToBulldozer(0.8f)),-BulldozerDrawableComponent.proportionalToBulldozer(0.6f));
 
         }
         private RevoluteJointDef createJoint(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2){
@@ -463,9 +463,9 @@ class TowerPhysicsComponent extends PhysicsComponent{
         triangle.setAsTriangle(positionComponent.x1_local, positionComponent.y1_local, positionComponent.x2_local, positionComponent.y2_local, positionComponent.x3_local, positionComponent.y3_local);
         FixtureDef fixturedef = new FixtureDef();
         fixturedef.setShape(triangle);
-        fixturedef.setFriction(3f);
+        fixturedef.setFriction(10f);
         fixturedef.setRestitution(0.4f);
-        fixturedef.setDensity(0.5f);
+        fixturedef.setDensity(4f);
         body.createFixture(fixturedef);
         fixturedef.delete();
         bdef.delete();
@@ -560,7 +560,7 @@ class BridgePhysicsComponent extends PhysicsComponent{
        bdef.setAngle(1.5708f);
        bdef.setType(BodyType.dynamicBody);
        DynamicPositionComponent  dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
-       bdef.setPosition(dynamicPositionComponent.coordinate_x, dynamicPositionComponent.coordinate_y);
+       bdef.setPosition(dynamicPositionComponent.coordinate_x+2f, dynamicPositionComponent.coordinate_y);
        GameWorld gameWorld = gameObject.gameWorld;
        this.body = gameWorld.world.createBody(bdef);
        this.body.setUserData(this);
@@ -570,11 +570,12 @@ class BridgePhysicsComponent extends PhysicsComponent{
        body.createFixture(box, 4f);
        bdef.delete();
        box.delete();
-       if (bridgePosition == BridgePosition.LEFT) createJoint(this.body, towerPhysicsComponent.body,-1.1f,0,2f,-0.8f,bridgePosition,gameWorld);
-       else createJoint(this.body, towerPhysicsComponent.body,1.1f,0,-2f,-0.8f,bridgePosition,gameWorld);
+       if (bridgePosition == BridgePosition.LEFT) createJoint(this.body, towerPhysicsComponent.body,-1.3f,0,2f,-0.8f,bridgePosition,gameWorld);
+       else createJoint(this.body, towerPhysicsComponent.body,1.3f,0,-2f,-0.8f,bridgePosition,gameWorld);
    }
 
     private RevoluteJointDef createJoint(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2, BridgePosition bridgePosition, GameWorld gameWorld){
+        int speed = 10;
         RevoluteJointDef jointDef = new RevoluteJointDef();
         jointDef.setBodyA(a);
         jointDef.setBodyB(b);
@@ -582,16 +583,18 @@ class BridgePhysicsComponent extends PhysicsComponent{
         jointDef.setLocalAnchorB(local_x2, local_y2);
         jointDef.setEnableLimit(true);
         jointDef.setEnableMotor(true);
-        jointDef.setMaxMotorTorque(50f);
-        jointDef.setMotorSpeed(10f);
+        jointDef.setMaxMotorTorque(500f);
+
 
         if(bridgePosition == BridgePosition.LEFT) {
             jointDef.setUpperAngle(6.28319f);
-            jointDef.setLowerAngle(6.28319f);
+            jointDef.setLowerAngle(0);
+            jointDef.setMotorSpeed(speed);
         }
         else{
             jointDef.setUpperAngle(0);
-            jointDef.setLowerAngle(-1.309f);
+            jointDef.setLowerAngle(-6.28319f);
+            jointDef.setMotorSpeed(-speed);
         }
 
         gameWorld.world.createJoint(jointDef);

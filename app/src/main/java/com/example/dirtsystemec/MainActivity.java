@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         GameWorld gw = new GameWorld(physicalSize, screenSize, this);
         gw.setGravity(-5,0);
 
-
-        Log.i("prop"," :"+BulldozerDrawableComponent.proportionalToBulldozzer(2.2f));
         gw.addGameObject(GameObject.createSea(-13.4f,0f,-12.5f,0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,7.0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,-7.0f,gw));

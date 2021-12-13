@@ -82,12 +82,12 @@ public class GameObject extends Entity{
 
 
         gameObjectDrapper1.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDrapper1));
-        gameObjectDrapper1.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject,bulldozerDrawableComponent));
+        gameObjectDrapper1.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject));
         gameObjectDrapper1.addComponent(bulldozerPhysicsComponent.new DrapperPhysicsComponent(gameObjectDrapper1,bulldozerDrawableComponent,bulldozerPhysicsComponent,1));
         gameWorld.addGameObject(gameObjectDrapper1);
 
       gameObjectDrapper2.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDrapper2));
-        gameObjectDrapper2.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject,bulldozerDrawableComponent));
+        gameObjectDrapper2.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject));
         gameObjectDrapper2.addComponent(bulldozerPhysicsComponent.new DrapperPhysicsComponent(gameObjectDrapper2,bulldozerDrawableComponent,bulldozerPhysicsComponent,2));
         gameWorld.addGameObject(gameObjectDrapper2);
 
@@ -103,12 +103,12 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectWheelDx);
 
        gameObjectDrapper3.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDrapper3));
-        gameObjectDrapper3.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject,bulldozerDrawableComponent));
+        gameObjectDrapper3.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject));
         gameObjectDrapper3.addComponent(bulldozerPhysicsComponent.new DrapperPhysicsComponent(gameObjectDrapper3,bulldozerDrawableComponent,bulldozerPhysicsComponent,3));
         gameWorld.addGameObject(gameObjectDrapper3);
 
         gameObjectDrapper4.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDrapper4));
-        gameObjectDrapper4.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject,bulldozerDrawableComponent));
+        gameObjectDrapper4.addComponent(bulldozerDrawableComponent.new DrapperDrawableComponent(gameObject));
         gameObjectDrapper4.addComponent(bulldozerPhysicsComponent.new DrapperPhysicsComponent(gameObjectDrapper4,bulldozerDrawableComponent,bulldozerPhysicsComponent,4));
         gameWorld.addGameObject(gameObjectDrapper4);
 

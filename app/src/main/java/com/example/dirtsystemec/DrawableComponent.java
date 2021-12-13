@@ -105,44 +105,44 @@ class BulldozerDrawableComponent extends DrawableComponent {
     float box1_x,box1_y,box2_x,box2_y,box3_x,box3_y;
     float screenBox1_x,screenBox1_y,screenBox2_x,screenBox2_y,screenBox3_x,screenBox3_y;
     float coordinate_x1,coordinate_y1,coordinate_x2,coordinate_y2;
-    static final float width= 4.4f;
+    static final float width = 2.8f;
     int invert;
 
     BulldozerDrawableComponent(GameObject gameObject){
         super();
         this.owner = gameObject;
-        invert=-1;
-        GameWorld gameWorld= gameObject.gameWorld;
+        invert = -1;
+        GameWorld gameWorld = gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
-        this.height=Math.round(((width* 79.545)/100f)*100f)/100f;
-        box1_x=width;
-        box1_y=Math.round(((height*34.285f)/100f)*100f)/100f;
-        box2_x=invert*Math.round(((width*52.272f)/100f)*100f)/100f;
-        box2_y=Math.round(((height*42.857f)/100f)*100f)/100f;
-        box3_x=invert*Math.round(((width*9.09f)/100f)*100f)/100f;
-        box3_y=Math.round(((height*8.571f)/100f)*100f)/100f;
-        screenBox1_x= gameWorld.toPixelsXLength(box1_x)/2;
-        screenBox1_y= gameWorld.toPixelsYLength(box1_y)/2;
-        screenBox2_x= gameWorld.toPixelsXLength(box2_x)/2;
-        screenBox2_y= gameWorld.toPixelsYLength(box2_y)/2;
-        screenBox3_x= gameWorld.toPixelsXLength(box3_x)/2;
-        screenBox3_y= gameWorld.toPixelsYLength(box3_y)/2;
-        this.screen_semi_width = gameWorld.toPixelsXLength(width)/2;
-        this.screen_semi_height = gameWorld.toPixelsYLength(height)/2;
+        this.height = proportionalToBulldozer(3.5f);
+        this.box1_x = this.width;
+        this.box1_y = proportionalToBulldozer(1.2f);
+        this.box2_x = invert * proportionalToBulldozer(2.3f);
+        this.box2_y = proportionalToBulldozer(1.5f);
+        this.box3_x = invert * proportionalToBulldozer(0.4f);
+        this.box3_y = proportionalToBulldozer(0.3f);
+        this.screenBox1_x = gameWorld.toPixelsXLength(this.box1_x)/2;
+        this.screenBox1_y = gameWorld.toPixelsYLength(this.box1_y)/2;
+        this.screenBox2_x = gameWorld.toPixelsXLength(this.box2_x)/2;
+        this.screenBox2_y = gameWorld.toPixelsYLength(this.box2_y)/2;
+        this.screenBox3_x = gameWorld.toPixelsXLength(this.box3_x)/2;
+        this.screenBox3_y = gameWorld.toPixelsYLength(this.box3_y)/2;
+        this.screen_semi_width = gameWorld.toPixelsXLength(this.width)/2;
+        this.screen_semi_height = gameWorld.toPixelsYLength(this.height)/2;
 
         int green = (int)(255*Math.random());
         int color = Color.argb(200, 255, green, 0);
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        coordinate_y1= gameWorld.toPixelsYLength( Math.round(((height*31.428f)/100f)*100f)/100f);
-        coordinate_x1=invert*gameWorld.toPixelsXLength(Math.round(( (width*11.363f)/100f)*100f)/100f);
-        coordinate_y2 =gameWorld.toPixelsYLength(Math.round(( (height*25.714f)/100f)*100f)/100f);
+        coordinate_y1 = gameWorld.toPixelsYLength( proportionalToBulldozer(1.1f));
+        coordinate_x1 = invert * gameWorld.toPixelsXLength(proportionalToBulldozer(0.5f));
+        coordinate_y2 = gameWorld.toPixelsYLength(proportionalToBulldozer(0.9f));
     }
 
-    public static float proportionalToBulldozzer(float x){
+    public static float proportionalToBulldozer(float x){
         float perc;
-        perc=(x*100)/4.4f;
-        return Math.round(((width*perc)/100f)*100f)/100f;
+        perc= (x * 100) / 4.4f;
+        return Math.round(((width*perc) / 100f) * 100f) / 100f;
     }
     @Override
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
@@ -166,53 +166,52 @@ class BulldozerDrawableComponent extends DrawableComponent {
         public WheelDrawableComponent(GameObject gameObject,BulldozerDrawableComponent bulldozerDrawableComponent) {
             super();
             this.owner = gameObject;
-            width=(Math.round((bulldozerDrawableComponent.width*11.363f)*100f)/100f)/100f;
+            this.width = proportionalToBulldozer(0.5f);
             GameWorld gameWorld= gameObject.gameWorld;
             this.canvas = new Canvas(gameWorld.buffer);
-            radius = gameWorld.toPixelsYLength(width);
+            this.radius = gameWorld.toPixelsYLength(this.width);
             int green = (int)(255*Math.random());
             int color = Color.argb(200, 255, green, 0);
-            paint.setColor(color);
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            this.paint.setColor(color);
+            this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
         }
 
         @Override
         public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
             canvas.save();
             canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
-            canvas.drawCircle(coordinate_x,coordinate_y,radius,paint);
+            canvas.drawCircle(coordinate_x,coordinate_y,this.radius,this.paint);
             canvas.restore();
         }
     }
 
     class DrapperDrawableComponent extends DrawableComponent{
-        public DrapperDrawableComponent(GameObject gameObject,BulldozerDrawableComponent bulldozerDrawableComponent) {
+        public DrapperDrawableComponent(GameObject gameObject) {
             super();
             this.owner = gameObject;
             GameWorld gameWorld = gameObject.gameWorld;
             this.canvas = new Canvas(gameWorld.buffer);
-
-            this.width = Math.round(((bulldozerDrawableComponent.width*11.363f)/100f)*100f)/100f;
-            this.height = Math.round(((bulldozerDrawableComponent.width*34.090f)/100f)*100f)/100f;
-            this.screen_semi_width = gameWorld.toPixelsXLength(width)/2;
-            this.screen_semi_height = gameWorld.toPixelsYLength(height)/2;
+            this.width = proportionalToBulldozer(0.5f);
+            this.height = proportionalToBulldozer(1.5f);
+            this.screen_semi_width = gameWorld.toPixelsXLength(this.width)/2;
+            this.screen_semi_height = gameWorld.toPixelsYLength(this.height)/2;
             int green = (int)(255*Math.random());
             int color = Color.argb(200, 255, green, 0);
-            paint.setColor(color);
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            this.paint.setColor(color);
+            this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
         }
 
         @Override
         public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
             canvas.save();
             canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
-            canvas.drawRect(coordinate_x- screen_semi_width ,coordinate_y-screen_semi_height, coordinate_x + screen_semi_width, coordinate_y +screen_semi_height, paint);
+            canvas.drawRect(coordinate_x- this.screen_semi_width ,coordinate_y- this.screen_semi_height, coordinate_x + this.screen_semi_width, coordinate_y + this.screen_semi_height, this.paint);
             canvas.restore();
         }
     }
 
     class ShovelDrawableComponent extends DrawableComponent{
-       private float box_1_x,box_1_y,box_2_x,box_2_y,box_3_x,box_3_y;
+       private float box_1_x,box_1_y,box_2_x,box_2_y;
        private float coordinate_x1,coordinate_y1,coordinate_x2,coordinate_y2;
        private float screenBox1_x,screenBox1_y,screenBox2_x,screenBox2_y,screenBox3_x,screenBox3_y;
         public ShovelDrawableComponent(GameObject gameObject,BulldozerDrawableComponent bulldozerDrawableComponent) {
@@ -220,26 +219,22 @@ class BulldozerDrawableComponent extends DrawableComponent {
             this.owner = gameObject;
             GameWorld gameWorld = gameObject.gameWorld;
             this.canvas = new Canvas(gameWorld.buffer);
-            box_1_x =BulldozerDrawableComponent.proportionalToBulldozzer(0.5f);
-            box_1_y=BulldozerDrawableComponent.proportionalToBulldozzer(1.6f);
-            box_2_x=invert*BulldozerDrawableComponent.proportionalToBulldozzer(1f);
-            box_2_y=BulldozerDrawableComponent.proportionalToBulldozzer(0.5f);
-            box_3_x=1f;
-            box_3_y=0.5f;
-            screenBox1_x= gameWorld.toPixelsXLength(box_1_x)/2;
-            screenBox1_y= gameWorld.toPixelsYLength(box_1_y)/2;
-            screenBox2_x= gameWorld.toPixelsXLength(box_2_x)/2;
-            screenBox2_y= gameWorld.toPixelsYLength(box_2_y)/2;
-            screenBox3_x= gameWorld.toPixelsXLength(box_3_x)/2;
-            screenBox3_y= gameWorld.toPixelsYLength(box_3_y)/2;
+            this.box_1_x = BulldozerDrawableComponent.proportionalToBulldozer(0.5f);
+            this.box_1_y = BulldozerDrawableComponent.proportionalToBulldozer(1.6f);
+            this.box_2_x = invert * BulldozerDrawableComponent.proportionalToBulldozer(1f);
+            this.box_2_y = BulldozerDrawableComponent.proportionalToBulldozer(0.5f);
+            this.screenBox1_x = gameWorld.toPixelsXLength(box_1_x)/2;
+            this.screenBox1_y = gameWorld.toPixelsYLength(box_1_y)/2;
+            this.screenBox2_x = gameWorld.toPixelsXLength(box_2_x)/2;
+            this.screenBox2_y = gameWorld.toPixelsYLength(box_2_y)/2;
             int green = (int)(255*Math.random());
             int color = Color.argb(200, 255, green, 0);
-            paint.setColor(color);
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            coordinate_y1=-gameWorld.toPixelsYLength( BulldozerDrawableComponent.proportionalToBulldozzer(0.9f));
-            coordinate_x1=invert*-gameWorld.toPixelsXLength(BulldozerDrawableComponent.proportionalToBulldozzer(0.5f));
-            coordinate_x2=-gameWorld.toPixelsXLength(BulldozerDrawableComponent.proportionalToBulldozzer(0.25f));
-            coordinate_y2=-gameWorld.toPixelsYLength(BulldozerDrawableComponent.proportionalToBulldozzer(1f));
+            this.paint.setColor(color);
+            this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            this.coordinate_y1 = -gameWorld.toPixelsYLength(BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
+            this.coordinate_x1 = invert*-gameWorld.toPixelsXLength(BulldozerDrawableComponent.proportionalToBulldozer(0.5f));
+            this.coordinate_x2 = -gameWorld.toPixelsXLength(BulldozerDrawableComponent.proportionalToBulldozer(0.25f));
+            this.coordinate_y2 = -gameWorld.toPixelsYLength(BulldozerDrawableComponent.proportionalToBulldozer(1f));
         }
 
         @Override
@@ -267,7 +262,7 @@ class BulldozerDrawableComponent extends DrawableComponent {
             public WheelShovelDrawableComponent(GameObject gameObject) {
                 super();
                 this.owner = gameObject;
-                width = BulldozerDrawableComponent.proportionalToBulldozzer(0.3f);
+                width = BulldozerDrawableComponent.proportionalToBulldozer(0.3f);
                 GameWorld gameWorld = gameObject.gameWorld;
                 this.canvas = new Canvas(gameWorld.buffer);
                 radius = gameWorld.toPixelsYLength(width);

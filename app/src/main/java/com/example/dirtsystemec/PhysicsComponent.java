@@ -90,22 +90,19 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
         PolygonShape lightShape = new PolygonShape();
         BulldozerDrawableComponent bulldozerDrawableComponent = (BulldozerDrawableComponent) gameObject.getComponent(ComponentType.Drawable);
         invert=bulldozerDrawableComponent.invert;
-        width=bulldozerDrawableComponent.width;
-        height=bulldozerDrawableComponent.height;
-        radius=(Math.round((bulldozerDrawableComponent.width*11.363f)*100f)/100f)/100f;
-        box1_x=bulldozerDrawableComponent.box1_x;
-        box1_y=bulldozerDrawableComponent.box1_y;
-        box2_x=bulldozerDrawableComponent.box2_x;
-        box2_y=bulldozerDrawableComponent.box2_y;
-        box3_x=bulldozerDrawableComponent.box3_x;
-        box3_y=bulldozerDrawableComponent.box3_y;
+        this.width = BulldozerDrawableComponent.width;
+        this.height = bulldozerDrawableComponent.height;
+        this.radius = BulldozerDrawableComponent.proportionalToBulldozer(0.5f);
+        this.box1_x = bulldozerDrawableComponent.box1_x;
+        this.box1_y = bulldozerDrawableComponent.box1_y;
+        this.box2_x = bulldozerDrawableComponent.box2_x;
+        this.box2_y = bulldozerDrawableComponent.box2_y;
+        this.box3_x = bulldozerDrawableComponent.box3_x;
+        this.box3_y = bulldozerDrawableComponent.box3_y;
         chassisShape.setAsBox(box1_x/2,box1_y/2);
-        cabinShape.setAsBox(invert*box2_x/2,box2_y/2,invert*-(Math.round((width*11.363f)*100f)/100f)/100f,-(Math.round((height*34.285f)*100f)/100f)/100f,0);
-        lightShape.setAsBox(invert*box3_x/2,box3_y/2,invert*-(Math.round((width*11.363f)*100f)/100f)/100f,-(Math.round((height*71.428f)*100f)/100f)/100f,0);
+        cabinShape.setAsBox(invert * box2_x/2,box2_y/2,invert * (-BulldozerDrawableComponent.proportionalToBulldozer(0.5f)),(-BulldozerDrawableComponent.proportionalToBulldozer(1.2f)),0);
+        lightShape.setAsBox(invert*box3_x/2,box3_y/2,invert* (-BulldozerDrawableComponent.proportionalToBulldozer(0.5f)),(-BulldozerDrawableComponent.proportionalToBulldozer(2.5f)),0);
 
-       /* chassisShape.setAsBox(2.2f,0.60f);
-        cabinShape.setAsBox(1.15f,0.75f,-0.5f,-1.2f,0);
-        lightShape.setAsBox(0.2f,0.15f,-0.5f,-2.5f,0);*/
         FixtureDef fixtureCabindef = new FixtureDef();
         fixtureCabindef.setShape(cabinShape);
         fixtureCabindef.setDensity(4f);
@@ -136,7 +133,7 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
         public WheelPhysicsComponent(GameObject gameObject,BulldozerDrawableComponent bulldozerDrawableComponent,BulldozerPhysicsComponent bulldozerPhysicsComponent,int count,GameObject gameObjectDrapper) {
           super();
           this.owner = gameObject;
-          radius=(Math.round((bulldozerDrawableComponent.width*11.363f)*100f)/100f)/100f;
+          this.radius= BulldozerDrawableComponent.proportionalToBulldozer(0.5f);
           BodyDef wheelDef = new BodyDef();
           wheelDef.setAngle(1.5708f);
           wheelDef.setType(BodyType.dynamicBody);
@@ -151,22 +148,22 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
 
            switch (count) {
                case 1:
-                   wheelDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y + (bulldozerDrawableComponent.width / 2) - radius);
+                   wheelDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y + (BulldozerDrawableComponent.width / 2) - radius);
 
                    break;
                case 2:
-                   wheelDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (bulldozerDrawableComponent.width / 2) + radius);
+                   wheelDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (BulldozerDrawableComponent.width / 2) + radius);
                    break;
                case 3:
-                   wheelDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (bulldozerDrawableComponent.width / 2) + (radius * 2) + Math.round(((bulldozerDrawableComponent.width*29.545f)/100f)*100f)/100f);
+                   wheelDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (BulldozerDrawableComponent.width / 2) + (radius * 2) + BulldozerDrawableComponent.proportionalToBulldozer(1.3f));
                    break;
                case 4:
-                   wheelDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (bulldozerDrawableComponent.width / 2) - (radius * 2) - Math.round(((bulldozerDrawableComponent.width*29.545f)/100f)*100f)/100f);
+                   wheelDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (BulldozerDrawableComponent.width / 2) - (radius * 2) - BulldozerDrawableComponent.proportionalToBulldozer(1.3f));
                    break;
 
                default:
                    try {
-                       throw new Exception("errore numero ruota sbagliato pos");
+                       throw new Exception("Error Wheel Position");
                    } catch (Exception e) {
                        e.printStackTrace();
                    }
@@ -191,25 +188,24 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
 
           switch (count){
               case 1:
-                  createVincolo(drapperPhysicsComponent.body,body,0, Math.round(((bulldozerDrawableComponent.width*9.09f)/100f)*100f)/100f,0,0);
+                  createVincolo(drapperPhysicsComponent.body,body,0, BulldozerDrawableComponent.proportionalToBulldozer(0.4f),0,0);
                   break;
               case 2:
-                  createVincolo(drapperPhysicsComponent.body,body,0, Math.round(((bulldozerDrawableComponent.width*9.09f)/100f)*100f)/100f,0,0);
+                  createVincolo(drapperPhysicsComponent.body,body,0, BulldozerDrawableComponent.proportionalToBulldozer(0.4f),0,0);
                   break;
               case 3:
-                  createVincolo(drapperPhysicsComponent.body,body,0, Math.round(((bulldozerDrawableComponent.width*9.09f)/100f)*100f)/100f,0,0);
+                  createVincolo(drapperPhysicsComponent.body,body,0, BulldozerDrawableComponent.proportionalToBulldozer(0.4f),0,0);
                   break;
               case 4:
-                  createVincolo(drapperPhysicsComponent.body,body,0, Math.round(((bulldozerDrawableComponent.width*9.09f)/100f)*100f)/100f,0,0);
+                  createVincolo(drapperPhysicsComponent.body,body,0, BulldozerDrawableComponent.proportionalToBulldozer(0.4f),0,0);
                   break;
 
               default:
                   try {
-                      throw new Exception("errore numero ruota sbagliato");
+                      throw new Exception("Error Wheel Vincolo");
                   } catch (Exception e) {
                       e.printStackTrace();
                   }
-
           }
 
           /*if(wheelPosition == WheelPosition.LEFT) {
@@ -228,7 +224,7 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             jointDef.setLocalAnchorA(local_x1,local_y1);
             jointDef.setLocalAnchorB(local_x2, local_y2);
             jointDef.setEnableMotor(true);
-            jointDef.setMotorSpeed(invert*20f);
+            jointDef.setMotorSpeed(invert * 20f);
             jointDef.setMaxMotorTorque(60f);
             gameWorld.world.createJoint(jointDef);
             jointDef.delete();
@@ -244,32 +240,32 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
         public DrapperPhysicsComponent(GameObject gameObject,BulldozerDrawableComponent bulldozerDrawableComponent,BulldozerPhysicsComponent bulldozerPhysicsComponent,int count){
             super();
             this.owner = gameObject;
-            this.width = Math.round(((bulldozerDrawableComponent.width*11.363f)/100f)*100f)/100f;
-            this.height = Math.round(((bulldozerDrawableComponent.width*34.090f)/100f)*100f)/100f;
+            this.width = BulldozerDrawableComponent.proportionalToBulldozer(0.5f);
+            this.height =  BulldozerDrawableComponent.proportionalToBulldozer(1.5f);
             this.bulldozerDrawableComponent=bulldozerDrawableComponent;
+            radius = BulldozerDrawableComponent.proportionalToBulldozer(0.5f);
             BodyDef drapperDef = new BodyDef();
             drapperDef.setType(BodyType.dynamicBody);
             drapperDef.setAngle(1.5708f);
             DynamicPositionComponent dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
-            Log.i("larg","  "+bulldozerDrawableComponent.width);
+
             switch (count) {
                 case 1:
-                    drapperDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (bulldozerDrawableComponent.width / 2) + radius);
-
+                    drapperDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (BulldozerDrawableComponent.width / 2) + radius);
                     break;
                 case 2:
-                    drapperDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y + (bulldozerDrawableComponent.width / 2) - radius);
+                    drapperDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y + (BulldozerDrawableComponent.width / 2) - radius);
                     break;
                 case 3:
-                    drapperDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (bulldozerDrawableComponent.width / 2) + (bulldozerPhysicsComponent.radius * 2) + Math.round(((bulldozerDrawableComponent.width*13.636f)/100f)*100f)/100f);
+                    drapperDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y - (BulldozerDrawableComponent.width / 2) + (bulldozerPhysicsComponent.radius * 2) + BulldozerDrawableComponent.proportionalToBulldozer(0.6f));
                     break;
                 case 4:
-                    drapperDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y + (bulldozerDrawableComponent.width / 2) - (bulldozerPhysicsComponent.radius * 2) - Math.round(((bulldozerDrawableComponent.width*13.636f)/100f)*100f)/100f);
+                    drapperDef.setPosition((dynamicPositionComponent.coordinate_x - (bulldozerDrawableComponent.height / 2)), dynamicPositionComponent.coordinate_y + (BulldozerDrawableComponent.width / 2) - (bulldozerPhysicsComponent.radius * 2) -  BulldozerDrawableComponent.proportionalToBulldozer(0.6f));
                     break;
 
                 default:
                     try {
-                        throw new Exception("errore numero ruota sbagliato pos");
+                        throw new Exception("Error Drapper Position");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -296,35 +292,29 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
 
           switch (count){
                 case 1:
-                    //createVincolo(bulldozerPhysicsComponent.body,body,-bulldozerDrawableComponent.width/2+bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2-(Math.round((bulldozerDrawableComponent.height*24.285)*100f)/100f)/100f,0,0);
-                    createVincolo(bulldozerPhysicsComponent.body,body,-bulldozerDrawableComponent.width/2+bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2,0,Math.round(((bulldozerDrawableComponent.width*20.454f)/100f)*100f)/100f);
+                    createVincolo(bulldozerPhysicsComponent.body,body,- BulldozerDrawableComponent.width /2+bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2,0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
                     break;
                 case 2:
-                    //createVincolo(bulldozerPhysicsComponent.body,body,+bulldozerDrawableComponent.width/2-bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2-(Math.round((bulldozerDrawableComponent.height*24.285)*100f)/100f)/100f,0,0);
-                    createVincolo(bulldozerPhysicsComponent.body,body,+bulldozerDrawableComponent.width/2-bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2,0,Math.round(((bulldozerDrawableComponent.width*20.454f)/100f)*100f)/100f);
+
+                    createVincolo(bulldozerPhysicsComponent.body,body,+ BulldozerDrawableComponent.width /2-bulldozerPhysicsComponent.radius, +bulldozerDrawableComponent.height/2,0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
                     break;
                 case 3:
                     //createVincolo(bulldozerPhysicsComponent.body,body,+bulldozerDrawableComponent.width/2-(bulldozerPhysicsComponent.radius*2)-0.6f, +bulldozerDrawableComponent.height/2-(Math.round((bulldozerDrawableComponent.height*24.285)*100f)/100f)/100f,0,0);
-                    createVincolo(bulldozerPhysicsComponent.body,body,+bulldozerDrawableComponent.width/2-(bulldozerPhysicsComponent.radius*2)-Math.round(((bulldozerDrawableComponent.width*13.636f)/100f)*100f)/100f, +bulldozerDrawableComponent.height/2,0,Math.round(((bulldozerDrawableComponent.width*20.454f)/100f)*100f)/100f);
+                    createVincolo(bulldozerPhysicsComponent.body,body,+ BulldozerDrawableComponent.width /2-(bulldozerPhysicsComponent.radius*2)- BulldozerDrawableComponent.proportionalToBulldozer(0.6f), +bulldozerDrawableComponent.height/2,0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
                     break;
                 case 4:
                     //createVincolo(bulldozerPhysicsComponent.body,body,-bulldozerDrawableComponent.width/2+(bulldozerPhysicsComponent.radius*2)+0.6f, +bulldozerDrawableComponent.height/2-(Math.round((bulldozerDrawableComponent.height*24.285)*100f)/100f)/100f,0,0);
-                    createVincolo(bulldozerPhysicsComponent.body,body,-bulldozerDrawableComponent.width/2+(bulldozerPhysicsComponent.radius*2)+Math.round(((bulldozerDrawableComponent.width*13.636f)/100f)*100f)/100f, +bulldozerDrawableComponent.height/2,0,Math.round(((bulldozerDrawableComponent.width*20.454f)/100f)*100f)/100f);
+                    createVincolo(bulldozerPhysicsComponent.body,body,- BulldozerDrawableComponent.width /2+(bulldozerPhysicsComponent.radius*2)+ BulldozerDrawableComponent.proportionalToBulldozer(0.6f), +bulldozerDrawableComponent.height/2,0,BulldozerDrawableComponent.proportionalToBulldozer(0.9f));
                     break;
 
                 default:
                     try {
-                        throw new Exception("errore numero ruota sbagliato");
+                        throw new Exception("Error Drapper Vincolo");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
             }
-
-
-
         }
-
 
         private PrismaticJointDef createVincolo(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2){
             PrismaticJointDef jointDef = new PrismaticJointDef();
@@ -333,23 +323,22 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             jointDef.setLocalAnchorA(local_x1, local_y1);
             jointDef.setLocalAnchorB(local_x2 ,local_y2);
             jointDef.setLocalAxisA(0,1);
-           jointDef.setEnableMotor(true);
-           jointDef.setEnableLimit(false);
-           jointDef.setUpperTranslation(0);
-           jointDef.setMaxMotorForce(this.body.getMass()*8.5f);
+            jointDef.setEnableMotor(true);
+            jointDef.setEnableLimit(false);
+            jointDef.setUpperTranslation(0);
+            jointDef.setMaxMotorForce(this.body.getMass()*8.5f);
 
-          gameWorld.world.createJoint(jointDef);
-           DistanceJointDef mollaDef = new DistanceJointDef();
+            gameWorld.world.createJoint(jointDef);
+            DistanceJointDef mollaDef = new DistanceJointDef();
             mollaDef.setBodyA(a);
             mollaDef.setBodyB(b);
             mollaDef.setLocalAnchorA(local_x1, local_y1);
             mollaDef.setLocalAnchorB(local_x2 ,local_y2);
             mollaDef.setDampingRatio(0.7f);
             mollaDef.setFrequencyHz(4f);
-            mollaDef.setLength(-Math.round(((bulldozerDrawableComponent.width*4.545f)/100f)*100f)/100f);
+            mollaDef.setLength(-Math.round(((BulldozerDrawableComponent.width *4.545f)/100f)*100f)/100f);
             gameWorld.world.createJoint(mollaDef);
             return  jointDef;
-
         }
 
     }
@@ -364,7 +353,7 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             shovelDef.setType(BodyType.dynamicBody);
             DynamicPositionComponent dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
             coordinate_x=dynamicPositionComponent.coordinate_x;
-            coordinate_y=dynamicPositionComponent.coordinate_y+invert*BulldozerDrawableComponent.proportionalToBulldozzer(3f);
+            coordinate_y=dynamicPositionComponent.coordinate_y+invert*BulldozerDrawableComponent.proportionalToBulldozer(3f);
             shovelDef.setPosition(coordinate_x, coordinate_y);
             gameWorld = gameObject.gameWorld;
             this.body = gameWorld.world.createBody(shovelDef);
@@ -373,9 +362,8 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             body.setSleepingAllowed(false);
             PolygonShape box1Shape = new PolygonShape();
             PolygonShape box2Shape = new PolygonShape();
-            PolygonShape box3Shape = new PolygonShape();
 
-            box1Shape.setAsBox(BulldozerDrawableComponent.proportionalToBulldozzer(0.25f),BulldozerDrawableComponent.proportionalToBulldozzer(0.8f),0,0,0);
+            box1Shape.setAsBox(BulldozerDrawableComponent.proportionalToBulldozer(0.25f),BulldozerDrawableComponent.proportionalToBulldozer(0.8f),0,0,0);
             FixtureDef fixtureBox1def = new FixtureDef();
             fixtureBox1def.setShape(box1Shape);
             fixtureBox1def.setDensity(4f);
@@ -383,7 +371,7 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             fixtureBox1def.delete();
             box1Shape.delete();
 
-           box2Shape.setAsBox(BulldozerDrawableComponent.proportionalToBulldozzer(0.5f),BulldozerDrawableComponent.proportionalToBulldozzer(0.25f),invert*-BulldozerDrawableComponent.proportionalToBulldozzer(0.5f),-BulldozerDrawableComponent.proportionalToBulldozzer(0.8f),0);
+           box2Shape.setAsBox(BulldozerDrawableComponent.proportionalToBulldozer(0.5f),BulldozerDrawableComponent.proportionalToBulldozer(0.25f),invert*-BulldozerDrawableComponent.proportionalToBulldozer(0.5f),-BulldozerDrawableComponent.proportionalToBulldozer(0.8f),0);
             FixtureDef fixtureBox2def = new FixtureDef();
             fixtureBox2def.setShape(box2Shape);
             fixtureBox2def.setDensity(4f);
@@ -391,20 +379,8 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             fixtureBox2def.delete();
             box2Shape.delete();
 
-          /* box3Shape.setAsBox(0.5f,0.25f,-1.6f,-1.8f,0);
-            FixtureDef fixtureBox3def = new FixtureDef();
-            fixtureBox3def.setShape(box3Shape);
-            fixtureBox3def.setDensity(4f);
-            body.createFixture(fixtureBox3def);
-            fixtureBox2def.delete();
-            fixtureBox3def.delete();
-            box3Shape.delete();*/
-
-
-
-
             shovelDef.delete();
-            createVincolo(bulldozerPhysicsComponent.body,body,invert*(bulldozerDrawableComponent.width-BulldozerDrawableComponent.proportionalToBulldozzer(2)), 0,invert*(-BulldozerDrawableComponent.proportionalToBulldozzer(0.8f)),-BulldozerDrawableComponent.proportionalToBulldozzer(0.6f));
+            createVincolo(bulldozerPhysicsComponent.body,body,invert*(BulldozerDrawableComponent.width -BulldozerDrawableComponent.proportionalToBulldozer(2)), 0,invert*(-BulldozerDrawableComponent.proportionalToBulldozer(0.8f)),-BulldozerDrawableComponent.proportionalToBulldozer(0.6f));
 
         }
         private RevoluteJointDef createVincolo(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2){
@@ -423,20 +399,21 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
                 jointDef.setLowerAngle(0);
             }
 
-
             gameWorld.world.createJoint(jointDef);
             jointDef.delete();
             return  jointDef;
         }
+
+
         class WheelShovelPhysicsComponent extends PhysicsComponent{
             float radius;
             public WheelShovelPhysicsComponent(GameObject gameObject){
                 super();
                 this.owner = gameObject;
                 BodyDef wheelShovelDef = new BodyDef();
-                radius= BulldozerDrawableComponent.proportionalToBulldozzer(0.3f);
+                radius= BulldozerDrawableComponent.proportionalToBulldozer(0.3f);
                 wheelShovelDef.setType(BodyType.dynamicBody);
-                wheelShovelDef.setPosition(coordinate_x, coordinate_y-BulldozerDrawableComponent.proportionalToBulldozzer(0.8f));
+                wheelShovelDef.setPosition(coordinate_x, coordinate_y-BulldozerDrawableComponent.proportionalToBulldozer(0.8f));
                 this.body = gameWorld.world.createBody(wheelShovelDef);
                 this.body.setUserData(this);
                 this.body.setSleepingAllowed(false);
@@ -450,9 +427,8 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
                 this.body.createFixture(fixturedef);
                 fixturedef.delete();
                 circleShape.delete();
-
                 wheelShovelDef.delete();
-                createVincolo(bodyShovel,this.body, 0,BulldozerDrawableComponent.proportionalToBulldozzer(0.8f),0,0);
+                createVincolo(bodyShovel,this.body, 0,BulldozerDrawableComponent.proportionalToBulldozer(0.8f),0,0);
 
             }
             private RevoluteJointDef createVincolo(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2){
@@ -468,10 +444,7 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             }
         }
     }
-
 }
-
-
 
 class ObstaclePhysicsComponent extends PhysicsComponent{
 

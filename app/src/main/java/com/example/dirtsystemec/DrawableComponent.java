@@ -108,10 +108,10 @@ class BulldozerDrawableComponent extends DrawableComponent {
     static final float width = 2.8f; //2.8f
     int invert;
 
-    BulldozerDrawableComponent(GameObject gameObject){
+    BulldozerDrawableComponent(GameObject gameObject,int invert){
         super();
         this.owner = gameObject;
-        invert = -1;
+        this.invert=invert;
         GameWorld gameWorld = gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
         this.height = proportionalToBulldozer(3.5f);
@@ -438,11 +438,10 @@ class BridgeDrawableComponet extends DrawableComponent{
         GameWorld gameWorld = gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
         this.width = 2.4f;
-        this.height = 0.4f;
+        this.height = 0.2f;
         this.screen_semi_width = gameWorld.toPixelsXLength(this.width)/2;
         this.screen_semi_height = gameWorld.toPixelsYLength(this.height)/2;
-        int green = (int)(255*Math.random());
-        int color = Color.argb(200, 255, green, 0);
+        int color = Color.argb(255, 32, 32, 32);
         this.paint.setColor(color);
         this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
 

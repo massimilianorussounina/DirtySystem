@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.impl.TouchHandler;
@@ -29,9 +30,11 @@ public class GameWorld {
     Bitmap buffer;
     private Canvas canvas;
     private Paint particlePaint;
+    private BulldozerPhysicsComponent bulldozer;
 
     // Simulation
     List<GameObject> objects;
+    List<GameObject> listBulldozer;
 
     World world;
     final Box physicalSize, screenSize, currentView;
@@ -70,14 +73,29 @@ public class GameWorld {
         touchConsumer = new TouchConsumer(this);
 
         this.objects = new ArrayList<>();
+        this.listBulldozer = new ArrayList<>();
         this.canvas = new Canvas(buffer);
         src.set(0,0,1920,1080);
     }
 
     public synchronized void update(float elapsedTime)
     {
+        float y;
         // advance the physics simulation
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
+        y=bulldozer.body.getPositionY();
+        if(y >= 20.5f){
+            deleteBuldozer();
+            addGameObject(GameObject.createBulldozer(-7.5f,y-0.5f,this,-1));
+            //creare il nuovo con -1
+        }
+        else if(y <=-20f){
+            deleteBuldozer();
+            addGameObject(GameObject.createBulldozer(-7.5f,y+0.5f,this,1));
+            //creare il nuovo con 1
+        }
+
+
 
         //handleCollisions(contactListener.getCollisions());
 
@@ -98,6 +116,12 @@ public class GameWorld {
     public synchronized GameObject addGameObject(GameObject obj)
     {
         objects.add(obj);
+        if(obj.getComponent(ComponentType.Physics) instanceof BulldozerPhysicsComponent ){
+            this.bulldozer=  (BulldozerPhysicsComponent) obj.getComponent(ComponentType.Physics);
+        }
+        if(obj.name != null && obj.name.compareTo("bulldozer")==0){
+            this.listBulldozer.add(obj);
+        }
         return obj;
     }
 
@@ -113,6 +137,20 @@ public class GameWorld {
             }*/
         }
 
+    }
+
+    public void deleteBuldozer(){
+        for (GameObject obj:listBulldozer){
+            objects.remove(obj);
+            if(((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body==null) {
+                Log.i("body", "oh nooooooo");
+            }
+            world.destroyBody(((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body);
+           /* ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body.setUserData(null);
+            ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body.delete();
+            ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body=null;*/
+
+        }
     }
 
     // Conversions between screen coordinates and physical coordinates

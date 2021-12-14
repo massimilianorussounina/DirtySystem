@@ -349,6 +349,9 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             super();
             this.owner = gameObject;
             BodyDef shovelDef = new BodyDef();
+            if(invert ==1 ){
+                shovelDef.setAngle(-1.5708f);
+                }
             shovelDef.setType(BodyType.dynamicBody);
             DynamicPositionComponent dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
             coordinate_x=dynamicPositionComponent.coordinate_x;
@@ -379,17 +382,18 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             box2Shape.delete();
 
             shovelDef.delete();
-            createJoint(bulldozerPhysicsComponent.body,body,invert*(BulldozerDrawableComponent.width -BulldozerDrawableComponent.proportionalToBulldozer(2)), +BulldozerDrawableComponent.proportionalToBulldozer(0.2f),invert*(-BulldozerDrawableComponent.proportionalToBulldozer(0.8f)),-BulldozerDrawableComponent.proportionalToBulldozer(0.6f));
+            createJoint(bulldozerPhysicsComponent.body,body,invert*(BulldozerDrawableComponent.width -BulldozerDrawableComponent.proportionalToBulldozer(2))+invert*0.05f, +BulldozerDrawableComponent.proportionalToBulldozer(0.2f),invert*(-BulldozerDrawableComponent.proportionalToBulldozer(0.8f)),-BulldozerDrawableComponent.proportionalToBulldozer(0.6f));
 
         }
         private RevoluteJointDef createJoint(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2){
             RevoluteJointDef jointDef = new RevoluteJointDef();
             jointDef.setBodyA(a);
             jointDef.setBodyB(b);
+
             jointDef.setLocalAnchorA(local_x1,local_y1);
             jointDef.setLocalAnchorB(local_x2, local_y2);
             jointDef.setEnableLimit(true);
-            if(invert==1) {
+            if(invert==1) { //dx
                 jointDef.setUpperAngle(0);
                 jointDef.setLowerAngle(-1.5708f);
             }
@@ -557,10 +561,15 @@ class BridgePhysicsComponent extends PhysicsComponent{
    public BridgePhysicsComponent (GameObject gameObject,BridgePosition bridgePosition, TowerPhysicsComponent towerPhysicsComponent){
        this.owner = gameObject;
        BodyDef bdef = new BodyDef();
-       bdef.setAngle(1.5708f);
+       if(bridgePosition==BridgePosition.LEFT) {
+           bdef.setAngle(1.5708f);
+       }
+       else{
+           bdef.setAngle(0f);
+       }
        bdef.setType(BodyType.dynamicBody);
        DynamicPositionComponent  dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
-       bdef.setPosition(dynamicPositionComponent.coordinate_x+2f, dynamicPositionComponent.coordinate_y);
+       bdef.setPosition(dynamicPositionComponent.coordinate_x+2F, dynamicPositionComponent.coordinate_y);
        GameWorld gameWorld = gameObject.gameWorld;
        this.body = gameWorld.world.createBody(bdef);
        this.body.setUserData(this);
@@ -575,7 +584,7 @@ class BridgePhysicsComponent extends PhysicsComponent{
    }
 
     private RevoluteJointDef createJoint(Body a, Body b,float local_x1,float local_y1, float local_x2, float local_y2, BridgePosition bridgePosition, GameWorld gameWorld){
-        int speed = 10;
+        int speed = 0;
         RevoluteJointDef jointDef = new RevoluteJointDef();
         jointDef.setBodyA(a);
         jointDef.setBodyB(b);
@@ -587,14 +596,14 @@ class BridgePhysicsComponent extends PhysicsComponent{
 
 
         if(bridgePosition == BridgePosition.LEFT) {
-            jointDef.setUpperAngle(6.28319f);
-            jointDef.setLowerAngle(0);
-            jointDef.setMotorSpeed(speed);
+            jointDef.setUpperAngle(6.28319f); //6.28319f
+            jointDef.setLowerAngle(6.28319f);
+            //jointDef.setMotorSpeed(speed);
         }
         else{
             jointDef.setUpperAngle(0);
-            jointDef.setLowerAngle(-6.28319f);
-            jointDef.setMotorSpeed(-speed);
+            jointDef.setLowerAngle(0);
+            //jointDef.setMotorSpeed(-speed);
         }
 
         gameWorld.world.createJoint(jointDef);

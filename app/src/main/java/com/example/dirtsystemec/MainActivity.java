@@ -65,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
         GameWorld gw = new GameWorld(physicalSize, screenSize, this);
         gw.setGravity(-5,0);
 
+        GameObject.createBridge(0,0,-8.5f,4.5f,-2f,
+                -1f,-2f,1f,2f,1f,BridgePosition.RIGHT,gw);
+
+        GameObject.createBridge(0,7,-8.5f,-4.5f,2f,
+                -1f,2f,1f,-2f,1f,BridgePosition.LEFT,gw);
+
         gw.addGameObject(GameObject.createSea(-13.4f,0f,-12.5f,0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,7.0f,gw));
         gw.addGameObject(GameObject.createGround(-11.5f,-7.0f,gw));
@@ -84,15 +90,11 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createBarrel(-7f,3f,gw));
         gw.addGameObject(GameObject.createBarrel(-7f,-3f,gw));
 */
-        gw.addGameObject(GameObject.createBulldozer(-7,+17f,gw));
+        gw.addGameObject(GameObject.createBulldozer(-6,0f,gw,1));
         gw.addGameObject(GameObject.createBarrel(2f,-22f,gw));
         gw.addGameObject(GameObject.createBarrel(3f,-17.5f,gw));
 
-        GameObject.createBridge(0,0,-8.5f,4.5f,-2f,
-                               -1f,-2f,1f,2f,1f,BridgePosition.RIGHT,gw);
 
-        GameObject.createBridge(0,7,-8.5f,-4.5f,2f,
-                            -1f,2f,1f,-2f,1f,BridgePosition.LEFT,gw);
 
 
 

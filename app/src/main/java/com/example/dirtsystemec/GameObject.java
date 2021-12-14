@@ -9,6 +9,11 @@ public class GameObject extends Entity{
         super();
         this.gameWorld = gameWorld;
     }
+    GameObject(GameWorld gameWorld,String name){
+        super();
+        this.name= name;
+        this.gameWorld = gameWorld;
+    }
 
     public static GameObject createGround(float coordinate_x, float coordinate_y,GameWorld gameWorld) {
 
@@ -73,29 +78,34 @@ public class GameObject extends Entity{
         return gameObject;
     }
 
-    public static GameObject createBulldozer(float coordinate_x, float coordinate_y,GameWorld gameWorld) {
+    public static GameObject createBulldozer(float coordinate_x, float coordinate_y,GameWorld gameWorld,int invert) {
 
-        GameObject gameObject = new GameObject(gameWorld);
-        GameObject gameObjectWheelSx =  new GameObject(gameWorld);
-        GameObject gameObjectWheelDx =  new GameObject(gameWorld);
-        GameObject gameObjectWheelSx2 =  new GameObject(gameWorld);
-        GameObject gameObjectWheelDx2 =  new GameObject(gameWorld);
-        GameObject gameObjectDamper1 = new GameObject(gameWorld);
-        GameObject gameObjectDamper2 = new GameObject(gameWorld);
-        GameObject gameObjectDamper3 = new GameObject(gameWorld);
-        GameObject gameObjectDamper4 = new GameObject(gameWorld);
-        GameObject gameObjectShovel = new GameObject(gameWorld);
-        GameObject gameObjectWheelShovel = new GameObject(gameWorld);
+        GameObject gameObject = new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectWheelSx =  new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectWheelDx =  new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectWheelSx2 =  new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectWheelDx2 =  new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectDamper1 = new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectDamper2 = new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectDamper3 = new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectDamper4 = new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectShovel = new GameObject(gameWorld,"bulldozer");
+        GameObject gameObjectWheelShovel = new GameObject(gameWorld,"bulldozer");
 
 
 
         gameObject.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObject));
-        BulldozerDrawableComponent bulldozerDrawableComponent = new BulldozerDrawableComponent(gameObject);
+        BulldozerDrawableComponent bulldozerDrawableComponent = new BulldozerDrawableComponent(gameObject,invert);
         gameObject.addComponent(bulldozerDrawableComponent);
         BulldozerPhysicsComponent bulldozerPhysicsComponent = new BulldozerPhysicsComponent(gameObject);
         gameObject.addComponent(bulldozerPhysicsComponent);
 
-
+        gameObjectShovel.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectShovel));
+        BulldozerDrawableComponent.ShovelDrawableComponent shovelDrawableComponent=bulldozerDrawableComponent.new ShovelDrawableComponent(gameObjectShovel,bulldozerDrawableComponent);
+        BulldozerPhysicsComponent.ShovelPhysicsComponent shovelPhysicsComponent = bulldozerPhysicsComponent.new ShovelPhysicsComponent(gameObjectShovel,bulldozerDrawableComponent,bulldozerPhysicsComponent);
+        gameObjectShovel.addComponent(shovelDrawableComponent);
+        gameObjectShovel.addComponent(shovelPhysicsComponent);
+        gameWorld.addGameObject(gameObjectShovel);
 
         gameObjectDamper1.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectDamper1));
         gameObjectDamper1.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObject));
@@ -141,12 +151,7 @@ public class GameObject extends Entity{
         gameObjectWheelSx2.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSx2,bulldozerDrawableComponent,bulldozerPhysicsComponent,4,gameObjectDamper4));
         gameWorld.addGameObject(gameObjectWheelSx2);
 
-        gameObjectShovel.addComponent(new DynamicPositionComponent(coordinate_x,coordinate_y,gameObjectShovel));
-        BulldozerDrawableComponent.ShovelDrawableComponent shovelDrawableComponent=bulldozerDrawableComponent.new ShovelDrawableComponent(gameObjectShovel,bulldozerDrawableComponent);
-        BulldozerPhysicsComponent.ShovelPhysicsComponent shovelPhysicsComponent = bulldozerPhysicsComponent.new ShovelPhysicsComponent(gameObjectShovel,bulldozerDrawableComponent,bulldozerPhysicsComponent);
-        gameObjectShovel.addComponent(shovelDrawableComponent);
-        gameObjectShovel.addComponent(shovelPhysicsComponent);
-        gameWorld.addGameObject(gameObjectShovel);
+
 
         gameObjectWheelShovel.addComponent(shovelDrawableComponent.new WheelShovelDrawableComponent(gameObjectWheelShovel));
         gameObjectWheelShovel.addComponent(shovelPhysicsComponent.new WheelShovelPhysicsComponent(gameObjectWheelShovel));

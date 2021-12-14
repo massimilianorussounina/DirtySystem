@@ -146,11 +146,12 @@ public class GameWorld {
                 Log.i("body", "oh nooooooo");
             }
             world.destroyBody(((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body);
-           /* ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body.setUserData(null);
+           ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body.setUserData(null);
             ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body.delete();
-            ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body=null;*/
+            ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body=null;
 
         }
+        listBulldozer = new ArrayList<>();
     }
 
     // Conversions between screen coordinates and physical coordinates

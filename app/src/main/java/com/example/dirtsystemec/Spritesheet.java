@@ -12,10 +12,12 @@ public class Spritesheet {
     private final Rect src = new Rect();
     private final RectF dest = new RectF();
     private float screen_semi_width, screen_semi_height;
+    private int numberOfAnimations;
 
 
     public Spritesheet(Bitmap spritesheet, int numberOfAnimations){
         spriteSheet=spritesheet;
+        this.numberOfAnimations= numberOfAnimations;
         delay = new int[numberOfAnimations];
         start = new int[numberOfAnimations];
     }
@@ -52,5 +54,9 @@ public class Spritesheet {
 
     public int[] getDelay() {
         return delay;
+    }
+
+    public int getNumberOfAnimations() {
+        return numberOfAnimations;
     }
 }

@@ -324,6 +324,32 @@ class IncineratorDrawableComponent extends DrawableComponent {
     }
 }
 
+class ScoreBarDrawableComponent extends DrawableComponent {
+
+    private ScoreBarSprite scoreBarSprite;
+    ScoreBarDrawableComponent(GameObject gameObject){
+        super();
+        this.owner = gameObject;
+        GameWorld gameWorld = gameObject.gameWorld;
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inScaled = false;
+        Bitmap bitmapFire = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.scorebar, o);
+        float scoreBar_coordinate_x =  ((StaticPositionComponent)gameObject.getComponent(ComponentType.Position)).coordinate_x;
+        float scoreBar_coordinate_y =  ((StaticPositionComponent)gameObject.getComponent(ComponentType.Position)).coordinate_y;
+        scoreBarSprite = new ScoreBarSprite(gameWorld,new Spritesheet(bitmapFire,10),scoreBar_coordinate_x,scoreBar_coordinate_y);
+    }
+
+
+    @Override
+    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+        scoreBarSprite.draw(System.currentTimeMillis());
+    }
+}
+
+
+
+
+
 
 
 

@@ -168,5 +168,13 @@ public class GameObject extends Entity{
         return  gameObjectEnclosure;
     }
 
+    public static GameObject createScoreBar(float scoreBar_coordinate_x, float scoreBar_coordinate_y,GameWorld gameWorld) {
+
+        GameObject gameObject = new GameObject(gameWorld);
+        gameObject.addComponent(new StaticPositionComponent(scoreBar_coordinate_x,scoreBar_coordinate_y,gameObject));
+        gameObject.addComponent(new ScoreBarDrawableComponent(gameObject));
+        return gameObject;
+    }
+
 
 }

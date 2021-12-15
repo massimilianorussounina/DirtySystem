@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         gw.setGravity(-5,0);
 
         gw.addGameObject(GameObject.createEnclosure(XMAX,XMIN,YMAX,YMIN,gw));
+        gw.addGameObject(GameObject.createScoreBar(6.5f,22.7f,gw));
+
 
         GameObject.createBridge(0,0,-8.5f,4.5f,-2f,
                 -1f,-2f,1f,2f,1f,BridgePosition.RIGHT,gw);

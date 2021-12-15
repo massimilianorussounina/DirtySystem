@@ -23,7 +23,7 @@ public class SeaSprite {
         this.screen_semi_width = gw.toPixelsXLength( 5.3f)/2;
         this.screen_semi_height = gw.toPixelsYLength(2f)/2;
         spritesheet.setFrameSize(500,108,screen_semi_width,screen_semi_height);
-        for(int i = 0;i<15;i++){
+        for(int i = 0;i<spritesheet.getNumberOfAnimations();i++){
             spritesheet.setAnimation(i,500);
         }
     }

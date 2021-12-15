@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         GameWorld gw = new GameWorld(physicalSize, screenSize, this);
         gw.setGravity(-5,0);
 
+        gw.addGameObject(GameObject.createEnclosure(XMAX,XMIN,YMAX,YMIN,gw));
+
         GameObject.createBridge(0,0,-8.5f,4.5f,-2f,
                 -1f,-2f,1f,2f,1f,BridgePosition.RIGHT,gw);
 
@@ -90,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         gw.addGameObject(GameObject.createBarrel(-7f,3f,gw));
         gw.addGameObject(GameObject.createBarrel(-7f,-3f,gw));
 */
-        //commit
         gw.addGameObject(GameObject.createBulldozer(-6,0f,gw,1));
         gw.addGameObject(GameObject.createBarrel(2f,-22f,gw));
         gw.addGameObject(GameObject.createBarrel(3f,-17.5f,gw));

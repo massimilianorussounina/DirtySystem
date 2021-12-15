@@ -611,6 +611,27 @@ class BridgePhysicsComponent extends PhysicsComponent{
         return  jointDef;
     }
 
-
 }
 
+    class EnclosurePhysicsComponent extends PhysicsComponent{
+        private static final float THICKNESS = 0.1f;
+
+        public EnclosurePhysicsComponent (GameObject gameObject,float xmax,float xmin,float ymax,float ymin){
+            super();
+            BodyDef bdef = new BodyDef();
+            bdef.setType(BodyType.staticBody);
+            this.body = gameObject.gameWorld.world.createBody(bdef);
+            body.setUserData(this);
+            PolygonShape box = new PolygonShape();
+            box.setAsBox(xmax-xmin, THICKNESS, xmin+(xmax-xmin)/2, ymin, 0); // last is rotation angle
+            body.createFixture(box, 0);
+            box.setAsBox(xmax-xmin, THICKNESS, xmin+(xmax-xmin)/2, ymax, 0);
+            body.createFixture(box, 0);
+            box.setAsBox(THICKNESS, ymax-ymin, xmin, ymin+(ymax-ymin)/2, 0);
+            body.createFixture(box, 0);
+            box.setAsBox(THICKNESS, ymax-ymin, xmax, ymin+(ymax - ymin) / 2, 0);
+            body.createFixture(box, 0);
+            bdef.delete();
+            box.delete();
+        }
+    }

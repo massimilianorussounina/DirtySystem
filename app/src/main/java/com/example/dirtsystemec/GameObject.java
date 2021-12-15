@@ -157,15 +157,16 @@ public class GameObject extends Entity{
         gameObjectWheelShovel.addComponent(shovelPhysicsComponent.new WheelShovelPhysicsComponent(gameObjectWheelShovel));
         gameWorld.addGameObject(gameObjectWheelShovel);
 
-
-
-
-
-
         return gameObject;
     }
 
+    public static GameObject createEnclosure(float xmax, float xmin,float ymax,float ymin,GameWorld gameWorld){
+        GameObject gameObjectEnclosure = new GameObject(gameWorld);
 
+        gameObjectEnclosure.addComponent(new EnclosurePhysicsComponent(gameObjectEnclosure,xmax,xmin,ymax,ymin));
+
+        return  gameObjectEnclosure;
+    }
 
 
 }

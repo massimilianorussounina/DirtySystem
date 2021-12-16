@@ -2,34 +2,26 @@ package com.example.dirtsystemec;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
-import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.impl.TouchHandler;
-import com.google.fpl.liquidfun.ParticleSystem;
-import com.google.fpl.liquidfun.ParticleSystemDef;
 import com.google.fpl.liquidfun.World;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * The game objects and the viewport.
- *
- * Created by mfaella on 27/02/16.
- */
+
+
 public class GameWorld {
-    // Rendering
+
     final static int bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
     Bitmap buffer;
-    private Canvas canvas;
-    private Paint particlePaint;
+    private final Canvas canvas;
     private BulldozerPhysicsComponent bulldozer;
 
     // Simulation
@@ -42,20 +34,12 @@ public class GameWorld {
     private TouchConsumer touchConsumer;
     private TouchHandler touchHandler;
 
-    // Particles
-    ParticleSystem particleSystem;
-    private static final int MAXPARTICLECOUNT = 1000;
-    private static final float PARTICLE_RADIUS = 0.3f;
-
-    // Parameters for world simulation
-    private static final float TIME_STEP = 1 / 50f; // 50 fps
     private static final int VELOCITY_ITERATIONS = 8;
     private static final int POSITION_ITERATIONS = 3;
     private static final int PARTICLE_ITERATIONS = 3;
     final Activity activity;
     private Bitmap bitmap;
-    private Rect src = new Rect();
-    private RectF dest = new RectF();
+    private final RectF dest = new RectF();
 
     // Arguments are in physical simulation units.
     public GameWorld(Box physicalSize, Box screenSize, Activity theActivity) {
@@ -75,6 +59,7 @@ public class GameWorld {
         this.objects = new ArrayList<>();
         this.listBulldozer = new ArrayList<>();
         this.canvas = new Canvas(buffer);
+        Rect src = new Rect();
         src.set(0,0,1920,1080);
     }
 
@@ -85,13 +70,13 @@ public class GameWorld {
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
         y=bulldozer.body.getPositionY();
         if(y >= 20.5f){
-            deleteBuldozer();
-            addGameObject(GameObject.createBulldozer(-7.5f,y-0.5f,this,-1));
+            deleteBulldozer();
+            GameObject.createBulldozer(-7.5f,y-0.5f,this,-1);
             //creare il nuovo con -1
         }
         else if(y <=-20f){
-            deleteBuldozer();
-            addGameObject(GameObject.createBulldozer(-7.5f,y+0.5f,this,1));
+            deleteBulldozer();
+            GameObject.createBulldozer(-7.5f,y+0.5f,this,1);
             //creare il nuovo con 1
         }
 
@@ -108,12 +93,12 @@ public class GameWorld {
         canvas.drawARGB(100,126,193,243);
         objects.stream()
                 .map(go -> go.getComponent(ComponentType.Drawable))
-                .filter(d -> d != null)
+                .filter(Objects::nonNull)
                 .map(d -> (DrawableComponent) d)
                 .forEach(cc -> cc.draw(buffer));
     }
 
-    public synchronized GameObject addGameObject(GameObject obj)
+    public synchronized void addGameObject(GameObject obj)
     {
         objects.add(obj);
         if(obj.getComponent(ComponentType.Physics) instanceof BulldozerPhysicsComponent ){
@@ -122,7 +107,6 @@ public class GameWorld {
         if(obj.name != null && obj.name.compareTo("bulldozer")==0){
             this.listBulldozer.add(obj);
         }
-        return obj;
     }
 
     private void handleCollisions(Collection<Collision> collisions) {
@@ -139,7 +123,7 @@ public class GameWorld {
 
     }
 
-    public void deleteBuldozer(){
+    public void deleteBulldozer(){
         for (GameObject obj:listBulldozer){
             objects.remove(obj);
             if(((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body==null) {

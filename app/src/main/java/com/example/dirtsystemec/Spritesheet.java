@@ -6,35 +6,30 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 public class Spritesheet {
-    private Bitmap spriteSheet;
+    private final Bitmap spriteSheet;
     private int spriteWidth, spriteHeight;
-    private int[] start,delay;
+    private final int[] delay;
     private final Rect src = new Rect();
     private final RectF dest = new RectF();
     private float screen_semi_width, screen_semi_height;
-    private int numberOfAnimations;
+    private final int numberOfAnimations;
 
 
     public Spritesheet(Bitmap spritesheet, int numberOfAnimations){
-        spriteSheet=spritesheet;
-        this.numberOfAnimations= numberOfAnimations;
-        delay = new int[numberOfAnimations];
-        start = new int[numberOfAnimations];
+        this.spriteSheet = spritesheet;
+        this.numberOfAnimations = numberOfAnimations;
+        this.delay = new int[numberOfAnimations];
     }
 
     public void setFrameSize(int width, int height,float screen_semi_width,float screen_semi_height){
-        spriteHeight=height;
-        spriteWidth=width;
+        this.spriteHeight = height;
+        this.spriteWidth = width;
         this.screen_semi_width = screen_semi_width;
         this.screen_semi_height = screen_semi_height;
     }
+
     public void setAnimation(int animation,int delay){
         this.delay[animation]=delay;
-
-    }
-
-    public void drawFrame(Canvas canvas, int frame, float x, float y){
-
     }
 
     public void drawAnimation(Canvas canvas,int animation, int step, float x,float y){

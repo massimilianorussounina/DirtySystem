@@ -56,7 +56,7 @@ class CirclePhysicsComponent extends PhysicsComponent {
         this.body.setUserData(this);
 
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(width/2);
+        circleShape.setRadius(width);
         FixtureDef fixturedef = new FixtureDef();
         fixturedef.setShape(circleShape);
         fixturedef.setFriction(friction);
@@ -68,7 +68,7 @@ class CirclePhysicsComponent extends PhysicsComponent {
         circleShape.delete();
     }
 
-    CirclePhysicsComponent(String name,GameObject gameObject, BodyType bodyType,float coordinateX, float coordinateY, float width, float height) {
+   /* CirclePhysicsComponent(String name,GameObject gameObject, BodyType bodyType,float coordinateX, float coordinateY, float width, float height) {
         super(name);
         this.owner = gameObject;
         BodyDef bodyDef = new BodyDef();
@@ -84,7 +84,7 @@ class CirclePhysicsComponent extends PhysicsComponent {
         circleShape.setRadius(width/2);
         bodyDef.delete();
         circleShape.delete();
-    }
+    }*/
 
 }
 
@@ -104,6 +104,7 @@ class PolygonPhysicsComponent extends PhysicsComponent{
 
         this.body = gameWorld.world.createBody(bodyDef);
         this.body.setUserData(this);
+        this.body.setSleepingAllowed(false);
 
         PolygonShape box = new PolygonShape();
         box.setAsBox(width , height);
@@ -125,6 +126,7 @@ class PolygonPhysicsComponent extends PhysicsComponent{
 
         this.body = gameWorld.world.createBody(bodyDef);
         this.body.setUserData(this);
+        this.body.setSleepingAllowed(false);
 
         PolygonShape box = new PolygonShape();
         box.setAsBox(width , height);
@@ -153,6 +155,7 @@ class PolygonPhysicsComponent extends PhysicsComponent{
         GameWorld gameWorld = gameObject.gameWorld;
         this.body = gameWorld.world.createBody(bodyDef);
         body.setUserData(this);
+        this.body.setSleepingAllowed(false);
         PolygonShape triangle = new PolygonShape();
         triangle.setAsTriangle(coordinateLocalOneX,coordinateLocalOneY,
                 coordinateLocalTwoX, coordinateLocalTwoY,
@@ -177,7 +180,7 @@ class PolygonPhysicsComponent extends PhysicsComponent{
         GameWorld gameWorld = gameObject.gameWorld;
         this.body = gameWorld.world.createBody(bodyDef);
         this.body.setUserData(this);
-
+        this.body.setSleepingAllowed(false);
         PolygonShape box = new PolygonShape();
         box.setAsBox(width, height, centerX, centerY, angle);
         body.createFixture(box, density);

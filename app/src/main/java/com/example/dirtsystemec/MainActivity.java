@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         GameObject.createBarrel(10,1,gw);
         GameObject.createBarrel(3f,-17.5f,gw);
 
-        GameObject.createBulldozer(0,7,gw,-1);
+        GameObject.createBulldozer(0,10,gw,-1);
 
 
         renderView = new AndroidFastRenderView(this, gw);

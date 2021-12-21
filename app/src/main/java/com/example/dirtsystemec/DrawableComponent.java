@@ -335,6 +335,29 @@ class RectDrawableComponent extends DrawableComponent{
     }
 }
 
+class CircleDrawambleComponent extends  DrawableComponent{
+    float radius;
+    public CircleDrawambleComponent (String name,GameObject gameObject, float radius, int color){
+        super(name);
+        this.owner = gameObject;
+        GameWorld gameWorld = gameObject.gameWorld;
+        this.canvas = new Canvas(gameWorld.buffer);
+        this.radius=gameWorld.toPixelsYLength(radius);
+        this.paint.setColor(color);
+        this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+
+    }
+
+    @Override
+    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+        canvas.save();
+        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
+        canvas.drawCircle(coordinate_x,coordinate_y,this.radius,this.paint);
+        canvas.restore();
+    }
+}
+
 
 
 class BitmapDrawableComponent extends DrawableComponent {

@@ -7,7 +7,8 @@ enum ComponentType{
     Physics,
     AI,
     Drawable,
-    Position
+    Position,
+    Joint
 }
 
 

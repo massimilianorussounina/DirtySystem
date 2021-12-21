@@ -2,9 +2,14 @@ package com.example.dirtsystemec;
 
 
 public abstract class PositionComponent extends Component{
+    protected String name;
     protected float coordinateX, coordinateY;
     protected float coordinateLocalOneX, coordinateLocalOneY, coordinateLocalTwoX,
                 coordinateLocalTwoY, coordinateLocalThreeX, coordinateLocalThreeY;
+
+    PositionComponent(String name){
+        this.name = name;
+    }
 
         @Override
         public ComponentType type(){
@@ -16,8 +21,8 @@ public abstract class PositionComponent extends Component{
 class StaticPositionComponent extends PositionComponent{
 
 
-    StaticPositionComponent(float coordinateX,float coordinateY,GameObject gameObject){
-        super();
+    StaticPositionComponent(String name,float coordinateX,float coordinateY,GameObject gameObject){
+        super(name);
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.owner = gameObject;
@@ -26,8 +31,8 @@ class StaticPositionComponent extends PositionComponent{
 
 class DynamicPositionComponent extends PositionComponent{
 
-    DynamicPositionComponent(float coordinateX,float coordinateY, GameObject gameObject){
-        super();
+    DynamicPositionComponent(String name,float coordinateX,float coordinateY, GameObject gameObject){
+        super(name);
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.owner = gameObject;
@@ -35,8 +40,10 @@ class DynamicPositionComponent extends PositionComponent{
 }
 class TrianglePositionComponent extends PositionComponent{
 
-    public TrianglePositionComponent(float coordinateX,float coordinateY, float coordinateLocalOneX, float coordinateLocalOneY,
+    public TrianglePositionComponent(String name,float coordinateX,float coordinateY, float coordinateLocalOneX, float coordinateLocalOneY,
                                     float coordinateLocalTwoX, float coordinateLocalTwoY,float coordinateLocalThreeX, float coordinateLocalThreeY,GameObject gameObject) {
+
+        super(name);
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.coordinateLocalOneX = coordinateLocalOneX;

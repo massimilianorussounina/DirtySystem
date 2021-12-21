@@ -1,9 +1,16 @@
 package com.example.dirtsystemec;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+
+import com.google.fpl.liquidfun.BodyType;
+
 public class GameObject extends Entity{
 
     protected String name;
     protected GameWorld gameWorld;
+
 
     GameObject(GameWorld gameWorld){
         super();
@@ -15,67 +22,218 @@ public class GameObject extends Entity{
         this.gameWorld = gameWorld;
     }
 
-    public static void createGround(float coordinateX, float coordinateY,GameWorld gameWorld) {
-        GameObject gameObjectGround = new GameObject(gameWorld);
-        gameObjectGround.addComponent(new StaticPositionComponent(coordinateX,coordinateY,gameObjectGround));
-        gameObjectGround.addComponent(new GroundDrawableComponent(gameObjectGround));
-        gameObjectGround.addComponent(new GroundPhysicsComponent(gameObjectGround));
-        gameWorld.addGameObject(gameObjectGround);
-    }
+    public static void createBarrel(float coordinateX, float coordinateY,GameWorld gameWorld) {
+        GameObject gameObjectBarrel = new GameObject(gameWorld);
+
+        DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("barrel",coordinateX,coordinateY,gameObjectBarrel);
+        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("barrel",gameObjectBarrel,0.8f,0.8f,80f,R.drawable.barrel,0,0,187,184);
+        CirclePhysicsComponent circlePhysicsComponent = new CirclePhysicsComponent("barrel",gameObjectBarrel,BodyType.dynamicBody,coordinateX,coordinateY,bitmapDrawableComponent.width,bitmapDrawableComponent.height,0.5f,0.1f,1f);
 
 
-    public static void createBridge(float bridgeCoordinateX,float bridgeCoordinateY,
-                                    float towerCoordinateX, float towerCoordinateY,
-                                    float towerBodyCoordinateX1, float towerBodyCoordinateY1,
-                                    float towerBodyCoordinateX2, float towerBodyCoordinateY2,
-                                    float towerBodyCoordinateX3, float towerBodyCoordinateY3,
-                                    BridgePosition bridgePosition, GameWorld gameWorld){
-
-        /* Costruzione delle torri */
-        GameObject gameObjectTower = new GameObject(gameWorld);
-        gameObjectTower.addComponent(new TrianglePositionComponent(towerCoordinateX,towerCoordinateY,towerBodyCoordinateX1,towerBodyCoordinateY1,
-                                towerBodyCoordinateX2,towerBodyCoordinateY2,towerBodyCoordinateX3,towerBodyCoordinateY3,gameObjectTower));
-        gameObjectTower.addComponent(new TowerDrawableComponent(gameObjectTower,bridgePosition));
-        TowerPhysicsComponent towerPhysicsComponent = new TowerPhysicsComponent(gameObjectTower);
-        gameObjectTower.addComponent(towerPhysicsComponent);
-        gameWorld.addGameObject(gameObjectTower);
+        gameObjectBarrel.addComponent(dynamicPositionComponent);
+        gameObjectBarrel.addComponent(bitmapDrawableComponent);
+        gameObjectBarrel.addComponent(circlePhysicsComponent);
 
 
-        /* Costruzione delle ponte */
-
-        GameObject gameObjectBridge = new GameObject(gameWorld);
-        gameObjectBridge.addComponent(new DynamicPositionComponent(bridgeCoordinateX,bridgeCoordinateY,gameObjectBridge));
-        gameObjectBridge.addComponent(new BridgeDrawableComponent(gameObjectBridge));
-        gameObjectBridge.addComponent(new BridgePhysicsComponent(gameObjectBridge,bridgePosition,towerPhysicsComponent));
-        gameWorld.addGameObject(gameObjectBridge);
+        gameWorld.addGameObject(gameObjectBarrel);
     }
 
 
     public static void createIncinerator(float coordinateX, float coordinateY,float fireCoordinateX, float fireCoordinateY,GameWorld gameWorld) {
         GameObject gameObjectIncinerator = new GameObject(gameWorld);
-        gameObjectIncinerator.addComponent(new StaticPositionComponent(coordinateX,coordinateY,gameObjectIncinerator));
-        gameObjectIncinerator.addComponent(new IncineratorDrawableComponent(gameObjectIncinerator,fireCoordinateX,fireCoordinateY));
-        gameObjectIncinerator.addComponent(new IncineratorPhysicsComponent(gameObjectIncinerator));
+
+        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("incinerator",gameObjectIncinerator,2.5f,2.7f,0,R.drawable.incinerator,0,0,37,54);
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("incinerator",coordinateX,coordinateY,gameObjectIncinerator);
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("incinerator",gameObjectIncinerator,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width, bitmapDrawableComponent.height, 0f);
+
+        BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
+        bitmapFactory.inScaled = false;
+        Bitmap bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.fire_spritesheet,bitmapFactory );
+        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("incinerator",gameObjectIncinerator,new FireSprite(gameWorld,new Spritesheet(bitmap,8),fireCoordinateX,fireCoordinateY,
+                2.5f,2.0f,49,75,200,8));
+
+
+        gameObjectIncinerator.addComponent(spriteDrawableComponent);
+        gameObjectIncinerator.addComponent(staticPositionComponent);
+        gameObjectIncinerator.addComponent(bitmapDrawableComponent);
+        gameObjectIncinerator.addComponent(polygonPhysicsComponent);
         gameWorld.addGameObject(gameObjectIncinerator);
     }
 
-    public static void createBarrel(float coordinateX, float coordinateY,GameWorld gameWorld) {
-        GameObject gameObjectBarrel = new GameObject(gameWorld);
-        gameObjectBarrel.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectBarrel));
-        gameObjectBarrel.addComponent(new BarrelDrawableComponent(gameObjectBarrel));
-        gameObjectBarrel.addComponent(new BarrelPhysicsComponent(gameObjectBarrel));
-        gameWorld.addGameObject(gameObjectBarrel);
-    }
 
     public static void createSea(float coordinateX, float coordinateY,float seaCoordinateX, float seaCoordinateY,GameWorld gameWorld) {
+
         GameObject gameObjectSea = new GameObject(gameWorld);
-        gameObjectSea.addComponent(new StaticPositionComponent(coordinateX,coordinateY,gameObjectSea));
-        gameObjectSea.addComponent(new SeaDrawableComponent(gameObjectSea,seaCoordinateX,seaCoordinateY));
-        gameObjectSea.addComponent(new SeaPhysicsComponent(gameObjectSea));
+
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("sea",coordinateX,coordinateY,gameObjectSea);
+
+        BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
+        bitmapFactory.inScaled = false;
+        Bitmap bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.sea,bitmapFactory );
+        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("sea",gameObjectSea,new SeaSprite(gameWorld,new Spritesheet(bitmap,15),seaCoordinateX,seaCoordinateY,
+                5.3f,2.0f,500,108,500,15));
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("sea",gameObjectSea,BodyType.staticBody,coordinateX,coordinateY,spriteDrawableComponent.width, spriteDrawableComponent.height,0f);
+
+        gameObjectSea.addComponent(staticPositionComponent);
+        gameObjectSea.addComponent(spriteDrawableComponent);
+        gameObjectSea.addComponent(polygonPhysicsComponent);
+
+
         gameWorld.addGameObject(gameObjectSea);
     }
 
-    public static void createBulldozer(float coordinateX, float coordinateY,GameWorld gameWorld,int invert) {
+
+    public static void createGround(float coordinateX, float coordinateY,GameWorld gameWorld) {
+        GameObject gameObjectGround = new GameObject(gameWorld);
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("ground",coordinateX,coordinateY,gameObjectGround);
+        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("ground",gameObjectGround,9.0f,4.0f,0,R.drawable.ground,0,0,200,82);
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("ground",gameObjectGround,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width/2, bitmapDrawableComponent.height/2, 0.5f,0.4f,0.1f);
+
+
+        gameObjectGround.addComponent(staticPositionComponent);
+        gameObjectGround.addComponent(bitmapDrawableComponent);
+        gameObjectGround.addComponent(polygonPhysicsComponent);
+
+        gameWorld.addGameObject(gameObjectGround);
+    }
+
+
+    public static void createBridge(float bridgeCoordinateX, float bridgeCoordinateY,
+                                    float towerCoordinateXRight, float towerCoordinateYRight,
+                                    float towerBodyCoordinateX1Right, float towerBodyCoordinateY1Right,
+                                    float towerBodyCoordinateX2Right, float towerBodyCoordinateY2Right,
+                                    float towerBodyCoordinateX3Right, float towerBodyCoordinateY3Right,
+                                    float towerCoordinateXLeft, float towerCoordinateYLeft,
+                                    float towerBodyCoordinateX1Left, float towerBodyCoordinateY1Left,
+                                    float towerBodyCoordinateX2Left, float towerBodyCoordinateY2Left,
+                                    float towerBodyCoordinateX3Left, float towerBodyCoordinateY3Left,
+                                    GameWorld gameWorld){
+
+
+        /* Costruzione torre right */
+
+        GameObject gameObjectTowerRight = new GameObject(gameWorld);
+        TrianglePositionComponent trianglePositionComponentRight = new TrianglePositionComponent("torreRight",towerCoordinateXRight,towerCoordinateYRight,towerBodyCoordinateX1Right,towerBodyCoordinateY1Right,
+                towerBodyCoordinateX2Right,towerBodyCoordinateY2Right,towerBodyCoordinateX3Right,towerBodyCoordinateY3Right,gameObjectTowerRight);
+        BitmapDrawableComponent bitmapDrawableComponentRight = new BitmapDrawableComponent("torreRight",gameObjectTowerRight,4.0f,2.0f,0,R.drawable.right_bridge,0,0,423,208);
+        PolygonPhysicsComponent polygonPhysicsComponentRight = new PolygonPhysicsComponent("torreRight",gameObjectTowerRight, BodyType.staticBody,towerCoordinateXRight,towerCoordinateYRight,
+                towerBodyCoordinateX1Right,towerBodyCoordinateY1Right,towerBodyCoordinateX2Right,towerBodyCoordinateY2Right,towerBodyCoordinateX3Right,towerBodyCoordinateY3Right,
+                10f,0.4f,4f);
+
+        gameObjectTowerRight.addComponent(trianglePositionComponentRight);
+        gameObjectTowerRight.addComponent(bitmapDrawableComponentRight);
+        gameObjectTowerRight.addComponent(polygonPhysicsComponentRight);
+        gameWorld.addGameObject(gameObjectTowerRight);
+
+
+
+
+        /* Costruzione torre left */
+
+        GameObject gameObjectTowerLeft = new GameObject(gameWorld);
+        TrianglePositionComponent trianglePositionComponentLeft = new TrianglePositionComponent("torreLeft",towerCoordinateXLeft,towerCoordinateYLeft,towerBodyCoordinateX1Left,towerBodyCoordinateY1Left,
+                towerBodyCoordinateX2Left,towerBodyCoordinateY2Left,towerBodyCoordinateX3Left,towerBodyCoordinateY3Left,gameObjectTowerLeft);
+        BitmapDrawableComponent bitmapDrawableComponentLeft = new BitmapDrawableComponent("torreLeft",gameObjectTowerLeft,4.0f,2.0f,0,R.drawable.left_bridge,0,0,423,208);
+        PolygonPhysicsComponent polygonPhysicsComponentLeft = new PolygonPhysicsComponent("torreLeft",gameObjectTowerLeft, BodyType.staticBody,towerCoordinateXLeft,towerCoordinateYLeft,
+                towerBodyCoordinateX1Left,towerBodyCoordinateY1Left,towerBodyCoordinateX2Left,towerBodyCoordinateY2Left,towerBodyCoordinateX3Left,towerBodyCoordinateY3Left,
+                10f,0.4f,4f);
+        gameObjectTowerLeft.addComponent(trianglePositionComponentLeft);
+        gameObjectTowerLeft.addComponent(bitmapDrawableComponentLeft);
+        gameObjectTowerLeft.addComponent(polygonPhysicsComponentLeft);
+        gameWorld.addGameObject(gameObjectTowerLeft);
+
+
+
+
+
+        /* Costruzione ponte */
+
+        GameObject gameObjectBridge = new GameObject(gameWorld);
+        DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("bridge",bridgeCoordinateX,bridgeCoordinateY,gameObjectBridge);
+        RectDrawableComponent rectDrawableComponent = new RectDrawableComponent("bridge",gameObjectBridge,4.8f,0.2f, Color.argb(255, 32, 32, 32));
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("bridge",gameObjectBridge,BodyType.staticBody,bridgeCoordinateX,bridgeCoordinateY,rectDrawableComponent.width/2, rectDrawableComponent.height/2,0.5f);
+        gameObjectBridge.addComponent(dynamicPositionComponent);
+        gameObjectBridge.addComponent(rectDrawableComponent);
+        gameObjectBridge.addComponent(polygonPhysicsComponent);
+        gameWorld.addGameObject(gameObjectBridge);
+
+    }
+
+
+
+    public static void createEnclosure(float coordinateXMax, float coordinateXMin,float coordinateYMax,float coordinateYMin,GameWorld gameWorld){
+        GameObject gameObjectEnclosure = new GameObject(gameWorld);
+        PolygonPhysicsComponent polygonPhysicsComponentTop = new PolygonPhysicsComponent("top",gameObjectEnclosure,BodyType.staticBody,
+                (coordinateXMin + (coordinateXMax - coordinateXMin)/2), coordinateYMin,(coordinateXMax - coordinateXMin),0.1f, 0,0);
+
+
+        PolygonPhysicsComponent polygonPhysicsComponentBottom =  new PolygonPhysicsComponent("bot",gameObjectEnclosure,BodyType.staticBody,
+                (coordinateXMin + (coordinateXMax - coordinateXMin)/2), coordinateYMax,(coordinateXMax - coordinateXMin),0.1f, 0,0);
+
+
+
+        PolygonPhysicsComponent polygonPhysicsComponentLeft = new PolygonPhysicsComponent("left",gameObjectEnclosure,BodyType.staticBody,
+                coordinateXMin, (coordinateYMin + (coordinateYMax - coordinateYMin)/2),0.1f,(coordinateYMax - coordinateYMin), 0,0);
+
+
+        PolygonPhysicsComponent polygonPhysicsComponentRight = new PolygonPhysicsComponent("right",gameObjectEnclosure,BodyType.staticBody,
+                coordinateXMax, (coordinateYMin + (coordinateYMax - coordinateYMin)/2),0.1f,(coordinateYMax - coordinateYMin), 0,0);
+
+        gameObjectEnclosure.addComponent(polygonPhysicsComponentTop);
+        gameObjectEnclosure.addComponent(polygonPhysicsComponentBottom);
+        gameObjectEnclosure.addComponent(polygonPhysicsComponentLeft);
+        gameObjectEnclosure.addComponent(polygonPhysicsComponentRight);
+        gameWorld.addGameObject(gameObjectEnclosure);
+    }
+
+
+
+
+    public static void createBulldozer(float coordinateX, float coordinateY,GameWorld gameWorld,int invert){
+        GameObject gameObjectBulldozer = new GameObject(gameWorld,"bulldozer");
+
+        PolygonPhysicsComponent polygonPhysicsComponentChassis = new PolygonPhysicsComponent("chassis",gameObjectBulldozer,BodyType.dynamicBody
+        ,coordinateX,coordinateY,(2.8f/2),proportionalToBulldozer(1.5f,2.8f)/2,4f);
+
+        PolygonPhysicsComponent polygonPhysicsComponentCabin = new PolygonPhysicsComponent("cabin",gameObjectBulldozer,BodyType.dynamicBody
+                ,coordinateX,coordinateY,(invert*proportionalToBulldozer(2.3f,2.8f))/2,proportionalToBulldozer(1.5f,2.8f)/2,4f);
+
+        gameObjectBulldozer.addComponent(polygonPhysicsComponentChassis);
+        gameObjectBulldozer.addComponent(polygonPhysicsComponentCabin);
+
+
+        RevoluteJointComponent revoluteJointComponentBulldozer =  new RevoluteJointComponent(gameObjectBulldozer,polygonPhysicsComponentChassis.body,
+                polygonPhysicsComponentCabin.body,(invert*-proportionalToBulldozer(0.5f,2.8f)),-proportionalToBulldozer(1.2f,2.8f),0,0,0,
+                0,0);
+
+        gameObjectBulldozer.addComponent(revoluteJointComponentBulldozer);
+
+
+
+        RectDrawableComponent rectDrawableComponentChassis = new RectDrawableComponent("chassis",gameObjectBulldozer,2.8f,proportionalToBulldozer(1.5f,2.8f), Color.argb(50, 32, 32, 32));
+        RectDrawableComponent rectDrawableComponentCabin = new RectDrawableComponent("cabin",gameObjectBulldozer,proportionalToBulldozer(2.3f,2.8f),proportionalToBulldozer(1.5f,2.8f), Color.argb(255, 32, 32, 32));
+
+        gameObjectBulldozer.addComponent(rectDrawableComponentCabin);
+        gameObjectBulldozer.addComponent(rectDrawableComponentChassis);
+
+
+
+        gameWorld.addGameObject(gameObjectBulldozer);
+
+
+    }
+
+    public static float proportionalToBulldozer(float number,float constant){
+        float percent;
+        percent = (number * 100) / 4.4f;
+        return Math.round(((constant*percent) / 100f) * 100f) / 100f;
+    }
+
+
+
+
+
+   /* public static void createBulldozer1(float coordinateX, float coordinateY,GameWorld gameWorld,int invert) {
 
         GameObject gameObjectBulldozer = new GameObject(gameWorld,"bulldozer");
         GameObject gameObjectWheelSxOne =  new GameObject(gameWorld,"bulldozer");
@@ -97,7 +255,7 @@ public class GameObject extends Entity{
         gameObjectBulldozer.addComponent(bulldozerPhysicsComponent);
 
 
-        /* Costruzione pala caricatrice */
+
 
         gameObjectShovel.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectShovel));
         BulldozerDrawableComponent.ShovelDrawableComponent shovelDrawableComponent=bulldozerDrawableComponent.new ShovelDrawableComponent(gameObjectShovel,bulldozerDrawableComponent);
@@ -107,7 +265,6 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectShovel);
 
 
-        /* Costruzione ammortizzatori */
 
         gameObjectDamperOne.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectDamperOne));
         gameObjectDamperOne.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObjectBulldozer));
@@ -141,8 +298,6 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectDamperFour);
 
 
-        /* Costruzione ruote */
-
         gameObjectWheelDxTwo.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectWheelDxTwo));
         gameObjectWheelDxTwo.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelDxTwo,bulldozerDrawableComponent));
         gameObjectWheelDxTwo.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelDxTwo,bulldozerDrawableComponent,3,gameObjectDamperThree));
@@ -158,20 +313,14 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectWheelShovel);
 
        gameWorld.addGameObject(gameObjectBulldozer);
-    }
 
-    public static void createEnclosure(float coordinateXMax, float coordinateXMin,float coordinateYMax,float coordinateYMin,GameWorld gameWorld){
-        GameObject gameObjectEnclosure = new GameObject(gameWorld);
-        gameObjectEnclosure.addComponent(new EnclosurePhysicsComponent(gameObjectEnclosure,coordinateXMax,coordinateXMin,coordinateYMax,coordinateYMin));
-        gameWorld.addGameObject(gameObjectEnclosure);
-    }
+
+
 
     public static void createScoreBar(float scoreBarCoordinateX, float scoreBarCoordinateY,GameWorld gameWorld) {
         GameObject gameObjectScoreBar = new GameObject(gameWorld);
         gameObjectScoreBar.addComponent(new StaticPositionComponent(scoreBarCoordinateX,scoreBarCoordinateY,gameObjectScoreBar));
         gameObjectScoreBar.addComponent(new ScoreBarDrawableComponent(gameObjectScoreBar));
         gameWorld.addGameObject(gameObjectScoreBar);
-    }
-
-
+    }*/
 }

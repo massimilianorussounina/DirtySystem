@@ -5,23 +5,26 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-import com.google.fpl.liquidfun.CircleShape;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class DrawableComponent  extends Component{
 
+    protected String name;
     protected final Rect src = new Rect();
     protected final RectF dest = new RectF();
     protected Bitmap bitmap;
     protected Canvas canvas;
     protected Paint paint = new Paint();
-    protected Path path = new Path();
     protected float width, height,density;
     protected float screenSemiWidth, screenSemiHeight;
 
+    DrawableComponent(String name){
+        this.name = name;
+    }
 
     @Override
     public ComponentType type(){
@@ -31,7 +34,14 @@ public abstract class DrawableComponent  extends Component{
     public abstract void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle);
 
     public void draw(Bitmap buffer){
-        PhysicsComponent physicsComponent = (PhysicsComponent) owner.getComponent(ComponentType.Physics);
+        ArrayList physicsComponents = (ArrayList) owner.getComponent(ComponentType.Physics);
+        PhysicsComponent physicsComponent = null;
+
+        for (Object c: physicsComponents) {
+            physicsComponent = (PhysicsComponent) c;
+            if(physicsComponent.name.compareTo(this.name) == 0)break;
+        }
+
         if (physicsComponent != null) {
             float coordinate_x = physicsComponent.getBodyPositionX(),
                     coordinate_y = physicsComponent.getBodyPositionY(),
@@ -52,41 +62,10 @@ public abstract class DrawableComponent  extends Component{
     }
 }
 
-class GroundDrawableComponent extends DrawableComponent {
-
-
-    GroundDrawableComponent(GameObject gameObject){
-        super();
-        this.owner = gameObject;
-        GameWorld gameWorld = gameObject.gameWorld;
-        this.canvas = new Canvas(gameWorld.buffer);
-        BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
-        bitmapFactory.inScaled = false;
-        this.width = 9.0f;
-        this.height = 4.0f;
-        this.bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.ground, bitmapFactory);
-        this.screenSemiWidth = gameWorld.toPixelsXLength(width)/2;
-        this.screenSemiHeight = gameWorld.toPixelsYLength(height)/2;
-        src.set(0, 0, 200, 82);
-    }
 
 
 
-    @Override
-    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-        canvas.save();
-        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
-        dest.left = coordinate_x - screenSemiWidth;
-        dest.bottom = coordinate_y + screenSemiHeight;
-        dest.right = coordinate_x + screenSemiWidth;
-        dest.top = coordinate_y - screenSemiHeight;
-        canvas.drawBitmap(bitmap, src, dest, null);
-        canvas.restore();
-    }
-}
-
-
-class BulldozerDrawableComponent extends DrawableComponent {
+/*class BulldozerDrawableComponent extends DrawableComponent {
 
     private final float boxOneX;
     private final float boxOneY;
@@ -305,46 +284,7 @@ class BulldozerDrawableComponent extends DrawableComponent {
 }
 
 
-
-
-class IncineratorDrawableComponent extends DrawableComponent {
-
-    private final FireSprite fireSprite;
-    IncineratorDrawableComponent(GameObject gameObject,float fire_coordinate_x, float fire_coordinate_y){
-        super();
-        this.owner = gameObject;
-        GameWorld gameWorld = gameObject.gameWorld;
-        this.canvas = new Canvas(gameWorld.buffer);
-        this.width = 2.5f;
-        this.height = 2.0f;
-        screenSemiWidth = gameWorld.toPixelsXLength(width)/2;
-        screenSemiHeight = gameWorld.toPixelsYLength(height)/2;
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inScaled = false;
-        Bitmap bitmapFire = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.fire_spritesheet, o);
-        fireSprite = new FireSprite(gameWorld,new Spritesheet(bitmapFire,8),fire_coordinate_x,fire_coordinate_y);
-        BitmapFactory.Options b = new BitmapFactory.Options();
-        b.inScaled = false;
-        bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.incinerator, b);
-        src.set(0, 0, 37, 54);
-    }
-
-
-    @Override
-    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-        canvas.save();
-        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
-        dest.left = coordinate_x - screenSemiWidth;
-        dest.bottom = coordinate_y + screenSemiHeight;
-        dest.right = coordinate_x + screenSemiWidth;
-        dest.top = coordinate_y - screenSemiHeight;
-        canvas.drawBitmap(bitmap, src, dest, null);
-        canvas.restore();
-        fireSprite.draw(System.currentTimeMillis());
-    }
-}
-
-class ScoreBarDrawableComponent extends DrawableComponent {
+/*class ScoreBarDrawableComponent extends DrawableComponent {
 
     private final ScoreBarSprite scoreBarSprite;
     ScoreBarDrawableComponent(GameObject gameObject){
@@ -364,129 +304,23 @@ class ScoreBarDrawableComponent extends DrawableComponent {
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
         scoreBarSprite.draw(System.currentTimeMillis());
     }
-}
+}*/
 
 
 
 
+class RectDrawableComponent extends DrawableComponent{
 
 
-
-
-class TowerDrawableComponent extends DrawableComponent {
-
-    TowerDrawableComponent(GameObject gameObject,BridgePosition bridgePosition){
-        super();
-        this.owner = gameObject;
-        GameWorld gameWorld= gameObject.gameWorld;
-        this.canvas = new Canvas(gameWorld.buffer);
-        this.width = 4f;
-        this.height = 2f;
-        if(bridgePosition == BridgePosition.RIGHT){
-            BitmapFactory.Options b = new BitmapFactory.Options();
-            b.inScaled = false;
-            bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.right_bridge, b);
-        }else{
-            BitmapFactory.Options b = new BitmapFactory.Options();
-            b.inScaled = false;
-            bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.left_bridge, b);
-        }
-
-        screenSemiWidth = gameWorld.toPixelsXLength(width)/2;
-        screenSemiHeight = gameWorld.toPixelsYLength(height)/2;
-        int color = Color.argb(250, 133, 133, 131);
-        paint.setColor(color);
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        src.set(0, 0, 423, 208);
-    }
-
-
-
-    @Override
-    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-        canvas.save();
-        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
-        dest.left = coordinate_x - screenSemiWidth;
-        dest.bottom = coordinate_y + screenSemiHeight;
-        dest.right = coordinate_x + screenSemiWidth;
-        dest.top = coordinate_y - screenSemiHeight;
-        canvas.drawBitmap(bitmap, src, dest, null);
-        canvas.restore();
-    }
-}
-
-
-class BarrelDrawableComponent extends DrawableComponent {
-
-    BarrelDrawableComponent(GameObject gameObject){
-        super();
+    public RectDrawableComponent (String name,GameObject gameObject, float width, float height, int color){
+        super(name);
         this.owner = gameObject;
         GameWorld gameWorld = gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
-        this.width = 0.8f;
-        this.height = 0.8f;
-        this.density = 100.0f;
-        screenSemiWidth = gameWorld.toPixelsXLength(width)/2;
-        screenSemiHeight = gameWorld.toPixelsYLength(height)/2;
-        CircleShape box = new CircleShape();
-        box.setRadius(width/2);
-        BitmapFactory.Options b = new BitmapFactory.Options();
-        b.inScaled = false;
-        bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.barrel, b);
-        src.set(0, 0, 187, 184);
-    }
-
-    @Override
-    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-        canvas.save();
-        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
-        dest.left = coordinate_x - screenSemiWidth;
-        dest.bottom = coordinate_y + screenSemiHeight;
-        dest.right = coordinate_x + screenSemiWidth;
-        dest.top = coordinate_y - screenSemiHeight;
-        canvas.drawBitmap(bitmap, src, dest, null);
-        canvas.restore();
-    }
-}
-
-class SeaDrawableComponent extends DrawableComponent {
-
-    private SeaSprite seaSprite;
-
-    public SeaDrawableComponent(GameObject gameObject,float sea_coordinate_x, float sea_coordinate_y){
-        super();
-        this.owner = gameObject;
-        GameWorld gameWorld = gameObject.gameWorld;
-        this.canvas = new Canvas(gameWorld.buffer);
-        this.width = 5.3f;
-        this.height = 0.1f;
-        screenSemiWidth = gameWorld.toPixelsXLength(width)/2;
-        screenSemiHeight = gameWorld.toPixelsYLength(height)/2;
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inScaled = false;
-        Bitmap bitmapSea = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.sea, o);
-        seaSprite = new SeaSprite(gameWorld,new Spritesheet(bitmapSea,18),sea_coordinate_x,sea_coordinate_y);
-    }
-
-
-    @Override
-    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-       seaSprite.draw(System.currentTimeMillis());
-    }
-}
-
-class BridgeDrawableComponent extends DrawableComponent{
-    float width,height;
-    public BridgeDrawableComponent (GameObject gameObject){
-        super();
-        this.owner = gameObject;
-        GameWorld gameWorld = gameObject.gameWorld;
-        this.canvas = new Canvas(gameWorld.buffer);
-        this.width = 2.4f;
-        this.height = 0.2f;
+        this.width = width;
+        this.height = height;
         this.screenSemiWidth = gameWorld.toPixelsXLength(this.width)/2;
         this.screenSemiHeight = gameWorld.toPixelsYLength(this.height)/2;
-        int color = Color.argb(255, 32, 32, 32);
         this.paint.setColor(color);
         this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
@@ -500,5 +334,62 @@ class BridgeDrawableComponent extends DrawableComponent{
         canvas.restore();
     }
 }
+
+
+
+class BitmapDrawableComponent extends DrawableComponent {
+
+    BitmapDrawableComponent(String name,GameObject gameObject, float width, float height,
+                            float density, int drawable, int left, int top, int right,
+                            int bottom){
+        super(name);
+        this.owner = gameObject;
+        GameWorld gameWorld = gameObject.gameWorld;
+        this.canvas = new Canvas(gameWorld.buffer);
+        this.width = width;
+        this.height = height;
+        this.density = density;
+        screenSemiWidth = gameWorld.toPixelsXLength(width)/2;
+        screenSemiHeight = gameWorld.toPixelsYLength(height)/2;
+        BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
+        bitmapFactory.inScaled = false;
+        bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(),drawable, bitmapFactory);
+        src.set(left, top, right, bottom);
+    }
+
+    @Override
+    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+        canvas.save();
+        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
+        dest.left = coordinate_x - screenSemiWidth;
+        dest.bottom = coordinate_y + screenSemiHeight;
+        dest.right = coordinate_x + screenSemiWidth;
+        dest.top = coordinate_y - screenSemiHeight;
+        canvas.drawBitmap(bitmap, src, dest, null);
+        canvas.restore();
+    }
+}
+
+
+
+class SpriteDrawableComponent extends DrawableComponent {
+
+    private final Sprite sprite;
+
+    public SpriteDrawableComponent(String name,GameObject gameObject,Sprite sprite){
+        super(name);
+        this.owner = gameObject;
+        GameWorld gameWorld = gameObject.gameWorld;
+        this.canvas = new Canvas(gameWorld.buffer);
+        this.sprite = sprite;
+    }
+
+
+    @Override
+    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+        sprite.draw(System.currentTimeMillis());
+    }
+}
+
 
 

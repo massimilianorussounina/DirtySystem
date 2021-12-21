@@ -1,5 +1,5 @@
 package com.example.dirtsystemec;
 
-public enum BridgePosition {
+public enum TowerPosition {
     LEFT,RIGHT
 }

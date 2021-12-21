@@ -60,13 +60,10 @@ public class MainActivity extends AppCompatActivity {
         gw.setGravity(-5,0);
 
         GameObject.createEnclosure(coordinateXMax,coordinateXMin,coordinateYMax,coordinateYMin,gw);
-        GameObject.createScoreBar(6.5f,22.7f,gw);
 
+        GameObject.createBridge(-7.6f,0,-8.5f,4.5f,-2f,-1f,-2f,1f,2f,1f
+                ,-8.5f,-4.5f,2f,-1f,2f,1f,-2f,1f,gw);
 
-        GameObject.createBridge(0,0,-8.5f,4.5f,-2f,
-                -1f,-2f,1f,2f,1f,BridgePosition.RIGHT,gw);
-        GameObject.createBridge(0,7,-8.5f,-4.5f,2f,
-                -1f,2f,1f,-2f,1f,BridgePosition.LEFT,gw);
 
         GameObject.createSea(-13.4f,0f,-12.5f,0f,gw);
         GameObject.createGround(-11.5f,7.0f,gw);
@@ -77,20 +74,14 @@ public class MainActivity extends AppCompatActivity {
         GameObject.createGround(-11.5f,-17.0f,gw);
 
 
-        //gw.addGameObject(GameObject.createObstacle(-9.5f,-6.5f,4f,4f,0f,4f,0f,0f,gw));
+        GameObject.createIncinerator(-12.5f,-22.7f,-10.1f,-22.7f,gw);
+        GameObject.createIncinerator(-12.5f,22.7f,-10.1f,22.7f,gw);
 
 
-        GameObject.createIncinerator(-12.5f,-22.7f,-10.5f,-22.7f,gw);
-        GameObject.createIncinerator(-12.5f,22.7f,-10.5f,22.7f,gw);
-
-        /*
-        gw.addGameObject(GameObject.createBarrel(-7f,3f,gw));
-        gw.addGameObject(GameObject.createBarrel(-7f,-3f,gw));
-*/
-        GameObject.createBulldozer(-6,0f,gw,1);
-        GameObject.createBarrel(2f,-22f,gw);
+        GameObject.createBarrel(10,1,gw);
         GameObject.createBarrel(3f,-17.5f,gw);
 
+        GameObject.createBulldozer(0,7,gw,-1);
 
 
         renderView = new AndroidFastRenderView(this, gw);

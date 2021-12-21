@@ -22,7 +22,7 @@ public class GameWorld {
     final static int bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
     Bitmap buffer;
     private final Canvas canvas;
-    private BulldozerPhysicsComponent bulldozer;
+    //private BulldozerPhysicsComponent bulldozer;
 
     // Simulation
     List<GameObject> objects;
@@ -68,7 +68,7 @@ public class GameWorld {
         float y;
         // advance the physics simulation
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
-        y=bulldozer.body.getPositionY();
+        /*y=bulldozer.body.getPositionY();
         if(y >= 20.5f){
             deleteBulldozer();
             GameObject.createBulldozer(-7.5f,y-0.5f,this,-1);
@@ -78,7 +78,7 @@ public class GameWorld {
             deleteBulldozer();
             GameObject.createBulldozer(-7.5f,y+0.5f,this,1);
             //creare il nuovo con 1
-        }
+        }*/
 
 
 
@@ -91,22 +91,27 @@ public class GameWorld {
 
     public synchronized void render() {
         canvas.drawARGB(100,126,193,243);
-        objects.stream()
-                .map(go -> go.getComponent(ComponentType.Drawable))
-                .filter(Objects::nonNull)
-                .map(d -> (DrawableComponent) d)
-                .forEach(cc -> cc.draw(buffer));
+
+        for(GameObject gameObject: objects){
+            List<Component> components = gameObject.getComponent(ComponentType.Drawable);
+            if(components != null){
+                for (Component component: components) {
+                    ((DrawableComponent) component).draw(buffer);
+                }
+            }
+        }
+
     }
 
     public synchronized void addGameObject(GameObject obj)
     {
         objects.add(obj);
-        if(obj.getComponent(ComponentType.Physics) instanceof BulldozerPhysicsComponent ){
-            this.bulldozer=  (BulldozerPhysicsComponent) obj.getComponent(ComponentType.Physics);
+       /* if(obj.getComponent(ComponentType.Physics) instanceof BulldozerPhysicsComponent ){
+            //this.bulldozer=  (BulldozerPhysicsComponent) obj.getComponent(ComponentType.Physics);
         }
         if(obj.name != null && obj.name.compareTo("bulldozer")==0){
             this.listBulldozer.add(obj);
-        }
+        }*/
     }
 
     private void handleCollisions(Collection<Collision> collisions) {

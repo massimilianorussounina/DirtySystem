@@ -5,15 +5,18 @@ import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.CircleShape;
-import com.google.fpl.liquidfun.DistanceJointDef;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
-import com.google.fpl.liquidfun.PrismaticJointDef;
-import com.google.fpl.liquidfun.RevoluteJointDef;
+
 
 public class PhysicsComponent  extends Component{
 
     protected Body body;
+    protected String name;
+
+    PhysicsComponent(String name){
+        this.name = name;
+    }
 
     @Override
     public ComponentType type(){
@@ -34,30 +37,150 @@ public class PhysicsComponent  extends Component{
 }
 
 
-class GroundPhysicsComponent extends PhysicsComponent{
 
-    GroundPhysicsComponent(GameObject gameObject){
-        super();
+class CirclePhysicsComponent extends PhysicsComponent {
+
+    CirclePhysicsComponent(String name,GameObject gameObject, BodyType bodyType, float coordinateX, float coordinateY, float width, float height,
+                           float friction, float restitution, float density) {
+        super(name);
+        this.name = name;
         this.owner = gameObject;
         BodyDef bodyDef = new BodyDef();
         bodyDef.setAngle(1.5708f);
-        bodyDef.setType(BodyType.staticBody);
-        StaticPositionComponent staticPositionComponent = (StaticPositionComponent) gameObject.getComponent(ComponentType.Position);
-        bodyDef.setPosition(staticPositionComponent.coordinateX, staticPositionComponent.coordinateY);
+        bodyDef.setType(bodyType);
+        bodyDef.setPosition(coordinateX, coordinateY);
+        GameWorld gameWorld = gameObject.gameWorld;
 
+        this.body = gameWorld.world.createBody(bodyDef);
+        this.body.setSleepingAllowed(false);
+        this.body.setUserData(this);
+
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(width/2);
+        FixtureDef fixturedef = new FixtureDef();
+        fixturedef.setShape(circleShape);
+        fixturedef.setFriction(friction);
+        fixturedef.setRestitution(restitution);
+        fixturedef.setDensity(density);
+        body.createFixture(fixturedef);
+        fixturedef.delete();
+        bodyDef.delete();
+        circleShape.delete();
+    }
+
+    CirclePhysicsComponent(String name,GameObject gameObject, BodyType bodyType,float coordinateX, float coordinateY, float width, float height) {
+        super(name);
+        this.owner = gameObject;
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.setAngle(1.5708f);
+        bodyDef.setType(bodyType);
+        bodyDef.setPosition(coordinateX,coordinateY);
+        GameWorld gameWorld = gameObject.gameWorld;
+
+        this.body = gameWorld.world.createBody(bodyDef);
+        this.body.setSleepingAllowed(false);
+        this.body.setUserData(this);
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(width/2);
+        bodyDef.delete();
+        circleShape.delete();
+    }
+
+}
+
+
+class PolygonPhysicsComponent extends PhysicsComponent{
+
+
+    PolygonPhysicsComponent(String name,GameObject gameObject,BodyType bodyType,float coordinateX, float coordinateY,float width, float height, float density){
+        super(name);
+        this.owner = gameObject;
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.setAngle(1.5708f);
+        bodyDef.setType(bodyType);
+
+        bodyDef.setPosition(coordinateX, coordinateY);
+        GameWorld gameWorld = gameObject.gameWorld;
+
+        this.body = gameWorld.world.createBody(bodyDef);
+        this.body.setUserData(this);
+
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(width , height);
+        body.createFixture(box, density);
+        bodyDef.delete();
+        box.delete();
+    }
+
+    PolygonPhysicsComponent(String name,GameObject gameObject,BodyType bodyType,float coordinateX, float coordinateY,float width, float height, float density,float restitution,
+                            float friction){
+        super(name);
+        this.owner = gameObject;
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.setAngle(1.5708f);
+        bodyDef.setType(bodyType);
+
+        bodyDef.setPosition(coordinateX, coordinateY);
+        GameWorld gameWorld = gameObject.gameWorld;
+
+        this.body = gameWorld.world.createBody(bodyDef);
+        this.body.setUserData(this);
+
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(width , height);
+        FixtureDef fixturedef = new FixtureDef();
+        fixturedef.setShape(box);
+        fixturedef.setFriction(friction);
+        fixturedef.setRestitution(restitution);
+        fixturedef.setDensity(density);
+        body.createFixture(fixturedef);
+        bodyDef.delete();
+        box.delete();
+    }
+
+
+    PolygonPhysicsComponent(String name, GameObject gameObject,BodyType bodyType,float coordinateX, float coordinateY,
+                            float coordinateLocalOneX, float coordinateLocalOneY,
+                            float coordinateLocalTwoX, float coordinateLocalTwoY,
+                            float coordinateLocalThreeX, float coordinateLocalThreeY,
+                            float density,float restitution, float friction){
+        super(name);
+        this.owner = gameObject;
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.setPosition(coordinateX,coordinateY);
+        bodyDef.setType(bodyType);
+        bodyDef.setAngle(1.5708f);
         GameWorld gameWorld = gameObject.gameWorld;
         this.body = gameWorld.world.createBody(bodyDef);
         body.setUserData(this);
+        PolygonShape triangle = new PolygonShape();
+        triangle.setAsTriangle(coordinateLocalOneX,coordinateLocalOneY,
+                coordinateLocalTwoX, coordinateLocalTwoY,
+                coordinateLocalThreeX, coordinateLocalThreeY);
+        FixtureDef fixturedef = new FixtureDef();
+        fixturedef.setShape(triangle);
+        fixturedef.setFriction(friction);
+        fixturedef.setRestitution(restitution);
+        fixturedef.setDensity(density);
+        body.createFixture(fixturedef);
+        fixturedef.delete();
+        bodyDef.delete();
+        triangle.delete();
+    }
+
+
+    PolygonPhysicsComponent(String name,GameObject gameObject,BodyType bodyType,float centerX, float centerY,float width, float height, float angle,float density){
+        super(name);
+        this.owner = gameObject;
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.setType(bodyType);
+        GameWorld gameWorld = gameObject.gameWorld;
+        this.body = gameWorld.world.createBody(bodyDef);
+        this.body.setUserData(this);
 
         PolygonShape box = new PolygonShape();
-        GroundDrawableComponent groundDrawableComponent = (GroundDrawableComponent) gameObject.getComponent(ComponentType.Drawable);
-        box.setAsBox(groundDrawableComponent.width/2 , groundDrawableComponent.height/2);
-        FixtureDef fixturedef = new FixtureDef();
-        fixturedef.setShape(box);
-        fixturedef.setFriction(0.1f);
-        fixturedef.setRestitution(0.4f);
-        fixturedef.setDensity(0.5f);
-        body.createFixture(fixturedef);
+        box.setAsBox(width, height, centerX, centerY, angle);
+        body.createFixture(box, density);
         bodyDef.delete();
         box.delete();
     }
@@ -65,7 +188,11 @@ class GroundPhysicsComponent extends PhysicsComponent{
 }
 
 
-class BulldozerPhysicsComponent extends PhysicsComponent{
+
+
+
+
+/*class BulldozerPhysicsComponent extends PhysicsComponent{
     float boxOneX,boxOneY,boxTwoX,boxTwoY,boxThreeX,boxThreeY;
     float width,height,radius;
     int invert;
@@ -428,186 +555,8 @@ class BulldozerPhysicsComponent extends PhysicsComponent{
             }
         }
     }
-}
-
-class TowerPhysicsComponent extends PhysicsComponent{
+}*/
 
 
-    TowerPhysicsComponent(GameObject gameObject){
-        super();
-        this.owner = gameObject;
-        BodyDef bodyDef = new BodyDef();
-        PositionComponent positionComponent = (TrianglePositionComponent) owner.getComponent(ComponentType.Position);
-        bodyDef.setPosition(positionComponent.coordinateX, positionComponent.coordinateY);
-        bodyDef.setType(BodyType.staticBody);
-        bodyDef.setAngle(1.5708f);
-        GameWorld gameWorld = gameObject.gameWorld;
-        this.body = gameWorld.world.createBody(bodyDef);
-        body.setUserData(this);
-        PolygonShape triangle = new PolygonShape();
-        triangle.setAsTriangle(positionComponent.coordinateLocalOneX, positionComponent.coordinateLocalOneY, positionComponent.coordinateLocalTwoX, positionComponent.coordinateLocalTwoY, positionComponent.coordinateLocalThreeX, positionComponent.coordinateLocalThreeY);
-        FixtureDef fixturedef = new FixtureDef();
-        fixturedef.setShape(triangle);
-        fixturedef.setFriction(10f);
-        fixturedef.setRestitution(0.4f);
-        fixturedef.setDensity(4f);
-        body.createFixture(fixturedef);
-        fixturedef.delete();
-        bodyDef.delete();
-        triangle.delete();
-    }
-}
-
-class IncineratorPhysicsComponent extends PhysicsComponent{
 
 
-    IncineratorPhysicsComponent(GameObject gameObject){
-        super();
-        this.owner = gameObject;
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.setAngle(1.5708f);
-        bodyDef.setType(BodyType.staticBody);
-        StaticPositionComponent staticPositionComponent = (StaticPositionComponent) gameObject.getComponent(ComponentType.Position);
-        bodyDef.setPosition(staticPositionComponent.coordinateX, staticPositionComponent.coordinateY);
-        GameWorld gameWorld = gameObject.gameWorld;
-        this.body = gameWorld.world.createBody(bodyDef);
-        this.body.setUserData(this);
-        PolygonShape box = new PolygonShape();
-        IncineratorDrawableComponent incineratorDrawableComponent = (IncineratorDrawableComponent) gameObject.getComponent(ComponentType.Drawable);
-        box.setAsBox(incineratorDrawableComponent.width/2 , incineratorDrawableComponent.height/2);
-        body.createFixture(box, 0);
-        bodyDef.delete();
-        box.delete();
-    }
-}
-
-class BarrelPhysicsComponent extends PhysicsComponent{
-
-    BarrelPhysicsComponent(GameObject gameObject){
-        super();
-        this.owner = gameObject;
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.setAngle(1.5708f);
-        bodyDef.setType(BodyType.dynamicBody);
-        DynamicPositionComponent dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
-        bodyDef.setPosition(dynamicPositionComponent.coordinateX, dynamicPositionComponent.coordinateY);
-        GameWorld gameWorld = gameObject.gameWorld;
-
-        this.body = gameWorld.world.createBody(bodyDef);
-        this.body.setSleepingAllowed(false);
-        this.body.setUserData(this);
-        BarrelDrawableComponent barrelDrawableComponent = (BarrelDrawableComponent) gameObject.getComponent(ComponentType.Drawable);
-        CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(barrelDrawableComponent.width/2);
-        FixtureDef fixturedef = new FixtureDef();
-        fixturedef.setShape(circleShape);
-        fixturedef.setFriction(0.5f);
-        fixturedef.setRestitution(0.1f);
-        fixturedef.setDensity(1f);
-        body.createFixture(fixturedef);
-        fixturedef.delete();
-        bodyDef.delete();
-        circleShape.delete();
-    }
-}
-
-class SeaPhysicsComponent extends PhysicsComponent{
-
-    SeaPhysicsComponent(GameObject gameObject){
-        super();
-        this.owner = gameObject;
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.setAngle(1.5708f);
-        bodyDef.setType(BodyType.staticBody);
-        StaticPositionComponent staticPositionComponent = (StaticPositionComponent) gameObject.getComponent(ComponentType.Position);
-        bodyDef.setPosition(staticPositionComponent.coordinateX, staticPositionComponent.coordinateY);
-        GameWorld gameWorld = gameObject.gameWorld;
-        this.body = gameWorld.world.createBody(bodyDef);
-        this.body.setUserData(this);
-        PolygonShape box = new PolygonShape();
-        SeaDrawableComponent seaDrawableComponent = (SeaDrawableComponent) gameObject.getComponent(ComponentType.Drawable);
-        box.setAsBox(seaDrawableComponent.width/2 , seaDrawableComponent.height/2);
-        body.createFixture(box, 0);
-        bodyDef.delete();
-        box.delete();
-    }
-
-}
-
-class BridgePhysicsComponent extends PhysicsComponent{
-
-   public BridgePhysicsComponent (GameObject gameObject,BridgePosition bridgePosition, TowerPhysicsComponent towerPhysicsComponent){
-       this.owner = gameObject;
-       BodyDef bodyDef = new BodyDef();
-
-       if(bridgePosition==BridgePosition.LEFT) bodyDef.setAngle(1.5708f);
-       else bodyDef.setAngle(0f);
-
-       bodyDef.setType(BodyType.dynamicBody);
-       DynamicPositionComponent  dynamicPositionComponent = (DynamicPositionComponent) gameObject.getComponent(ComponentType.Position);
-       bodyDef.setPosition(dynamicPositionComponent.coordinateX+2f, dynamicPositionComponent.coordinateY);
-       GameWorld gameWorld = gameObject.gameWorld;
-       this.body = gameWorld.world.createBody(bodyDef);
-       this.body.setUserData(this);
-       PolygonShape box = new PolygonShape();
-       BridgeDrawableComponent bridgeDrawableComponet = (BridgeDrawableComponent) gameObject.getComponent(ComponentType.Drawable);
-       box.setAsBox(bridgeDrawableComponet.width/2 , bridgeDrawableComponet.height/2);
-       body.createFixture(box, 4f);
-       bodyDef.delete();
-       box.delete();
-
-       if (bridgePosition == BridgePosition.LEFT) createJoint(this.body, towerPhysicsComponent.body,-1.3f,0,2f,-0.9f,bridgePosition,gameWorld);
-       else createJoint(this.body, towerPhysicsComponent.body,1.3f,0,-2f,-0.9f,bridgePosition,gameWorld);
-   }
-
-   private void createJoint(Body a, Body b, float localOneX, float localOneY, float localTwoX, float localTwoY, BridgePosition bridgePosition, GameWorld gameWorld){
-
-        RevoluteJointDef jointDef = new RevoluteJointDef();
-        jointDef.setBodyA(a);
-        jointDef.setBodyB(b);
-        jointDef.setLocalAnchorA(localOneX,localOneY);
-        jointDef.setLocalAnchorB(localTwoX,localTwoY);
-        jointDef.setEnableLimit(true);
-        jointDef.setEnableMotor(true);
-        jointDef.setMaxMotorTorque(500f);
-
-
-        if(bridgePosition == BridgePosition.LEFT) {
-            jointDef.setUpperAngle(6.28319f); //6.28319f
-            jointDef.setLowerAngle(6.28319f);
-            //jointDef.setMotorSpeed(speed);
-        }
-        else{
-            jointDef.setUpperAngle(0);
-            jointDef.setLowerAngle(0);
-            //jointDef.setMotorSpeed(-speed);
-        }
-
-        gameWorld.world.createJoint(jointDef);
-        jointDef.delete();
-    }
-
-}
-
-class EnclosurePhysicsComponent extends PhysicsComponent{
-    private static final float THICKNESS = 0.1f;
-
-    public EnclosurePhysicsComponent (GameObject gameObject,float coordinateXMax,float coordinateXMin,float coordinateYMax,float coordinateYMin){
-            super();
-            BodyDef bodyDef = new BodyDef();
-            bodyDef.setType(BodyType.staticBody);
-            this.body = gameObject.gameWorld.world.createBody(bodyDef);
-            body.setUserData(this);
-            PolygonShape box = new PolygonShape();
-            box.setAsBox(coordinateXMax - coordinateXMin, THICKNESS, coordinateXMin + (coordinateXMax - coordinateXMin)/2, coordinateYMin, 0); // last is rotation angle
-            body.createFixture(box, 0);
-            box.setAsBox(coordinateXMax - coordinateXMin, THICKNESS, coordinateXMin + (coordinateXMax - coordinateXMin)/2, coordinateYMax, 0);
-            body.createFixture(box, 0);
-            box.setAsBox(THICKNESS, coordinateYMax - coordinateYMin, coordinateXMin, coordinateYMin + (coordinateYMax - coordinateYMin)/2, 0);
-            body.createFixture(box, 0);
-            box.setAsBox(THICKNESS, coordinateYMax - coordinateYMin, coordinateXMin, coordinateYMin + (coordinateYMax - coordinateYMin) / 2, 0);
-            body.createFixture(box, 0);
-            bodyDef.delete();
-            box.delete();
-        }
-    }

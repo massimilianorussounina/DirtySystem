@@ -335,9 +335,9 @@ class RectDrawableComponent extends DrawableComponent{
     }
 }
 
-class CircleDrawambleComponent extends  DrawableComponent{
+class CircleDrawableComponent extends  DrawableComponent{
     float radius;
-    public CircleDrawambleComponent (String name,GameObject gameObject, float radius, int color){
+    public CircleDrawableComponent (String name,GameObject gameObject, float radius, int color){
         super(name);
         this.owner = gameObject;
         GameWorld gameWorld = gameObject.gameWorld;
@@ -345,8 +345,6 @@ class CircleDrawambleComponent extends  DrawableComponent{
         this.radius=gameWorld.toPixelsYLength(radius);
         this.paint.setColor(color);
         this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-
     }
 
     @Override
@@ -363,15 +361,13 @@ class CircleDrawambleComponent extends  DrawableComponent{
 class BitmapDrawableComponent extends DrawableComponent {
 
     BitmapDrawableComponent(String name,GameObject gameObject, float width, float height,
-                            float density, int drawable, int left, int top, int right,
-                            int bottom){
+                            int drawable, int left, int top, int right, int bottom){
         super(name);
         this.owner = gameObject;
         GameWorld gameWorld = gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
         this.width = width;
         this.height = height;
-        this.density = density;
         screenSemiWidth = gameWorld.toPixelsXLength(width)/2;
         screenSemiHeight = gameWorld.toPixelsYLength(height)/2;
         BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();

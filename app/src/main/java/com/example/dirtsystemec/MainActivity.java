@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         Box physicalSize = new Box(coordinateXMin, coordinateYMin, coordinateXMax, coordinateYMax);
         Box screenSize   = new Box(0, 0, metrics.widthPixels, metrics.heightPixels);
         GameWorld gw = new GameWorld(physicalSize, screenSize, this);
-        gw.setGravity(-5,0);
+        gw.setGravity(-10,0);
 
         GameObject.createEnclosure(coordinateXMax,coordinateXMin,coordinateYMax,coordinateYMin,gw);
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         GameObject.createBarrel(10,1,gw);
         GameObject.createBarrel(3f,-17.5f,gw);
 
-        GameObject.createBulldozer(0,10,gw,-1);
+        GameObject.createBulldozer(-5,10,gw,-1);
 
 
         renderView = new AndroidFastRenderView(this, gw);

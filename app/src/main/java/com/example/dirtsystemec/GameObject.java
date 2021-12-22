@@ -26,7 +26,7 @@ public class GameObject extends Entity{
         GameObject gameObjectBarrel = new GameObject(gameWorld);
 
         DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("barrel",coordinateX,coordinateY,gameObjectBarrel);
-        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("barrel",gameObjectBarrel,0.8f,0.8f,80f,R.drawable.barrel,0,0,187,184);
+        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("barrel",gameObjectBarrel,0.8f,0.8f,R.drawable.barrel,0,0,187,184);
         CirclePhysicsComponent circlePhysicsComponent = new CirclePhysicsComponent("barrel",gameObjectBarrel,BodyType.dynamicBody,coordinateX,coordinateY,bitmapDrawableComponent.width/2f,bitmapDrawableComponent.height/2f,0.5f,0.1f,1f);
 
 
@@ -42,7 +42,7 @@ public class GameObject extends Entity{
     public static void createIncinerator(float coordinateX, float coordinateY,float fireCoordinateX, float fireCoordinateY,GameWorld gameWorld) {
         GameObject gameObjectIncinerator = new GameObject(gameWorld);
 
-        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("incinerator",gameObjectIncinerator,2.5f,2.7f,1,R.drawable.incinerator,0,0,37,54);
+        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("incinerator",gameObjectIncinerator,2.5f,2.7f,R.drawable.incinerator,0,0,37,54);
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("incinerator",coordinateX,coordinateY,gameObjectIncinerator);
         PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("incinerator",gameObjectIncinerator,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width, bitmapDrawableComponent.height, 2f);
 
@@ -86,8 +86,8 @@ public class GameObject extends Entity{
     public static void createGround(float coordinateX, float coordinateY,GameWorld gameWorld) {
         GameObject gameObjectGround = new GameObject(gameWorld);
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("ground",coordinateX,coordinateY,gameObjectGround);
-        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("ground",gameObjectGround,9.0f,4.0f,0,R.drawable.ground,0,0,200,82);
-        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("ground",gameObjectGround,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width/2, bitmapDrawableComponent.height/2, 5f,0.4f,0.1f);
+        BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("ground",gameObjectGround,9.0f,4.0f,R.drawable.ground,0,0,200,82);
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("ground",gameObjectGround,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width/2, bitmapDrawableComponent.height/2, 1f,0.1f,0.1f);
 
 
         gameObjectGround.addComponent(staticPositionComponent);
@@ -115,10 +115,10 @@ public class GameObject extends Entity{
         GameObject gameObjectTowerRight = new GameObject(gameWorld);
         TrianglePositionComponent trianglePositionComponentRight = new TrianglePositionComponent("torreRight",towerCoordinateXRight,towerCoordinateYRight,towerBodyCoordinateX1Right,towerBodyCoordinateY1Right,
                 towerBodyCoordinateX2Right,towerBodyCoordinateY2Right,towerBodyCoordinateX3Right,towerBodyCoordinateY3Right,gameObjectTowerRight);
-        BitmapDrawableComponent bitmapDrawableComponentRight = new BitmapDrawableComponent("torreRight",gameObjectTowerRight,4.0f,2.0f,4f,R.drawable.right_bridge,0,0,423,208);
+        BitmapDrawableComponent bitmapDrawableComponentRight = new BitmapDrawableComponent("torreRight",gameObjectTowerRight,4.0f,2.0f,R.drawable.right_bridge,0,0,423,208);
         PolygonPhysicsComponent polygonPhysicsComponentRight = new PolygonPhysicsComponent("torreRight",gameObjectTowerRight, BodyType.staticBody,towerCoordinateXRight,towerCoordinateYRight,
                 towerBodyCoordinateX1Right,towerBodyCoordinateY1Right,towerBodyCoordinateX2Right,towerBodyCoordinateY2Right,towerBodyCoordinateX3Right,towerBodyCoordinateY3Right,
-                4f,0.4f,10f);
+                1f,0.4f,0.1f);
 
         gameObjectTowerRight.addComponent(trianglePositionComponentRight);
         gameObjectTowerRight.addComponent(bitmapDrawableComponentRight);
@@ -133,10 +133,10 @@ public class GameObject extends Entity{
         GameObject gameObjectTowerLeft = new GameObject(gameWorld);
         TrianglePositionComponent trianglePositionComponentLeft = new TrianglePositionComponent("torreLeft",towerCoordinateXLeft,towerCoordinateYLeft,towerBodyCoordinateX1Left,towerBodyCoordinateY1Left,
                 towerBodyCoordinateX2Left,towerBodyCoordinateY2Left,towerBodyCoordinateX3Left,towerBodyCoordinateY3Left,gameObjectTowerLeft);
-        BitmapDrawableComponent bitmapDrawableComponentLeft = new BitmapDrawableComponent("torreLeft",gameObjectTowerLeft,4.0f,2.0f,4f,R.drawable.left_bridge,0,0,423,208);
+        BitmapDrawableComponent bitmapDrawableComponentLeft = new BitmapDrawableComponent("torreLeft",gameObjectTowerLeft,4.0f,2.0f,R.drawable.left_bridge,0,0,423,208);
         PolygonPhysicsComponent polygonPhysicsComponentLeft = new PolygonPhysicsComponent("torreLeft",gameObjectTowerLeft, BodyType.staticBody,towerCoordinateXLeft,towerCoordinateYLeft,
                 towerBodyCoordinateX1Left,towerBodyCoordinateY1Left,towerBodyCoordinateX2Left,towerBodyCoordinateY2Left,towerBodyCoordinateX3Left,towerBodyCoordinateY3Left,
-                4f,0.4f,10f);
+                1f,0.4f,0.1f);
         gameObjectTowerLeft.addComponent(trianglePositionComponentLeft);
         gameObjectTowerLeft.addComponent(bitmapDrawableComponentLeft);
         gameObjectTowerLeft.addComponent(polygonPhysicsComponentLeft);
@@ -151,7 +151,7 @@ public class GameObject extends Entity{
         GameObject gameObjectBridge = new GameObject(gameWorld);
         DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("bridge",bridgeCoordinateX,bridgeCoordinateY,gameObjectBridge);
         RectDrawableComponent rectDrawableComponent = new RectDrawableComponent("bridge",gameObjectBridge,4.8f,0.2f, Color.argb(255, 32, 32, 32));
-        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("bridge",gameObjectBridge,BodyType.staticBody,bridgeCoordinateX,bridgeCoordinateY,rectDrawableComponent.width/2, rectDrawableComponent.height/2,5f);
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("bridge",gameObjectBridge,BodyType.staticBody,bridgeCoordinateX,bridgeCoordinateY,rectDrawableComponent.width/2, rectDrawableComponent.height/2,4f,0.4f,0.4f);
         gameObjectBridge.addComponent(dynamicPositionComponent);
         gameObjectBridge.addComponent(rectDrawableComponent);
         gameObjectBridge.addComponent(polygonPhysicsComponent);
@@ -194,136 +194,143 @@ public class GameObject extends Entity{
         GameObject gameObjectBulldozer = new GameObject(gameWorld,"bulldozer");
 
         PolygonPhysicsComponent polygonPhysicsComponentChassis = new PolygonPhysicsComponent("chassis",gameObjectBulldozer,BodyType.dynamicBody
-        ,coordinateX,coordinateY,(width/2),proportionalToBulldozer(1.2f,width)/2,4f);
-
-        PolygonPhysicsComponent polygonPhysicsComponentCabin = new PolygonPhysicsComponent("cabin",gameObjectBulldozer,BodyType.dynamicBody
-                ,coordinateX,coordinateY,(invert*proportionalToBulldozer(2.3f,width))/2,proportionalToBulldozer(1.5f,width)/2,4f);
+        ,coordinateX,coordinateY,(width/2),proportionalToBulldozer(1.2f,width)/2,4f,0f,1f);
 
         gameObjectBulldozer.addComponent(polygonPhysicsComponentChassis);
+
+        PolygonPhysicsComponent polygonPhysicsComponentCabin = new PolygonPhysicsComponent("cabin",gameObjectBulldozer,BodyType.dynamicBody
+                ,coordinateX,coordinateY,(proportionalToBulldozer(2.3f,width))/2,proportionalToBulldozer(1.5f,width)/2,2f,0.1f,1f);
+
         gameObjectBulldozer.addComponent(polygonPhysicsComponentCabin);
 
 
         RevoluteJointComponent revoluteJointComponentBulldozer =  new RevoluteJointComponent(gameObjectBulldozer,polygonPhysicsComponentChassis.body,
                 polygonPhysicsComponentCabin.body,(invert*-proportionalToBulldozer(0.5f,width)),-proportionalToBulldozer(1.4f,width),0,0,0,
                 0,0);
-
         gameObjectBulldozer.addComponent(revoluteJointComponentBulldozer);
 
-
-
-        RectDrawableComponent rectDrawableComponentChassis = new RectDrawableComponent("chassis",gameObjectBulldozer,width,proportionalToBulldozer(1.5f,width), Color.argb(50, 32, 32, 32));
+        RectDrawableComponent rectDrawableComponentChassis = new RectDrawableComponent("chassis",gameObjectBulldozer,width,proportionalToBulldozer(1.2f,width), Color.argb(50, 32, 32, 32));
         RectDrawableComponent rectDrawableComponentCabin = new RectDrawableComponent("cabin",gameObjectBulldozer,proportionalToBulldozer(2.3f,width),proportionalToBulldozer(1.5f,width), Color.argb(255, 32, 32, 32));
+
 
         gameObjectBulldozer.addComponent(rectDrawableComponentCabin);
         gameObjectBulldozer.addComponent(rectDrawableComponentChassis);
 
 
-        PolygonPhysicsComponent polygonPhysicsComponentDamper1 = new PolygonPhysicsComponent("damper1",gameObjectBulldozer,BodyType.dynamicBody
-                ,coordinateX,coordinateY,proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1.5f,width)/2,4f);
-        gameObjectBulldozer.addComponent(polygonPhysicsComponentDamper1);
 
-        PrismaticJointComponet prismaticJointComponet = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper1.body,-width/2+proportionalToBulldozer(0.5f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
-                proportionalToBulldozer(0.9f,width),0,1,true,false,0,polygonPhysicsComponentDamper1.body.getMass()*8.5f );
+        PolygonPhysicsComponent polygonPhysicsComponentDamperOne = new PolygonPhysicsComponent("damperOne",gameObjectBulldozer,BodyType.dynamicBody
+                ,coordinateX,coordinateY,proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1.5f,width)/2,4f,0.1f,0.5f);
+        gameObjectBulldozer.addComponent(polygonPhysicsComponentDamperOne);
+
+        PrismaticJointComponet prismaticJointComponet = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamperOne.body,-width/2+proportionalToBulldozer(0.5f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
+                proportionalToBulldozer(0.9f,width),0,1,false,false,0,polygonPhysicsComponentDamperOne.body.getMass()*8.5f );
 
         gameObjectBulldozer.addComponent(prismaticJointComponet);
 
-        DistanceJointComponet distanceJointComponet = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper1.body,-width/2+proportionalToBulldozer(0.5f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
-                proportionalToBulldozer(0.9f,width),0.8f,2f,-proportionalToBulldozer(0.2f,width));
+        DistanceJointComponet distanceJointComponet = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamperOne.body,-width/2+proportionalToBulldozer(0.5f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
+                proportionalToBulldozer(0.9f,width),0.7f,4f,-proportionalToBulldozer(0.2f,width));
         gameObjectBulldozer.addComponent(distanceJointComponet);
 
-        RectDrawableComponent rectDrawableComponentDamper1 = new RectDrawableComponent("damper1",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1.5f,width),Color.argb(255,4,255,21));
-        gameObjectBulldozer.addComponent(rectDrawableComponentDamper1);
+        RectDrawableComponent rectDrawableComponentDamperOne = new RectDrawableComponent("damperOne",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1.5f,width),Color.argb(255,4,255,21));
+        gameObjectBulldozer.addComponent(rectDrawableComponentDamperOne);
 
 
 
-        PolygonPhysicsComponent polygonPhysicsComponentDamper2 = new PolygonPhysicsComponent("damper2",gameObjectBulldozer,BodyType.dynamicBody
-                ,coordinateX,coordinateY,proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1.5f,width)/2,4f);
-        gameObjectBulldozer.addComponent(polygonPhysicsComponentDamper2);
+        PolygonPhysicsComponent polygonPhysicsComponentDamperTwo = new PolygonPhysicsComponent("damperTwo",gameObjectBulldozer,BodyType.dynamicBody
+                ,coordinateX,coordinateY,proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1.5f,width)/2,4f,0.1f,0.5f);
+        gameObjectBulldozer.addComponent(polygonPhysicsComponentDamperTwo);
 
-        PrismaticJointComponet prismaticJointComponet2 = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper2.body,+width/2-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
-                proportionalToBulldozer(0.9f,width),0,1,true,false,0,polygonPhysicsComponentDamper2.body.getMass()*8.5f );
+        PrismaticJointComponet prismaticJointComponentDamperTwo = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamperTwo.body,+width/2-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
+                proportionalToBulldozer(0.9f,width),0,0.5f,false,true,0,polygonPhysicsComponentDamperTwo.body.getMass()*8.5f );
 
-        gameObjectBulldozer.addComponent(prismaticJointComponet2);
+        gameObjectBulldozer.addComponent(prismaticJointComponentDamperTwo);
 
-        DistanceJointComponet distanceJointComponet2 = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper2.body,+width/2-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
-                proportionalToBulldozer(0.9f,width),0.8f,2f,-proportionalToBulldozer(0.2f,width));
-        gameObjectBulldozer.addComponent(distanceJointComponet2);
+        DistanceJointComponet distanceJointComponentDamperTwo = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamperTwo.body,+width/2-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
+                proportionalToBulldozer(0.9f,width),0.7f,4f,-proportionalToBulldozer(0.2f,width));
+        gameObjectBulldozer.addComponent(distanceJointComponentDamperTwo);
 
-        RectDrawableComponent rectDrawableComponentDamper2 = new RectDrawableComponent("damper2",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1.5f,width),Color.argb(255,4,255,21));
+        RectDrawableComponent rectDrawableComponentDamper2 = new RectDrawableComponent("damperTwo",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1.5f,width),Color.argb(255,4,255,21));
         gameObjectBulldozer.addComponent(rectDrawableComponentDamper2);
 
 
 
-        PolygonPhysicsComponent polygonPhysicsComponentDamper3 = new PolygonPhysicsComponent("damper3",gameObjectBulldozer,BodyType.dynamicBody
-                ,coordinateX,coordinateY,proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1.5f,width)/2,4f);
-        gameObjectBulldozer.addComponent(polygonPhysicsComponentDamper3);
+        PolygonPhysicsComponent polygonPhysicsComponentDamperThree = new PolygonPhysicsComponent("damperThree",gameObjectBulldozer,BodyType.dynamicBody
+                ,coordinateX,coordinateY,proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1.5f,width)/2,4f,0.1f,0.5f);
+        gameObjectBulldozer.addComponent(polygonPhysicsComponentDamperThree);
 
-        PrismaticJointComponet prismaticJointComponet3 = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper3.body,+width/2-(proportionalToBulldozer(0.5f,width)*2)- proportionalToBulldozer(0.6f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
-                proportionalToBulldozer(0.9f,width),0,1,true,false,0,polygonPhysicsComponentDamper3.body.getMass()*8.5f );
+        PrismaticJointComponet prismaticJointComponentThree = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamperThree.body,+width/2-(proportionalToBulldozer(0.5f,width)*2)- proportionalToBulldozer(0.6f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
+                proportionalToBulldozer(0.9f,width),0,1,false,false,0,polygonPhysicsComponentDamperThree.body.getMass()*8.5f );
 
-        gameObjectBulldozer.addComponent(prismaticJointComponet3);
+        gameObjectBulldozer.addComponent(prismaticJointComponentThree);
 
-        DistanceJointComponet distanceJointComponet3 = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper3.body,+width/2-(proportionalToBulldozer(0.5f,width)*2)- proportionalToBulldozer(0.6f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
-                proportionalToBulldozer(0.9f,width),0.8f,2f,-proportionalToBulldozer(0.2f,width));
-        gameObjectBulldozer.addComponent(distanceJointComponet3);
+        DistanceJointComponet distanceJointComponentThree = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamperThree.body,+width/2-(proportionalToBulldozer(0.5f,width)*2)- proportionalToBulldozer(0.6f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
+                proportionalToBulldozer(0.9f,width),0.7f,4f,-proportionalToBulldozer(0.2f,width));
+        gameObjectBulldozer.addComponent(distanceJointComponentThree);
 
-        RectDrawableComponent rectDrawableComponentDamper3 = new RectDrawableComponent("damper3",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1.5f,width),Color.argb(255,4,255,21));
-        gameObjectBulldozer.addComponent(rectDrawableComponentDamper3);
+        RectDrawableComponent rectDrawableComponentDamperThree = new RectDrawableComponent("damperThree",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1.5f,width),Color.argb(255,4,255,21));
+        gameObjectBulldozer.addComponent(rectDrawableComponentDamperThree);
 
 
-        PolygonPhysicsComponent polygonPhysicsComponentDamper4 = new PolygonPhysicsComponent("damper4",gameObjectBulldozer,BodyType.dynamicBody
-                ,coordinateX,coordinateY,proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1.5f,width)/2,4f);
-        gameObjectBulldozer.addComponent(polygonPhysicsComponentDamper4);
+        PolygonPhysicsComponent polygonPhysicsComponentDamperFour = new PolygonPhysicsComponent("damperFour",gameObjectBulldozer,BodyType.dynamicBody
+                ,coordinateX,coordinateY,proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1.5f,width)/2,4f,0.1f,0.5f);
+        gameObjectBulldozer.addComponent(polygonPhysicsComponentDamperFour);
 
-        PrismaticJointComponet prismaticJointComponet4 = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper4.body,-width/2+(proportionalToBulldozer(0.5f,width)*2)+ proportionalToBulldozer(0.6f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
-                proportionalToBulldozer(0.9f,width),0,1,true,false,0,polygonPhysicsComponentDamper4.body.getMass()*8.5f );
+        PrismaticJointComponet prismaticJointComponentFour = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamperFour.body,-width/2+(proportionalToBulldozer(0.5f,width)*2)+ proportionalToBulldozer(0.6f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
+                proportionalToBulldozer(0.9f,width),0,1,false,false,0,polygonPhysicsComponentDamperFour.body.getMass()*8.5f );
 
-        gameObjectBulldozer.addComponent(prismaticJointComponet4);
+        gameObjectBulldozer.addComponent(prismaticJointComponentFour);
 
-        DistanceJointComponet distanceJointComponet4 = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper4.body,-width/2+(proportionalToBulldozer(0.5f,width)*2)+ proportionalToBulldozer(0.6f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
-                proportionalToBulldozer(0.9f,width),0.8f,2f,-proportionalToBulldozer(0.2f,width));
-        gameObjectBulldozer.addComponent(distanceJointComponet4);
+        DistanceJointComponet distanceJointComponentFour = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamperFour.body,-width/2+(proportionalToBulldozer(0.5f,width)*2)+ proportionalToBulldozer(0.6f,width),proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.3f,width),0,
+                proportionalToBulldozer(0.9f,width),0.7f,4f,-proportionalToBulldozer(0.2f,width));
+        gameObjectBulldozer.addComponent(distanceJointComponentFour);
 
-        RectDrawableComponent rectDrawableComponentDamper4 = new RectDrawableComponent("damper4",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1.5f,width),Color.argb(255,4,255,21));
-        gameObjectBulldozer.addComponent(rectDrawableComponentDamper4);
+        RectDrawableComponent rectDrawableComponentDamperFour = new RectDrawableComponent("damperFour",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1.5f,width),Color.argb(255,4,255,21));
+        gameObjectBulldozer.addComponent(rectDrawableComponentDamperFour);
 
-        CirclePhysicsComponent circlePhysicsComponentWheel1 = new CirclePhysicsComponent("wheel1",gameObjectBulldozer,BodyType.dynamicBody,coordinateX -(proportionalToBulldozer(3.5f,width)/2),coordinateY+(width/2)-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),1,0.1f,4f);
-        gameObjectBulldozer.addComponent(circlePhysicsComponentWheel1);
 
-        RevoluteJointComponent revoluteJointComponent1 = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentDamper1.body, circlePhysicsComponentWheel1.body,0,proportionalToBulldozer(0.7f,width),0,0,50f,true,invert*20f);
-        gameObjectBulldozer.addComponent(revoluteJointComponent1);
 
-        CircleDrawambleComponent circleDrawambleComponent1= new CircleDrawambleComponent("wheel1",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(255,255,0,0));
-        gameObjectBulldozer.addComponent(circleDrawambleComponent1);
 
-        CirclePhysicsComponent circlePhysicsComponentWheel2 = new CirclePhysicsComponent("wheel2",gameObjectBulldozer,BodyType.dynamicBody,coordinateX -(proportionalToBulldozer(3.5f,width)/2),coordinateY+(width/2)-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),1,0.1f,4f);
-        gameObjectBulldozer.addComponent(circlePhysicsComponentWheel2);
+        CirclePhysicsComponent circlePhysicsComponentWheelOne = new CirclePhysicsComponent("wheelOne",gameObjectBulldozer,BodyType.dynamicBody,coordinateX -(proportionalToBulldozer(3.5f,width)/2),coordinateY+(width/2)-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),1,0.1f,1f);
+        gameObjectBulldozer.addComponent(circlePhysicsComponentWheelOne);
 
-        RevoluteJointComponent revoluteJointComponent2 = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentDamper2.body, circlePhysicsComponentWheel2.body,0,proportionalToBulldozer(0.7f,width),0,0,50f,true,invert*20f);
-        gameObjectBulldozer.addComponent(revoluteJointComponent2);
+        RevoluteJointComponent revoluteJointComponentOne = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentDamperOne.body, circlePhysicsComponentWheelOne.body,0,proportionalToBulldozer(0.7f,width),0,0,10f,true,invert*20f);
+        gameObjectBulldozer.addComponent(revoluteJointComponentOne);
 
-        CircleDrawambleComponent circleDrawambleComponent2= new CircleDrawambleComponent("wheel2",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(255,255,0,0));
-        gameObjectBulldozer.addComponent(circleDrawambleComponent2);
+        CircleDrawableComponent circleDrawableComponentOne= new CircleDrawableComponent("wheelOne",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(255,255,0,0));
+        gameObjectBulldozer.addComponent(circleDrawableComponentOne);
 
-        CirclePhysicsComponent circlePhysicsComponentWheel3 = new CirclePhysicsComponent("wheel3",gameObjectBulldozer,BodyType.dynamicBody,coordinateX -(proportionalToBulldozer(3.5f,width)/2),coordinateY+(width/2)-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),1,0.1f,4f);
-        gameObjectBulldozer.addComponent(circlePhysicsComponentWheel3);
+        CirclePhysicsComponent circlePhysicsComponentWheelTwo = new CirclePhysicsComponent("wheelTwo",gameObjectBulldozer,BodyType.dynamicBody,coordinateX -(proportionalToBulldozer(3.5f,width)/2),coordinateY+(width/2)-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),1,0.1f,1f);
+        gameObjectBulldozer.addComponent(circlePhysicsComponentWheelTwo);
 
-        RevoluteJointComponent revoluteJointComponent3 = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentDamper3.body, circlePhysicsComponentWheel3.body,0,proportionalToBulldozer(0.7f,width),0,0,50f,true,invert*20f);
-        gameObjectBulldozer.addComponent(revoluteJointComponent3);
+        RevoluteJointComponent revoluteJointComponentTwo = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentDamperTwo.body, circlePhysicsComponentWheelTwo.body,0,proportionalToBulldozer(0.7f,width),0,0,10f,true,invert*20f);
+        gameObjectBulldozer.addComponent(revoluteJointComponentTwo);
 
-        CircleDrawambleComponent circleDrawambleComponent3= new CircleDrawambleComponent("wheel3",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(255,255,0,0));
-        gameObjectBulldozer.addComponent(circleDrawambleComponent3);
+        CircleDrawableComponent circleDrawableComponentTwo = new CircleDrawableComponent("wheelTwo",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(255,255,0,0));
+        gameObjectBulldozer.addComponent(circleDrawableComponentTwo);
 
-        CirclePhysicsComponent circlePhysicsComponentWheel4 = new CirclePhysicsComponent("wheel4",gameObjectBulldozer,BodyType.dynamicBody,coordinateX -(proportionalToBulldozer(3.5f,width)/2),coordinateY+(width/2)-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),1,0.1f,4f);
-        gameObjectBulldozer.addComponent(circlePhysicsComponentWheel4);
+        CirclePhysicsComponent circlePhysicsComponentWheelThree = new CirclePhysicsComponent("wheelThree",gameObjectBulldozer,BodyType.dynamicBody,coordinateX -(proportionalToBulldozer(3.5f,width)/2),coordinateY+(width/2)-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),1,0.1f,1f);
+        gameObjectBulldozer.addComponent(circlePhysicsComponentWheelThree);
 
-        RevoluteJointComponent revoluteJointComponent4 = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentDamper4.body, circlePhysicsComponentWheel4.body,0,proportionalToBulldozer(0.7f,width),0,0,50f,true,invert*20f);
+        RevoluteJointComponent revoluteJointComponentThree = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentDamperThree.body, circlePhysicsComponentWheelThree.body,0,proportionalToBulldozer(0.7f,width),0,0,10f,true,invert*20f);
+        gameObjectBulldozer.addComponent(revoluteJointComponentThree);
+
+        CircleDrawableComponent circleDrawableComponentThree = new CircleDrawableComponent("wheelThree",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(255,255,0,0));
+        gameObjectBulldozer.addComponent(circleDrawableComponentThree);
+
+        CirclePhysicsComponent circlePhysicsComponentWheelFour = new CirclePhysicsComponent("wheelFour",gameObjectBulldozer,BodyType.dynamicBody,coordinateX -(proportionalToBulldozer(3.5f,width)/2),coordinateY+(width/2)-proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),1,0.1f,1f);
+        gameObjectBulldozer.addComponent(circlePhysicsComponentWheelFour);
+
+        RevoluteJointComponent revoluteJointComponent4 = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentDamperFour.body, circlePhysicsComponentWheelFour.body,0,proportionalToBulldozer(0.7f,width),0,0,10f,true,invert*20f);
         gameObjectBulldozer.addComponent(revoluteJointComponent4);
 
-        CircleDrawambleComponent circleDrawambleComponent4= new CircleDrawambleComponent("wheel4",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(255,255,0,0));
-        gameObjectBulldozer.addComponent(circleDrawambleComponent4);
+        CircleDrawableComponent circleDrawableComponentFour = new CircleDrawableComponent("wheelFour",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(255,255,0,0));
+        gameObjectBulldozer.addComponent(circleDrawableComponentFour);
 
-        PolygonPhysicsComponent polygonPhysicsComponentShovel1 = new PolygonPhysicsComponent("shovel1",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+invert*proportionalToBulldozer(3f,width),proportionalToBulldozer(1f,width)/2,proportionalToBulldozer(0.5f,width)/2,4f);
+
+
+
+        /*
+        PolygonPhysicsComponent polygonPhysicsComponentShovel1 = new PolygonPhysicsComponent("shovel1",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+*proportionalToBulldozer(3f,width),proportionalToBulldozer(1f,width)/2,proportionalToBulldozer(0.5f,width)/2,4f);
         gameObjectBulldozer.addComponent(polygonPhysicsComponentShovel1);
 
         if (invert==1){
@@ -350,16 +357,16 @@ public class GameObject extends Entity{
         RectDrawableComponent rectDrawableComponent8= new RectDrawableComponent("shovel1",gameObjectBulldozer,proportionalToBulldozer(1f,width),proportionalToBulldozer(0.5f,width),Color.argb(255,50,55,50));
         gameObjectBulldozer.addComponent(rectDrawableComponent8);
 
-        PolygonPhysicsComponent polygonPhysicsComponentShovel2 = new PolygonPhysicsComponent("shovel2",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+invert*proportionalToBulldozer(3f,width),proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(2.8f,width)/2,4f);
+        PolygonPhysicsComponent polygonPhysicsComponentShovel2 = new PolygonPhysicsComponent("shovel2",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+proportionalToBulldozer(3f,width),proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(2.8f,width)/2,4f);
         gameObjectBulldozer.addComponent(polygonPhysicsComponentShovel2);
 
-        RevoluteJointComponent revoluteJointComponent8 = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentShovel1.body,polygonPhysicsComponentShovel2.body,0,0,invert*-proportionalToBulldozer(0.5f,width),-proportionalToBulldozer(1.1f,width),0,0,0);
+        RevoluteJointComponent revoluteJointComponent8 = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentShovel1.body,polygonPhysicsComponentShovel2.body,0,0,-proportionalToBulldozer(0.5f,width),-proportionalToBulldozer(1.1f,width),0,0,0);
         gameObjectBulldozer.addComponent(revoluteJointComponent8);
 
         RectDrawableComponent rectDrawableComponent9= new RectDrawableComponent("shovel2",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(2.8f,width),Color.argb(255,50,55,50));
         gameObjectBulldozer.addComponent(rectDrawableComponent9);
 
-        CirclePhysicsComponent circlePhysicsComponentShovel = new CirclePhysicsComponent("wheelshovel",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+invert*proportionalToBulldozer(3f,width),proportionalToBulldozer(1f,width)/2,0,1,0.1f,4f);
+        CirclePhysicsComponent circlePhysicsComponentShovel = new CirclePhysicsComponent("wheelshovel",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+proportionalToBulldozer(3f,width),proportionalToBulldozer(1f,width)/2,0,1,0.1f,4f);
         gameObjectBulldozer.addComponent(circlePhysicsComponentShovel);
 
         RevoluteJointComponent revoluteJointComponentShovel = new RevoluteJointComponent(gameObjectBulldozer,polygonPhysicsComponentShovel2.body,circlePhysicsComponentShovel.body,0,proportionalToBulldozer(1.3f,width),0,0,0,true,0);
@@ -371,6 +378,8 @@ public class GameObject extends Entity{
 
 
 
+
+         */
         gameWorld.addGameObject(gameObjectBulldozer);
 
 

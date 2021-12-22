@@ -48,6 +48,7 @@ class CirclePhysicsComponent extends PhysicsComponent {
         BodyDef bodyDef = new BodyDef();
         bodyDef.setAngle(1.5708f);
         bodyDef.setType(bodyType);
+        bodyDef.setAllowSleep(false);
         bodyDef.setPosition(coordinateX, coordinateY);
         GameWorld gameWorld = gameObject.gameWorld;
 
@@ -98,6 +99,8 @@ class PolygonPhysicsComponent extends PhysicsComponent{
         BodyDef bodyDef = new BodyDef();
         bodyDef.setAngle(1.5708f);
         bodyDef.setType(bodyType);
+        bodyDef.setAllowSleep(false);
+
 
         bodyDef.setPosition(coordinateX, coordinateY);
         GameWorld gameWorld = gameObject.gameWorld;
@@ -155,7 +158,6 @@ class PolygonPhysicsComponent extends PhysicsComponent{
         GameWorld gameWorld = gameObject.gameWorld;
         this.body = gameWorld.world.createBody(bodyDef);
         body.setUserData(this);
-        this.body.setSleepingAllowed(false);
         PolygonShape triangle = new PolygonShape();
         triangle.setAsTriangle(coordinateLocalOneX,coordinateLocalOneY,
                 coordinateLocalTwoX, coordinateLocalTwoY,

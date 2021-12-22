@@ -27,7 +27,7 @@ public class GameWorld {
     // Simulation
     List<GameObject> objects;
     List<GameObject> listBulldozer;
-
+    PhysicsComponent bulldozer;
     World world;
     final Box physicalSize, screenSize, currentView;
     private MyContactListener contactListener;
@@ -68,7 +68,7 @@ public class GameWorld {
         float y;
         // advance the physics simulation
         world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
-        /*y=bulldozer.body.getPositionY();
+        y=bulldozer.body.getPositionY();
         if(y >= 20.5f){
             deleteBulldozer();
             GameObject.createBulldozer(-7.5f,y-0.5f,this,-1);
@@ -78,7 +78,7 @@ public class GameWorld {
             deleteBulldozer();
             GameObject.createBulldozer(-7.5f,y+0.5f,this,1);
             //creare il nuovo con 1
-        }*/
+        }
 
 
 
@@ -106,12 +106,14 @@ public class GameWorld {
     public synchronized void addGameObject(GameObject obj)
     {
         objects.add(obj);
-       /* if(obj.getComponent(ComponentType.Physics) instanceof BulldozerPhysicsComponent ){
-            //this.bulldozer=  (BulldozerPhysicsComponent) obj.getComponent(ComponentType.Physics);
+        if(obj.name!=null && obj.name.equals("bulldozer")) {
+            for (Component psh : obj.getComponent(ComponentType.Physics)) {
+                if (((PhysicsComponent)psh).name.equals("chassis")){
+                    bulldozer=(PhysicsComponent)psh;
+                }
+            }
         }
-        if(obj.name != null && obj.name.compareTo("bulldozer")==0){
-            this.listBulldozer.add(obj);
-        }*/
+
     }
 
     private void handleCollisions(Collection<Collision> collisions) {
@@ -129,18 +131,15 @@ public class GameWorld {
     }
 
     public void deleteBulldozer(){
-        for (GameObject obj:listBulldozer){
-            objects.remove(obj);
-            if(((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body==null) {
-                Log.i("body", "oh nooooooo");
-            }
-            world.destroyBody(((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body);
-           ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body.setUserData(null);
-            ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body.delete();
-            ((PhysicsComponent)obj.getComponent(ComponentType.Physics)).body=null;
 
+        objects.remove(bulldozer.owner);
+        for (Component obj:bulldozer.owner.getComponent(ComponentType.Physics)){
+            world.destroyBody(((PhysicsComponent)obj).body);
+            ((PhysicsComponent)obj).body.setUserData(null);
+            ((PhysicsComponent)obj).body.delete();
+            ((PhysicsComponent)obj).body=null;
         }
-        listBulldozer = new ArrayList<>();
+
     }
 
     // Conversions between screen coordinates and physical coordinates

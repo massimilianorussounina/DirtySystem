@@ -2,7 +2,9 @@ package com.example.dirtsystemec;
 
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.DistanceJointDef;
+import com.google.fpl.liquidfun.Joint;
 import com.google.fpl.liquidfun.PrismaticJointDef;
+import com.google.fpl.liquidfun.RevoluteJoint;
 import com.google.fpl.liquidfun.RevoluteJointDef;
 
 public class JointComponent  extends  Component{
@@ -19,6 +21,7 @@ public class JointComponent  extends  Component{
 
 
 class RevoluteJointComponent extends JointComponent{
+    protected  RevoluteJoint joint;
 
     public RevoluteJointComponent(GameObject gameObject, Body bodyOne, Body bodyTwo,
                                   float coordinateOneX, float coordinateOneY,
@@ -38,7 +41,7 @@ class RevoluteJointComponent extends JointComponent{
         revoluteJointDef.setMaxMotorTorque(motorTorque);
         revoluteJointDef.setUpperAngle(upperAngle);
         revoluteJointDef.setLowerAngle(lowerAngle);
-        gameObject.gameWorld.world.createJoint(revoluteJointDef);
+        joint=gameObject.gameWorld.world.createRevoluteJoint(revoluteJointDef);
         revoluteJointDef.delete();
     }
     public   RevoluteJointComponent(GameObject gameObject, Body bodyOne, Body bodyTwo,
@@ -57,7 +60,7 @@ class RevoluteJointComponent extends JointComponent{
         revoluteJointDef.setEnableMotor(enableMotor);
         revoluteJointDef.setMotorSpeed(motorSpeed);
         revoluteJointDef.setMaxMotorTorque(motorTorque);
-        gameObject.gameWorld.world.createJoint(revoluteJointDef);
+        joint=gameObject.gameWorld.world.createRevoluteJoint(revoluteJointDef);
         revoluteJointDef.delete();
 
     }

@@ -78,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
         GameObject.createIncinerator(-12.5f,22.7f,-10.1f,22.7f,gw);
 
 
-        GameObject.createBarrel(10,1,gw);
-        GameObject.createBarrel(3f,-17.5f,gw);
+       /* GameObject.createBarrel(10,1,gw);
+        GameObject.createBarrel(3f,-17.5f,gw); */
+
+        GameObject.createOilStain(-9.5f,10f,gw);
 
         GameObject.createBulldozer(-5,10,gw,1);
 

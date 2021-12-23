@@ -99,4 +99,12 @@ public class World {
     liquidfunJNI.World_destroyJoint(swigCPtr, this, Joint.getCPtr(joint), joint);
   }
 
+
+  //prova
+
+  public RevoluteJoint createRevoluteJoint(JointDef def) {
+    long cPtr = liquidfunJNI.World_createJoint(swigCPtr, this, JointDef.getCPtr(def), def);
+    return (cPtr == 0) ? null : new RevoluteJoint(cPtr, false);
+  }
+
 }

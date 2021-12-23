@@ -8,6 +8,8 @@ import android.graphics.RectF;
 import android.util.Log;
 
 import com.badlogic.androidgames.framework.impl.TouchHandler;
+import com.google.fpl.liquidfun.Joint;
+import com.google.fpl.liquidfun.RevoluteJoint;
 import com.google.fpl.liquidfun.World;
 
 import java.util.ArrayList;
@@ -82,7 +84,7 @@ public class GameWorld {
 
 
 
-        //handleCollisions(contactListener.getCollisions());
+        handleCollisions(contactListener.getCollisions());
 
         // Handle touch events
        //for (Input.TouchEvent event: touchHandler.getTouchEvents())
@@ -118,14 +120,38 @@ public class GameWorld {
 
     private void handleCollisions(Collection<Collision> collisions) {
         for (Collision event: collisions) {
-           /* Sound sound = CollisionSounds.getSound(event.a.getClass(), event.b.getClass());
-            if (sound!=null) {
-                long currentTime = System.nanoTime();
-                if (currentTime - timeOfLastSound > 500_000_000) {
-                    timeOfLastSound = currentTime;
-                    sound.play(0.7f);
-                }
-            }*/
+           if(event.a.name.equals("wheelOne") || event.a.name.equals("wheelTwo")|| event.a.name.equals("wheelThree")|| event.a.name.equals("wheelFour")){
+               if(event.b.name.equals("oilstain")){
+                   for(Component component: event.a.owner.getComponent(ComponentType.Joint)) {
+                       if (component instanceof RevoluteJointComponent) {
+                           RevoluteJointComponent revoluteJointComponent = (RevoluteJointComponent) component;
+                           if (revoluteJointComponent.bodyOne.equals(event.a.body) || revoluteJointComponent.bodyTwo.equals(event.a.body)) {
+                               if(revoluteJointComponent.joint instanceof RevoluteJoint) {
+                                   if(revoluteJointComponent.joint.getMotorSpeed()!=2f)
+                                       revoluteJointComponent.joint.setMotorSpeed(2f);
+                               }
+                           }
+                       }
+                   }
+
+               }
+           } else
+           if(event.b.name.equals("wheelOne") || event.b.name.equals("wheelTwo")|| event.b.name.equals("wheelThree")|| event.b.name.equals("wheelFour")){
+               if(event.a.name.equals("oilstain")){
+                   for(Component component: event.b.owner.getComponent(ComponentType.Joint)){
+                       if (component instanceof RevoluteJointComponent) {
+                           RevoluteJointComponent revoluteJointComponent = (RevoluteJointComponent) component;
+                           if (revoluteJointComponent.bodyOne.equals(event.b.body) || revoluteJointComponent.bodyTwo.equals(event.b.body)) {
+                               if(revoluteJointComponent.joint instanceof RevoluteJoint) {
+                                   if(revoluteJointComponent.joint.getMotorSpeed()!=2f)
+                                       revoluteJointComponent.joint.setMotorSpeed(2f);
+                               }
+                           }
+                       }
+                   }
+
+               }
+           }
         }
 
     }

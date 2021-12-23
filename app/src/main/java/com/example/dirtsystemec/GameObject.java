@@ -385,6 +385,16 @@ public class GameObject extends Entity{
 
     }
 
+    public static  void createOilStain (float coordinateX, float coordinateY,GameWorld gameWorld){
+        GameObject gameObjectOilStain = new GameObject(gameWorld);
+        PolygonPhysicsComponent polygonPhysicsComponentOilStain = new PolygonPhysicsComponent("oilstain",gameObjectOilStain,BodyType.staticBody,coordinateX,coordinateY,0.5f,0.1f,4f,0.05f,0f);
+        gameObjectOilStain.addComponent(polygonPhysicsComponentOilStain);
+        RectDrawableComponent rectDrawableComponentOilStain = new RectDrawableComponent("oilstain",gameObjectOilStain,1,0.1f,Color.argb(255,0,0,0));
+        gameObjectOilStain.addComponent(rectDrawableComponentOilStain);
+        gameWorld.addGameObject(gameObjectOilStain);
+
+    }
+
     public static float proportionalToBulldozer(float number,float constant){
         float percent;
         percent = (number * 100) / 4.4f;

@@ -23,7 +23,7 @@ public class GameObject extends Entity{
     }
 
     public static void createBarrel(float coordinateX, float coordinateY,GameWorld gameWorld) {
-        GameObject gameObjectBarrel = new GameObject(gameWorld);
+        GameObject gameObjectBarrel = new GameObject(gameWorld,"barrel");
 
         DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("barrel",coordinateX,coordinateY,gameObjectBarrel);
         BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("barrel",gameObjectBarrel,0.8f,0.8f,R.drawable.barrel,0,0,187,184);
@@ -40,11 +40,11 @@ public class GameObject extends Entity{
 
 
     public static void createIncinerator(float coordinateX, float coordinateY,float fireCoordinateX, float fireCoordinateY,GameWorld gameWorld) {
-        GameObject gameObjectIncinerator = new GameObject(gameWorld);
+        GameObject gameObjectIncinerator = new GameObject(gameWorld,"incinerator");
 
         BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("incinerator",gameObjectIncinerator,2.5f,2.7f,R.drawable.incinerator,0,0,37,54);
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("incinerator",coordinateX,coordinateY,gameObjectIncinerator);
-        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("incinerator",gameObjectIncinerator,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width, bitmapDrawableComponent.height, 2f);
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("incinerator",gameObjectIncinerator,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width/2, bitmapDrawableComponent.height/2, 2f);
 
         BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
         bitmapFactory.inScaled = false;
@@ -63,7 +63,7 @@ public class GameObject extends Entity{
 
     public static void createSea(float coordinateX, float coordinateY,float seaCoordinateX, float seaCoordinateY,GameWorld gameWorld) {
 
-        GameObject gameObjectSea = new GameObject(gameWorld);
+        GameObject gameObjectSea = new GameObject(gameWorld,"sea");
 
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("sea",coordinateX,coordinateY,gameObjectSea);
 
@@ -84,7 +84,7 @@ public class GameObject extends Entity{
 
 
     public static void createGround(float coordinateX, float coordinateY,GameWorld gameWorld) {
-        GameObject gameObjectGround = new GameObject(gameWorld);
+        GameObject gameObjectGround = new GameObject(gameWorld,"ground");
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("ground",coordinateX,coordinateY,gameObjectGround);
         BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("ground",gameObjectGround,9.0f,4.0f,R.drawable.ground,0,0,200,82);
         PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("ground",gameObjectGround,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width/2, bitmapDrawableComponent.height/2, 1f,0.1f,0.1f);
@@ -112,7 +112,7 @@ public class GameObject extends Entity{
 
         /* Costruzione torre right */
 
-        GameObject gameObjectTowerRight = new GameObject(gameWorld);
+        GameObject gameObjectTowerRight = new GameObject(gameWorld,"torreRight");
         TrianglePositionComponent trianglePositionComponentRight = new TrianglePositionComponent("torreRight",towerCoordinateXRight,towerCoordinateYRight,towerBodyCoordinateX1Right,towerBodyCoordinateY1Right,
                 towerBodyCoordinateX2Right,towerBodyCoordinateY2Right,towerBodyCoordinateX3Right,towerBodyCoordinateY3Right,gameObjectTowerRight);
         BitmapDrawableComponent bitmapDrawableComponentRight = new BitmapDrawableComponent("torreRight",gameObjectTowerRight,4.0f,2.0f,R.drawable.right_bridge,0,0,423,208);
@@ -130,7 +130,7 @@ public class GameObject extends Entity{
 
         /* Costruzione torre left */
 
-        GameObject gameObjectTowerLeft = new GameObject(gameWorld);
+        GameObject gameObjectTowerLeft = new GameObject(gameWorld,"torreLeft");
         TrianglePositionComponent trianglePositionComponentLeft = new TrianglePositionComponent("torreLeft",towerCoordinateXLeft,towerCoordinateYLeft,towerBodyCoordinateX1Left,towerBodyCoordinateY1Left,
                 towerBodyCoordinateX2Left,towerBodyCoordinateY2Left,towerBodyCoordinateX3Left,towerBodyCoordinateY3Left,gameObjectTowerLeft);
         BitmapDrawableComponent bitmapDrawableComponentLeft = new BitmapDrawableComponent("torreLeft",gameObjectTowerLeft,4.0f,2.0f,R.drawable.left_bridge,0,0,423,208);
@@ -148,7 +148,7 @@ public class GameObject extends Entity{
 
         /* Costruzione ponte */
 
-        GameObject gameObjectBridge = new GameObject(gameWorld);
+        GameObject gameObjectBridge = new GameObject(gameWorld,"bridge");
         DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("bridge",bridgeCoordinateX,bridgeCoordinateY,gameObjectBridge);
         RectDrawableComponent rectDrawableComponent = new RectDrawableComponent("bridge",gameObjectBridge,4.8f,0.2f, Color.argb(255, 32, 32, 32));
         PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("bridge",gameObjectBridge,BodyType.staticBody,bridgeCoordinateX,bridgeCoordinateY,rectDrawableComponent.width/2, rectDrawableComponent.height/2,4f,0.4f,0.4f);
@@ -162,7 +162,7 @@ public class GameObject extends Entity{
 
 
     public static void createEnclosure(float coordinateXMax, float coordinateXMin,float coordinateYMax,float coordinateYMin,GameWorld gameWorld){
-        GameObject gameObjectEnclosure = new GameObject(gameWorld);
+        GameObject gameObjectEnclosure = new GameObject(gameWorld,"enclosure");
         PolygonPhysicsComponent polygonPhysicsComponentTop = new PolygonPhysicsComponent("top",gameObjectEnclosure,BodyType.staticBody,
                 (coordinateXMin + (coordinateXMax - coordinateXMin)/2), coordinateYMin,(coordinateXMax - coordinateXMin),0.1f, 0,1);
 
@@ -193,6 +193,8 @@ public class GameObject extends Entity{
         float width=2.8f;
         GameObject gameObjectBulldozer = new GameObject(gameWorld,"bulldozer");
 
+        DynamicPositionComponent dynamicPositionComponentBulldozer = new DynamicPositionComponent("bulldozer",coordinateX, coordinateY,gameObjectBulldozer,invert);
+
         PolygonPhysicsComponent polygonPhysicsComponentChassis = new PolygonPhysicsComponent("chassis",gameObjectBulldozer,BodyType.dynamicBody
         ,coordinateX,coordinateY,(width/2),proportionalToBulldozer(1.2f,width)/2,4f,0f,1f);
 
@@ -215,7 +217,7 @@ public class GameObject extends Entity{
 
         gameObjectBulldozer.addComponent(rectDrawableComponentCabin);
         gameObjectBulldozer.addComponent(rectDrawableComponentChassis);
-
+        gameObjectBulldozer.addComponent(dynamicPositionComponentBulldozer);
 
 
         PolygonPhysicsComponent polygonPhysicsComponentDamperOne = new PolygonPhysicsComponent("damperOne",gameObjectBulldozer,BodyType.dynamicBody
@@ -379,21 +381,11 @@ public class GameObject extends Entity{
 
 
 
-
         gameWorld.addGameObject(gameObjectBulldozer);
 
 
     }
 
-    public static  void createOilStain (float coordinateX, float coordinateY,GameWorld gameWorld){
-        GameObject gameObjectOilStain = new GameObject(gameWorld);
-        PolygonPhysicsComponent polygonPhysicsComponentOilStain = new PolygonPhysicsComponent("oilstain",gameObjectOilStain,BodyType.staticBody,coordinateX,coordinateY,0.5f,0.1f,4f,0.05f,0f);
-        gameObjectOilStain.addComponent(polygonPhysicsComponentOilStain);
-        RectDrawableComponent rectDrawableComponentOilStain = new RectDrawableComponent("oilstain",gameObjectOilStain,1,0.1f,Color.argb(255,0,0,0));
-        gameObjectOilStain.addComponent(rectDrawableComponentOilStain);
-        gameWorld.addGameObject(gameObjectOilStain);
-
-    }
 
     public static float proportionalToBulldozer(float number,float constant){
         float percent;
@@ -404,95 +396,17 @@ public class GameObject extends Entity{
 
 
 
-
-   /* public static void createBulldozer1(float coordinateX, float coordinateY,GameWorld gameWorld,int invert) {
-
-        GameObject gameObjectBulldozer = new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectWheelSxOne =  new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectWheelDxOne =  new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectWheelSxTwo =  new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectWheelDxTwo =  new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectDamperOne = new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectDamperTwo = new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectDamperThree = new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectDamperFour = new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectShovel = new GameObject(gameWorld,"bulldozer");
-        GameObject gameObjectWheelShovel = new GameObject(gameWorld,"bulldozer");
-
-
-        gameObjectBulldozer.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectBulldozer));
-        BulldozerDrawableComponent bulldozerDrawableComponent = new BulldozerDrawableComponent(gameObjectBulldozer,invert);
-        gameObjectBulldozer.addComponent(bulldozerDrawableComponent);
-        BulldozerPhysicsComponent bulldozerPhysicsComponent = new BulldozerPhysicsComponent(gameObjectBulldozer);
-        gameObjectBulldozer.addComponent(bulldozerPhysicsComponent);
+    public static void createButtonTrash(float coordinateX, float coordinateY,GameWorld gameWorld,boolean buttonTrash){
+        GameObject gameObjectButtonTrash = new GameObject(gameWorld,"buttonTrash");
+        BitmapDrawableComponent bitmapDrawableComponent;
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("buttonTrash",coordinateX,coordinateY,gameObjectButtonTrash);
+        if(buttonTrash) bitmapDrawableComponent = new BitmapDrawableComponent("buttonTrash",gameObjectButtonTrash,2.4f,2.5f,R.drawable.trash_active,0,0,185,186);
+        else bitmapDrawableComponent = new BitmapDrawableComponent("buttonTrash",gameObjectButtonTrash,2.4f,2.5f,R.drawable.trash_disattive,0,0,185,186);
+        gameObjectButtonTrash.addComponent(staticPositionComponent);
+        gameObjectButtonTrash.addComponent(bitmapDrawableComponent);
+        gameWorld.addGameObject(gameObjectButtonTrash);
+    }
 
 
 
-
-        gameObjectShovel.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectShovel));
-        BulldozerDrawableComponent.ShovelDrawableComponent shovelDrawableComponent=bulldozerDrawableComponent.new ShovelDrawableComponent(gameObjectShovel,bulldozerDrawableComponent);
-        BulldozerPhysicsComponent.ShovelPhysicsComponent shovelPhysicsComponent = bulldozerPhysicsComponent.new ShovelPhysicsComponent(gameObjectShovel,bulldozerPhysicsComponent);
-        gameObjectShovel.addComponent(shovelDrawableComponent);
-        gameObjectShovel.addComponent(shovelPhysicsComponent);
-        gameWorld.addGameObject(gameObjectShovel);
-
-
-
-        gameObjectDamperOne.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectDamperOne));
-        gameObjectDamperOne.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObjectBulldozer));
-        gameObjectDamperOne.addComponent(bulldozerPhysicsComponent.new DamperPhysicsComponent(gameObjectDamperOne,bulldozerDrawableComponent,bulldozerPhysicsComponent,1));
-        gameWorld.addGameObject(gameObjectDamperOne);
-
-        gameObjectDamperTwo.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectDamperTwo));
-        gameObjectDamperTwo.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObjectBulldozer));
-        gameObjectDamperTwo.addComponent(bulldozerPhysicsComponent.new DamperPhysicsComponent(gameObjectDamperTwo,bulldozerDrawableComponent,bulldozerPhysicsComponent,2));
-        gameWorld.addGameObject(gameObjectDamperTwo);
-
-        gameObjectWheelSxOne.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectWheelSxOne));
-        gameObjectWheelSxOne.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelSxOne,bulldozerDrawableComponent));
-        gameObjectWheelSxOne.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSxOne,bulldozerDrawableComponent,1,gameObjectDamperOne));
-        gameWorld.addGameObject(gameObjectWheelSxOne);
-
-
-        gameObjectWheelDxOne.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectWheelDxOne));
-        gameObjectWheelDxOne.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelDxOne,bulldozerDrawableComponent));
-        gameObjectWheelDxOne.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelDxOne,bulldozerDrawableComponent,2,gameObjectDamperTwo));
-        gameWorld.addGameObject(gameObjectWheelDxOne);
-
-        gameObjectDamperThree.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectDamperThree));
-        gameObjectDamperThree.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObjectBulldozer));
-        gameObjectDamperThree.addComponent(bulldozerPhysicsComponent.new DamperPhysicsComponent(gameObjectDamperThree,bulldozerDrawableComponent,bulldozerPhysicsComponent,3));
-        gameWorld.addGameObject(gameObjectDamperThree);
-
-        gameObjectDamperFour.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectDamperFour));
-        gameObjectDamperFour.addComponent(bulldozerDrawableComponent.new DamperDrawableComponent(gameObjectBulldozer));
-        gameObjectDamperFour.addComponent(bulldozerPhysicsComponent.new DamperPhysicsComponent(gameObjectDamperFour,bulldozerDrawableComponent,bulldozerPhysicsComponent,4));
-        gameWorld.addGameObject(gameObjectDamperFour);
-
-
-        gameObjectWheelDxTwo.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectWheelDxTwo));
-        gameObjectWheelDxTwo.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelDxTwo,bulldozerDrawableComponent));
-        gameObjectWheelDxTwo.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelDxTwo,bulldozerDrawableComponent,3,gameObjectDamperThree));
-        gameWorld.addGameObject(gameObjectWheelDxTwo);
-
-        gameObjectWheelSxTwo.addComponent(new DynamicPositionComponent(coordinateX,coordinateY,gameObjectWheelSxTwo));
-        gameObjectWheelSxTwo.addComponent(bulldozerDrawableComponent.new WheelDrawableComponent(gameObjectWheelSxTwo,bulldozerDrawableComponent));
-        gameObjectWheelSxTwo.addComponent(bulldozerPhysicsComponent.new WheelPhysicsComponent(gameObjectWheelSxTwo,bulldozerDrawableComponent,4,gameObjectDamperFour));
-        gameWorld.addGameObject(gameObjectWheelSxTwo);
-
-        gameObjectWheelShovel.addComponent(shovelDrawableComponent.new WheelShovelDrawableComponent(gameObjectWheelShovel));
-        gameObjectWheelShovel.addComponent(shovelPhysicsComponent.new WheelShovelPhysicsComponent(gameObjectWheelShovel));
-        gameWorld.addGameObject(gameObjectWheelShovel);
-
-       gameWorld.addGameObject(gameObjectBulldozer);
-
-
-
-
-    public static void createScoreBar(float scoreBarCoordinateX, float scoreBarCoordinateY,GameWorld gameWorld) {
-        GameObject gameObjectScoreBar = new GameObject(gameWorld);
-        gameObjectScoreBar.addComponent(new StaticPositionComponent(scoreBarCoordinateX,scoreBarCoordinateY,gameObjectScoreBar));
-        gameObjectScoreBar.addComponent(new ScoreBarDrawableComponent(gameObjectScoreBar));
-        gameWorld.addGameObject(gameObjectScoreBar);
-    }*/
 }

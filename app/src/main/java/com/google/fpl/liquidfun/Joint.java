@@ -44,5 +44,6 @@ public class Joint {
     long cPtr = liquidfunJNI.Joint_getBodyB(swigCPtr, this);
     return (cPtr == 0) ? null : new Body(cPtr, false);
   }
+  
 
 }

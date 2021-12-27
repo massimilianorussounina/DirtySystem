@@ -16,6 +16,14 @@ public abstract class PositionComponent extends Component{
             return ComponentType.Position;
         }
 
+
+    public float getCoordinateX() {
+        return coordinateX;
+    }
+
+    public float getCoordinateY() {
+        return coordinateY;
+    }
 }
 
 class StaticPositionComponent extends PositionComponent{
@@ -31,12 +39,24 @@ class StaticPositionComponent extends PositionComponent{
 
 class DynamicPositionComponent extends PositionComponent{
 
+    protected  int direction;
+
+    DynamicPositionComponent(String name,float coordinateX,float coordinateY, GameObject gameObject, int direction){
+        super(name);
+        this.coordinateX = coordinateX;
+        this.coordinateY = coordinateY;
+        this.owner = gameObject;
+        this.direction = direction;
+    }
+
     DynamicPositionComponent(String name,float coordinateX,float coordinateY, GameObject gameObject){
         super(name);
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.owner = gameObject;
+        this.direction = direction;
     }
+
 }
 class TrianglePositionComponent extends PositionComponent{
 

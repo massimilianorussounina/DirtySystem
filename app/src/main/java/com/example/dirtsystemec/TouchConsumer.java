@@ -18,7 +18,6 @@ public class TouchConsumer {
     private MouseJoint mouseJoint;
     private int activePointerID;
     private Fixture touchedFixture;
-
     private GameWorld gw;
     private QueryCallback touchQueryCallback = new TouchQueryCallback();
 
@@ -42,10 +41,14 @@ public class TouchConsumer {
 
     public void consumeTouchEvent(Input.TouchEvent event)
     {
-        /*
+
         switch (event.type) {
             case Input.TouchEvent.TOUCH_DOWN:
                 consumeTouchDown(event);
+
+
+
+
                 break;
             case Input.TouchEvent.TOUCH_UP:
                 consumeTouchUp(event);
@@ -53,7 +56,7 @@ public class TouchConsumer {
             case Input.TouchEvent.TOUCH_DRAGGED:
                 consumeTouchMove(event);
                 break;
-        }*/
+        }
     }
 
     private void consumeTouchDown(Input.TouchEvent event) {
@@ -66,6 +69,11 @@ public class TouchConsumer {
 
         Log.d("MultiTouchHandler", "touch down at " + x + ", " + y);
 
+        gw.eventButton(x,y);
+
+
+
+        /*
         touchedFixture = null;
         gw.world.queryAABB(touchQueryCallback, x - POINTER_SIZE, y - POINTER_SIZE, x + POINTER_SIZE, y + POINTER_SIZE);
         if (touchedFixture != null) {
@@ -80,6 +88,7 @@ public class TouchConsumer {
                 // splitBox(touchedGO, touchedBody);
             }
         }
+        */
     }
 
 
@@ -112,4 +121,9 @@ public class TouchConsumer {
             mouseJoint.setTarget(x, y);
         }
     }
+
+
+
+
+
 }

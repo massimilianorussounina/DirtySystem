@@ -1,12 +1,15 @@
 package com.example.dirtsystemec;
 
 import android.app.Activity;
+import android.app.usage.UsageEvents;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
+import com.badlogic.androidgames.framework.Game;
+import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.impl.TouchHandler;
 import com.google.fpl.liquidfun.Joint;
 import com.google.fpl.liquidfun.RevoluteJoint;
@@ -21,14 +24,16 @@ import java.util.Objects;
 
 public class GameWorld {
 
+
     final static int bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
     Bitmap buffer;
     private final Canvas canvas;
     //private BulldozerPhysicsComponent bulldozer;
-
+    private boolean buttonTrash = true;
     // Simulation
     List<GameObject> objects;
-    List<GameObject> listBulldozer;
+
+    List<GameObject> listBarrel;
     PhysicsComponent bulldozer;
     World world;
     final Box physicalSize, screenSize, currentView;
@@ -59,7 +64,7 @@ public class GameWorld {
         touchConsumer = new TouchConsumer(this);
 
         this.objects = new ArrayList<>();
-        this.listBulldozer = new ArrayList<>();
+        this.listBarrel = new ArrayList<>();
         this.canvas = new Canvas(buffer);
         Rect src = new Rect();
         src.set(0,0,1920,1080);
@@ -82,17 +87,23 @@ public class GameWorld {
             //creare il nuovo con 1
         }
 
-
-
         handleCollisions(contactListener.getCollisions());
 
-        // Handle touch events
-       //for (Input.TouchEvent event: touchHandler.getTouchEvents())
-         //    touchConsumer.consumeTouchEvent(event);
+        for (Input.TouchEvent event: touchHandler.getTouchEvents())
+            touchConsumer.consumeTouchEvent(event);
     }
 
     public synchronized void render() {
         canvas.drawARGB(100,126,193,243);
+
+        for(GameObject gameObject: listBarrel){
+            List<Component> components = gameObject.getComponent(ComponentType.Drawable);
+            if(components != null){
+                for (Component component: components) {
+                    ((DrawableComponent) component).draw(buffer);
+                }
+            }
+        }
 
         for(GameObject gameObject: objects){
             List<Component> components = gameObject.getComponent(ComponentType.Drawable);
@@ -103,58 +114,36 @@ public class GameWorld {
             }
         }
 
+
     }
 
     public synchronized void addGameObject(GameObject obj)
     {
-        objects.add(obj);
+
         if(obj.name!=null && obj.name.equals("bulldozer")) {
+            objects.add(obj);
             for (Component psh : obj.getComponent(ComponentType.Physics)) {
                 if (((PhysicsComponent)psh).name.equals("chassis")){
                     bulldozer=(PhysicsComponent)psh;
                 }
             }
+        }else if(obj.name!=null && obj.name.equals("barrel")){
+            listBarrel.add(obj);
+        }else{
+            objects.add(obj);
         }
 
     }
 
     private void handleCollisions(Collection<Collision> collisions) {
         for (Collision event: collisions) {
-           if(event.a.name.equals("wheelOne") || event.a.name.equals("wheelTwo")|| event.a.name.equals("wheelThree")|| event.a.name.equals("wheelFour")){
-               if(event.b.name.equals("oilstain")){
-                   for(Component component: event.a.owner.getComponent(ComponentType.Joint)) {
-                       if (component instanceof RevoluteJointComponent) {
-                           RevoluteJointComponent revoluteJointComponent = (RevoluteJointComponent) component;
-                           if (revoluteJointComponent.bodyOne.equals(event.a.body) || revoluteJointComponent.bodyTwo.equals(event.a.body)) {
-                               if(revoluteJointComponent.joint instanceof RevoluteJoint) {
-                                   if(revoluteJointComponent.joint.getMotorSpeed()!=2f)
-                                       revoluteJointComponent.joint.setMotorSpeed(2f);
-                               }
-                           }
-                       }
-                   }
-
-               }
-           } else
-           if(event.b.name.equals("wheelOne") || event.b.name.equals("wheelTwo")|| event.b.name.equals("wheelThree")|| event.b.name.equals("wheelFour")){
-               if(event.a.name.equals("oilstain")){
-                   for(Component component: event.b.owner.getComponent(ComponentType.Joint)){
-                       if (component instanceof RevoluteJointComponent) {
-                           RevoluteJointComponent revoluteJointComponent = (RevoluteJointComponent) component;
-                           if (revoluteJointComponent.bodyOne.equals(event.b.body) || revoluteJointComponent.bodyTwo.equals(event.b.body)) {
-                               if(revoluteJointComponent.joint instanceof RevoluteJoint) {
-                                   if(revoluteJointComponent.joint.getMotorSpeed()!=2f)
-                                       revoluteJointComponent.joint.setMotorSpeed(2f);
-                               }
-                           }
-                       }
-                   }
-
-               }
-           }
+            handleDeleteBarrel(event);
         }
 
     }
+
+
+
 
     public void deleteBulldozer(){
 
@@ -198,6 +187,59 @@ public class GameWorld {
 
     public void setTouchHandler(TouchHandler touchHandler) {
         this.touchHandler = touchHandler;
+    }
+
+    public void eventButton(float coordinateX, float coordinateY){
+        int index = 0;
+
+        if(buttonTrash) {
+            if ((coordinateX <= 12.5f && coordinateX >= 10f) && (coordinateY >= -23.8f && coordinateY <= -21.8f)) {
+                buttonTrash = false;
+                for (GameObject g : objects) {
+                    if (g.name.equals("buttonTrash")) {
+                        break;
+                    } else {
+                        index++;
+                    }
+                }
+                if (index <= objects.size()) {
+                    objects.remove(index);
+                    GameObject.createButtonTrash(11.5f, -22.8f, this, buttonTrash);
+                }
+            }
+        }else{
+            buttonTrash = true;
+            for (GameObject g: objects) {
+                if(g.name.equals("buttonTrash")){
+                    break;
+                }else{
+                    index++;
+                }
+            }
+            if(index <= objects.size()) {
+                objects.remove(index);
+                GameObject.createButtonTrash(11.5f,-22.8f,this,buttonTrash);
+            }
+            GameObject.createBarrel(13f,coordinateY,this);
+        }
+
+    }
+
+
+    public void handleDeleteBarrel(Collision event){
+        if(event.a.name.equals("incinerator")  && event.b.name.equals("barrel")){
+            listBarrel.remove((GameObject) event.b.owner);
+            world.destroyBody(event.b.body);
+            event.b.body.setUserData(null);
+            event.b.body.delete();
+            event.b.body=null;
+        }else if(event.a.name.equals("barrel")  && event.b.name.equals("incinerator")){
+            listBarrel.remove((GameObject) event.a.owner);
+            world.destroyBody(event.a.body);
+            event.a.body.setUserData(null);
+            event.a.body.delete();
+            event.a.body=null;
+        }
     }
 
 }

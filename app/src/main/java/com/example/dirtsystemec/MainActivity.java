@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         GameObject.createEnclosure(coordinateXMax,coordinateXMin,coordinateYMax,coordinateYMin,gw);
 
-        GameObject.createBridge(-7.6f,0,-8.5f,4.5f,-2f,-1f,-2f,1f,2f,1f
-                ,-8.5f,-4.5f,2f,-1f,2f,1f,-2f,1f,gw);
+        GameObject.createBridge(-7.6f,0,-8.5f,4.5f,-2f,0f,-2f,1f,2f,1f
+                ,-8.5f,-4.5f,2f,0f,2f,1f,-2f,1f,gw);
 
 
 

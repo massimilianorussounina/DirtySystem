@@ -47,7 +47,8 @@ public class GameWorld {
     final Activity activity;
     private Bitmap bitmap;
     private final RectF dest = new RectF();
-
+    boolean flag=false;
+    float speed=10f;
     // Arguments are in physical simulation units.
     public GameWorld(Box physicalSize, Box screenSize, Activity theActivity) {
         this.physicalSize = physicalSize;
@@ -86,6 +87,10 @@ public class GameWorld {
             GameObject.createBulldozer(-7.5f,y+0.5f,this,1);
             //creare il nuovo con 1
         }
+
+
+        accelerationAnddeceleration();
+        Log.i("angolo buldozzer",":  "+bulldozer.body.getAngularVelocity());
 
         handleCollisions(contactListener.getCollisions());
 
@@ -239,6 +244,68 @@ public class GameWorld {
             event.a.body.setUserData(null);
             event.a.body.delete();
             event.a.body=null;
+        }
+    }
+
+    private void accelerationAnddeceleration(){
+        if(bulldozer.body.getAngle()>=1.6f || bulldozer.body.getAngle() < 1.4f) {
+            int invert = ((DynamicPositionComponent) bulldozer.owner.getComponent(ComponentType.Position).get(0)).direction;
+            if (invert == -1 && bulldozer.body.getAngle() < 1.4f) {
+                flag=true;
+                for (Component c : bulldozer.owner.getComponent(ComponentType.Joint)) {
+                    if (c instanceof RevoluteJointComponent) {
+                        if (((RevoluteJointComponent) c).joint.isMotorEnabled())
+                            ((RevoluteJointComponent) c).joint.setMaxMotorTorque(0f);
+                    }
+                }
+
+            }
+            else if (invert == +1 && bulldozer.body.getAngle() >= 1.6f) {
+                flag=true;
+                for (Component c : bulldozer.owner.getComponent(ComponentType.Joint)) {
+                    if (c instanceof RevoluteJointComponent) {
+                        if (((RevoluteJointComponent) c).joint.isMotorEnabled())
+                            ((RevoluteJointComponent) c).joint.setMaxMotorTorque(0f);
+                    }
+                }
+            }
+            else if(flag) {
+                flag=false;
+                for (Component c : bulldozer.owner.getComponent(ComponentType.Joint)) {
+                    if (c instanceof RevoluteJointComponent) {
+                        if (((RevoluteJointComponent) c).joint.isMotorEnabled())
+                            ((RevoluteJointComponent) c).joint.setMaxMotorTorque(100f);
+                    }
+
+                }
+            }
+
+            if (speed >= 5) {
+                speed = speed - 0.05f;
+            }
+
+            for (Component c : bulldozer.owner.getComponent(ComponentType.Joint)) {
+                if (c instanceof RevoluteJointComponent) {
+                    if (((RevoluteJointComponent) c).joint.isMotorEnabled())
+                        ((RevoluteJointComponent) c).joint.setMotorSpeed(invert * speed);
+                }
+            }
+        }
+
+        else{
+            if(speed<=10){
+                speed=speed+0.05f;
+            }
+            int invert = ((DynamicPositionComponent)bulldozer.owner.getComponent(ComponentType.Position).get(0)).direction;
+            for(Component c:bulldozer.owner.getComponent(ComponentType.Joint)){
+                if(c instanceof RevoluteJointComponent) {
+                    if (((RevoluteJointComponent) c).joint.isMotorEnabled())
+                        ((RevoluteJointComponent) c).joint.setMotorSpeed(invert*speed);
+                         ((RevoluteJointComponent) c).joint.setMaxMotorTorque(100f);
+
+                }
+            }
+
         }
     }
 

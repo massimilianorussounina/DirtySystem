@@ -79,17 +79,17 @@ public class GameWorld {
         y=bulldozer.body.getPositionY();
         if(y >= 20.5f){
             deleteBulldozer();
-            GameObject.createBulldozer(-7.5f,y-0.5f,this,-1);
+            GameObject.createBulldozer(-7.5f,y-0.5f,this,-1,activity);
             //creare il nuovo con -1
         }
         else if(y <=-20f){
             deleteBulldozer();
-            GameObject.createBulldozer(-7.5f,y+0.5f,this,1);
+            GameObject.createBulldozer(-7.5f,y+0.5f,this,1,activity);
             //creare il nuovo con 1
         }
 
 
-        accelerationAnddeceleration();
+        //accelerationAnddeceleration();
         Log.i("angolo buldozzer",":  "+bulldozer.body.getAngularVelocity());
 
         handleCollisions(contactListener.getCollisions());
@@ -306,6 +306,31 @@ public class GameWorld {
                 }
             }
 
+        }
+    }
+
+    private String searchBarrel(){
+        int contRight = 0;
+        int contLeft = 0;
+        float y = bulldozer.body.getPositionY();
+        if(listBarrel.size() == 0){
+            return null;
+        }else{
+            for (GameObject g: listBarrel) {
+                List<Component> positionComponents = g.getComponent(ComponentType.Position);
+                PositionComponent positionComponent = (PositionComponent) positionComponents.get(0);
+                if(y > positionComponent.getCoordinateY()){
+                    contLeft++;
+                }else{
+                    contRight++;
+                }
+            }
+
+            if(contLeft > contRight){
+                return "left";
+            }else{
+                return "right";
+            }
         }
     }
 

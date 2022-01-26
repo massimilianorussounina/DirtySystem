@@ -1,0 +1,45 @@
+{
+	"state":[
+			{
+				"name":"wait",
+				"action":[
+							{
+								"name":"searched"
+							}
+						]
+			},
+			{
+				"name":"burn",
+				"action":[
+							{
+								"name":"searched"
+							}
+						 ]
+			}
+		   ],
+
+	"transition": [
+					{
+						"from":"wait",
+						"to":"burn",
+						"action":[
+									{
+										"name":"searched"
+									}
+								]
+
+					},
+
+					{
+						"from":"burn",
+						"to":"wait",
+						"action":[
+							{
+								"name":"waited"
+							}
+						]
+
+					}
+	],
+	"startState": "wait"
+}

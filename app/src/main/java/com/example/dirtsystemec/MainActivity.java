@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         GameObject.createBarrel(3f,-17.5f,gw); */
 
 
-        GameObject.createBulldozer(-5,10,gw,1);
+        GameObject.createBulldozer(-6,0,gw,1,this);
         GameObject.createButtonTrash(11.5f,-22.8f,gw,true);
 
         renderView = new AndroidFastRenderView(this, gw);

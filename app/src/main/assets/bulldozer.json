@@ -2,19 +2,12 @@
 	"state":[
 			{
 				"name":"wait",
-				"action":[
-							{
-								"name":"searched"
-							}
-						]
+				"action":"waited"
 			},
+
 			{
 				"name":"burn",
-				"action":[
-							{
-								"name":"searched"
-							}
-						 ]
+				"action":"burned"
 			}
 		   ],
 
@@ -22,23 +15,19 @@
 					{
 						"from":"wait",
 						"to":"burn",
-						"action":[
-									{
-										"name":"searched"
-									}
-								]
-
+						"action":"burned"
 					},
 
 					{
 						"from":"burn",
 						"to":"wait",
-						"action":[
-							{
-								"name":"waited"
-							}
-						]
+						"action":"waited"
+					},
 
+					{
+						"from":"burn",
+						"to":"burn",
+						"action":"burned"
 					}
 	],
 	"startState": "wait"

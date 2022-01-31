@@ -30,6 +30,7 @@ public class FixtureDef {
       if (swigCMemOwn) {
         swigCMemOwn = false;
         liquidfunJNI.delete_FixtureDef(swigCPtr);
+
       }
       swigCPtr = 0;
     }
@@ -47,6 +48,7 @@ public class FixtureDef {
   public void setFriction(float value) {
     liquidfunJNI.FixtureDef_friction_set(swigCPtr, this, value);
   }
+
 
   public float getFriction() {
     return liquidfunJNI.FixtureDef_friction_get(swigCPtr, this);

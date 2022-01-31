@@ -10,6 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.badlogic.androidgames.framework.Audio;
+import com.badlogic.androidgames.framework.Music;
+import com.badlogic.androidgames.framework.impl.AndroidAudio;
 import com.badlogic.androidgames.framework.impl.MultiTouchHandler;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,12 +23,16 @@ public class MainActivity extends AppCompatActivity {
     public static String TAG;
     private AndroidFastRenderView renderView;
     private int currentApiVersion;
+    private Audio audio;
+    private Music bulldozerMusic,backgroundMusic;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         System.loadLibrary("liquidfun");
         System.loadLibrary("liquidfun_jni");
+
         TAG = getString(R.string.app_name);
         TAG = getString(R.string.app_name);
 
@@ -50,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        /* Inizializzazione Audio */
+        audio = new AndroidAudio(this);
+        CollisionSounds.init(audio);
+        bulldozerMusic = audio.newMusic("soundTractor.mp3");
+        bulldozerMusic.play();
+        bulldozerMusic.setLooping(true);
+        bulldozerMusic.setVolume(0f);
+        backgroundMusic = audio.newMusic("soundtrack.mp3");
+        backgroundMusic.play();
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0f);
+
 
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -84,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         GameObject.createBarrel(3f,-17.5f,gw); */
 
 
-        GameObject.createBulldozer(-6,0,gw,1,this);
+        GameObject.createBulldozer(-6.6f,0,gw,-1,this,null);
         GameObject.createButtonTrash(11.5f,-22.8f,gw,true);
 
         renderView = new AndroidFastRenderView(this, gw);
@@ -101,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.i("Main thread", "resume");
         renderView.resume(); // starts game loop in a separate thread
-
     }
 
     @Override

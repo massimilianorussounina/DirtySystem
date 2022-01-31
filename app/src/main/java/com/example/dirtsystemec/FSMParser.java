@@ -19,13 +19,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class FSMParser {
 
     private List<State> states;
-    private List<Transition> transitions;
     private Context context;
 
     public FSMParser(Context context) {
         this.context = context;
         states = new ArrayList<>();
-        transitions = new ArrayList<>();
+
     }
 
 
@@ -38,7 +37,6 @@ public class FSMParser {
             /* Creazione degli stati */
             JsonArray jsonArrayState = jsonResults.getAsJsonArray("state");
             states = new ArrayList<>();
-            transitions = new ArrayList<>();
             for(int i = 0; i < jsonArrayState.size(); i++){
                 createStates(jsonArrayState.get(i).getAsJsonObject());
             }
@@ -78,39 +76,28 @@ public class FSMParser {
 
     private void createStates(JsonObject jsonObject){
         String name = jsonObject.get("name").getAsString();
-        if(name != null) {
-            State state = new State(name);
-            List<Action> activeActions = new ArrayList<>();
-
-            JsonArray jsonArrayAction = jsonObject.getAsJsonArray("action");
-            if (jsonArrayAction != null) {
-                for (int i = 0; i < jsonArrayAction.size(); i++) {
-                    JsonElement jsonElement = jsonArrayAction.get(i);
-                    String nameAction = jsonElement.getAsJsonObject().get("name").getAsString();
-                    if (nameAction != null) {
-                        switch (nameAction) {
-                            case "searched":
-                                activeActions.add(Action.searched);
-                            case "waited":
-                                activeActions.add(Action.waited);
-                            case "burned":
-                                activeActions.add(Action.burned);
-                        }
-                    }
-                }
-                state.setActiveActions(activeActions);
+        String activeAction = jsonObject.get("action").getAsString();
+        State state;
+        if(name != null && activeAction != null) {
+            switch (activeAction) {
+                case "waited":
+                    state = new State(name,Action.waited);
+                    break;
+                case "burned":
+                    state = new State(name,Action.burned);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + activeAction);
             }
             states.add(state);
         }
     }
 
-
-
-
-
     private void createTransitions(JsonObject jsonObject) {
         String fromState = jsonObject.get("from").getAsString();
         String targetState = jsonObject.get("to").getAsString();
+        String action = jsonObject.get("action").getAsString();
+        Transition transition = null;
         if (fromState != null && targetState != null) {
             State fState = null;
             State tState = null;
@@ -125,34 +112,21 @@ public class FSMParser {
             }
 
             if (fState != null && tState != null) {
-                Transition transition = new Transition(fState, tState);
-                fState.addTransitionsOut(transition);
-                List<Action> actions = new ArrayList<>();
-
-                JsonArray jsonArrayAction = jsonObject.getAsJsonArray("action");
-                if (jsonArrayAction != null) {
-                    for (int i = 0; i < jsonArrayAction.size(); i++) {
-                        JsonElement jsonElement = jsonArrayAction.get(i);
-                        String nameAction = jsonElement.getAsJsonObject().get("name").getAsString();
-                        if (nameAction != null) {
-
-                            switch (nameAction) {
-                                case "waited":
-                                    actions.add(Action.waited);
-                                    break;
-                                case "searched":
-                                    actions.add(Action.searched);
-                                    break;
-                                case "burned":
-                                    actions.add(Action.burned);
-                                    break;
-                            }
-                        }
+                if(action != null){
+                    switch (action) {
+                        case "waited":
+                            transition = new Transition(fState, tState,Action.waited);
+                            break;
+                        case "burned":
+                            transition = new Transition(fState, tState,Action.burned);
+                            break;
                     }
-                    transition.setActions(actions);
+                }else{
+                    transition = new Transition(fState, tState,null);
                 }
-                transitions.add(transition);
+                fState.addTransitionsOut(transition);
             }
+
         }
     }
 

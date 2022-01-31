@@ -212,6 +212,7 @@ public class liquidfunJNI {
   public final static native void FixtureDef_shape_set(long jarg1, FixtureDef jarg1_, long jarg2, Shape jarg2_);
   public final static native long FixtureDef_shape_get(long jarg1, FixtureDef jarg1_);
   public final static native void FixtureDef_friction_set(long jarg1, FixtureDef jarg1_, float jarg2);
+  public final static native void FixtureDef_sensor_set(long jarg1, FixtureDef jarg1_, boolean jarg2);
   public final static native float FixtureDef_friction_get(long jarg1, FixtureDef jarg1_);
   public final static native void FixtureDef_restitution_set(long jarg1, FixtureDef jarg1_, float jarg2);
   public final static native float FixtureDef_restitution_get(long jarg1, FixtureDef jarg1_);
@@ -574,6 +575,7 @@ public class liquidfunJNI {
   public final static native long RopeJoint_SWIGUpcast(long jarg1);
   public final static native long DistanceJointDef_SWIGUpcast(long jarg1);
   public final static native long DistanceJoint_SWIGUpcast(long jarg1);
+
 
   public static void SwigDirector_Draw_drawPolygon(Draw jself, byte[] vertices, int vertexCount, long color) {
     jself.drawPolygon(vertices, vertexCount, new Color(color, false));

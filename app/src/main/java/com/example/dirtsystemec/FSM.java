@@ -6,34 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 enum Action{
-    burned,searched,waited
+    burned,waited
 }
 
 class State{
 
     protected String name;
 
-    protected List<Action> activeActions;
+    protected Action activeAction;
 
     protected List<Transition> transitionsOut;
 
-    public State(String name){
+    public State(String name, Action activeAction){
         this.name = name;
-        this.activeActions = new ArrayList<>();
+        this.activeAction = activeAction;
         this.transitionsOut = new ArrayList<>();
     }
 
-    public List<Action> activeActions() {
-        return activeActions;
+    public Action activeAction() {
+        return activeAction;
     }
 
     public List<Transition> outGoingTransitions() {
         return transitionsOut;
     }
 
-    public void setActiveActions(List<Action> activeActions) {
-        this.activeActions = activeActions;
-    }
 
     public void addTransitionsOut(Transition transition) {
         this.transitionsOut.add(transition);
@@ -47,24 +44,27 @@ class State{
 class Transition{
 
 
-    protected List<Action> actions;
+    protected Action action;
     protected State fromState;
     protected State targetState;
 
-    public Transition(State fromState,State targetState){
+    public Transition(State fromState,State targetState,Action action){
         this.fromState = fromState;
         this.targetState = targetState;
-        actions = new ArrayList<>();
+        this.action = action;
     }
 
     public boolean isTriggered(GameWorld gameWorld) {
-        targetState.activeActions();
+       Action action = targetState.activeAction();
+
+        if(action.equals(Action.burned)){
+            System.out.println(gameWorld.listBarrel.size());
+            return gameWorld.listBarrel.size() != 0;
+        }else if(action.equals(Action.waited)){
+            return gameWorld.listBarrel.size() == 0;
+        }
+
         return false;
-    }
-
-
-    public List<Action> actions() {
-        return actions;
     }
 
 
@@ -72,9 +72,6 @@ class Transition{
         return targetState;
     }
 
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
-    }
 }
 
 public class FSM {
@@ -86,9 +83,9 @@ public class FSM {
         this.currentState = state;
     }
 
-    public List<Action> stepAndGetAction(GameWorld gameWorld){
+    public Action stepAndGetAction(GameWorld gameWorld){
         Transition transitionTrigger = null;
-
+        System.out.println(currentState.name);
 
         for (Transition transition: currentState.outGoingTransitions()) {
             if(transition.isTriggered(gameWorld)){
@@ -99,10 +96,12 @@ public class FSM {
 
         if(transitionTrigger != null){
             currentState = transitionTrigger.targetState();
-            return transitionTrigger.actions();
+            System.out.println(currentState.name);
+            return transitionTrigger.action;
         }
         else{
-            return null;
+            System.out.println(currentState.activeAction);
+            return currentState.activeAction;
         }
     }
 

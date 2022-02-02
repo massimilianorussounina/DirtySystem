@@ -244,7 +244,7 @@ public class GameObject extends Entity{
         for(int i=0;i<4;i++){
 
             PolygonPhysicsComponent polygonPhysicsComponentDamper = new PolygonPhysicsComponent(damperName[i],gameObjectBulldozer,BodyType.dynamicBody
-                    ,coordinateX-proportionalToBulldozer(0.5f,width),coordinateY+coordinateSpawnDamper[i],proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1f,width)/2,1,0.1f,0.5f);
+                    ,coordinateX-proportionalToBulldozer(0.5f,width),coordinateY+coordinateSpawnDamper[i],proportionalToBulldozer(0.5f,width)/2,proportionalToBulldozer(1f,width)/2,1,0.1f,0.5f, true);
             gameObjectBulldozer.addComponent(polygonPhysicsComponentDamper);
             listPolygonDamper.add(polygonPhysicsComponentDamper);
 
@@ -274,6 +274,8 @@ public class GameObject extends Entity{
         for(int i=0;i<4;i++){
             CirclePhysicsComponent circlePhysicsComponentWheel = new CirclePhysicsComponent(wheelName[i],gameObjectBulldozer,BodyType.dynamicBody,coordinateX-proportionalToBulldozer(0.7f,width),coordinateY+coordinateSpawnDamper[i],proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),4,0.1f,1f);
             gameObjectBulldozer.addComponent(circlePhysicsComponentWheel);
+
+
 
             RevoluteJointComponent revoluteJointComponentOne = new RevoluteJointComponent(gameObjectBulldozer, listPolygonDamper.get(i).body, circlePhysicsComponentWheel.body,0,proportionalToBulldozer(0.7f,width),0,0,100f,true,invert*0f);
             gameObjectBulldozer.addComponent(revoluteJointComponentOne);
@@ -351,6 +353,7 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectBulldozer);
 
         gameWorld.setGravity(-10,0);
+
     }
 
 
@@ -374,6 +377,13 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectButtonTrash);
     }
 
-
+    public static void createTimer(float coordinateX, float coordinateY,GameWorld gameWorld){
+        GameObject gameObjectTimer = new GameObject(gameWorld,"timer");
+        TextDrawbleComponent textDrawbleComponentTimer = new TextDrawbleComponent("timer",gameObjectTimer,"05:00",Color.argb(255,255,255,255), gameWorld.activity, 40);
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("timer",coordinateX,coordinateY,gameObjectTimer);
+        gameObjectTimer.addComponent(textDrawbleComponentTimer);
+        gameObjectTimer.addComponent(staticPositionComponent);
+        gameWorld.addGameObject(gameObjectTimer);
+    }
 
 }

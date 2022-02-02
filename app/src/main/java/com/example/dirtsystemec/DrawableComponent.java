@@ -1,5 +1,6 @@
 package com.example.dirtsystemec;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public abstract class DrawableComponent  extends Component{
     protected Bitmap bitmap;
     protected Canvas canvas;
     protected Paint paint = new Paint();
+    protected String text;
     protected float width, height,density;
     protected float screenSemiWidth, screenSemiHeight;
 
@@ -183,6 +186,37 @@ class SpriteDrawableComponent extends DrawableComponent {
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
         sprite.draw(System.currentTimeMillis());
     }
+}
+
+class TextDrawbleComponent extends DrawableComponent{
+
+    Context context;
+    public TextDrawbleComponent (String name, GameObject gameObject, String text, int color, Context context, int size){
+        super(name);
+        this.owner = gameObject;
+        this.text=text;
+        this.context=context;
+        GameWorld gameWorld = gameObject.gameWorld;
+        this.canvas = new Canvas(gameWorld.buffer);
+        this.paint.setColor(color);
+        this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setTextSize(size);
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"font/8bitfont.ttf");
+        paint.setTypeface(typeface);
+    }
+
+    @Override
+    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
+        canvas.save();
+        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
+        canvas.drawText(text, coordinate_x, coordinate_y, paint);
+        canvas.restore();
+    }
+
+    public void setText(String text){
+        this.text=text;
+    }
+
 }
 
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.concurrent.TimeUnit;
 
 
 public class GameWorld {
@@ -55,6 +55,10 @@ public class GameWorld {
     boolean flag=false;
     float speed=7f;
     // Arguments are in physical simulation units.
+
+    private TextDrawbleComponent timerTex;
+    private long startTime,currentTime,maxTime=300000l,timerPause=0,timeResume=0;
+
     public GameWorld(Box physicalSize, Box screenSize, Activity theActivity) {
         this.physicalSize = physicalSize;
         this.screenSize = screenSize;
@@ -63,6 +67,7 @@ public class GameWorld {
         this.world = new World( 0.0f, 0.0f);  // gravity vector
         this.currentView = physicalSize;
         this.numFps = 0;
+        this.startTime= System.currentTimeMillis();
         // stored to prevent GC
         contactListener = new MyContactListener();
         world.setContactListener(contactListener);
@@ -151,6 +156,22 @@ public class GameWorld {
 
 
         handleCollisions(contactListener.getCollisions());
+        /* update Timer */
+        if(numFps == 30 ) {
+            if(timeResume!=0 && timerPause!=0){
+                startTime=startTime+(timeResume-timerPause);
+                timeResume=0;
+                timerPause=0;
+            }
+            currentTime = maxTime - (System.currentTimeMillis() - startTime);
+            timerTex.setText(String.format("%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(currentTime),
+                    TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
+            ));
+        }
+
+
 
         for (Input.TouchEvent event: touchHandler.getTouchEvents())
             touchConsumer.consumeTouchEvent(event);
@@ -189,7 +210,12 @@ public class GameWorld {
             }
         }else if(obj.name!=null && obj.name.equals("barrel")){
             objects.add(0,obj);
-        }else{
+        }else if (obj.name!= null && obj.name.equals("timer")){
+            timerTex=(TextDrawbleComponent)obj.getComponent(ComponentType.Drawable).get(0);
+            objects.add(obj);
+        }
+        else
+        {
             objects.add(obj);
         }
 
@@ -284,7 +310,7 @@ public class GameWorld {
         int index = 0;
 
         if(buttonTrash) {
-            if ((coordinateX <= 12.5f && coordinateX >= 10f) && (coordinateY >= -23.8f && coordinateY <= -21.8f)) {
+            if ((coordinateX <= 14.5f && coordinateX >= 9.75f) && (coordinateY >= -23.05f && coordinateY <= -20.55f)) {
                 buttonTrash = false;
                 for (GameObject g : objects) {
                     if (g.name.equals("buttonTrash")) {
@@ -295,7 +321,7 @@ public class GameWorld {
                 }
                 if (index <= objects.size()) {
                     objects.remove(index);
-                    GameObject.createButtonTrash(11.5f, -22.8f, this, buttonTrash);
+                    GameObject.createButtonTrash(11f, -21.8f, this, buttonTrash);
                 }
             }
         }else{
@@ -309,7 +335,7 @@ public class GameWorld {
             }
             if(index <= objects.size()) {
                 objects.remove(index);
-                GameObject.createButtonTrash(11.5f,-22.8f,this,buttonTrash);
+                GameObject.createButtonTrash(11f,-21.8f,this,buttonTrash);
             }
             GameObject.createBarrel(13f,coordinateY,this);
         }
@@ -504,7 +530,13 @@ public class GameWorld {
     }
 
 
+    public void setTimerPause(long time){
+        this.timerPause=time;
+    }
 
+    public void setTimeResume(long time){
+        this.timeResume=time;
+    }
 
 
 

@@ -5,6 +5,7 @@ import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.CircleShape;
+import com.google.fpl.liquidfun.Fixture;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.PolygonShape;
 
@@ -189,6 +190,37 @@ class PolygonPhysicsComponent extends PhysicsComponent{
         bodyDef.delete();
         box.delete();
     }
+
+    PolygonPhysicsComponent(String name,GameObject gameObject,BodyType bodyType,float coordinateX, float coordinateY,float width, float height, float density,float restitution,
+                            float friction,boolean isSensor) {
+        super(name);
+        this.owner = gameObject;
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.setAngle(1.5708f);
+        bodyDef.setType(bodyType);
+
+        bodyDef.setPosition(coordinateX, coordinateY);
+        GameWorld gameWorld = gameObject.gameWorld;
+
+        this.body = gameWorld.world.createBody(bodyDef);
+        this.body.setUserData(this);
+        this.body.setSleepingAllowed(false);
+
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(width, height);
+        FixtureDef fixturedef = new FixtureDef();
+        fixturedef.setShape(box);
+        fixturedef.setFriction(friction);
+        fixturedef.setRestitution(restitution);
+        fixturedef.setDensity(density);
+        body.createFixture(fixturedef);
+        body.getFixtureList().setSensor(isSensor);
+
+        bodyDef.delete();
+        box.delete();
+        }
+
+
 
 }
 

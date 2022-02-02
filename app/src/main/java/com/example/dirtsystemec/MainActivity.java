@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentApiVersion;
     private Audio audio;
     private Music bulldozerMusic,backgroundMusic;
-
+    private GameWorld gw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +77,10 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Box physicalSize = new Box(coordinateXMin, coordinateYMin, coordinateXMax, coordinateYMax);
         Box screenSize   = new Box(0, 0, metrics.widthPixels, metrics.heightPixels);
-        GameWorld gw = new GameWorld(physicalSize, screenSize, this);
+        gw = new GameWorld(physicalSize, screenSize, this);
         gw.setGravity(-10,0);
+
+        GameObject.createTimer(11,-2.2f,gw);
 
         GameObject.createEnclosure(coordinateXMax,coordinateXMin,coordinateYMax,coordinateYMin,gw);
 
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         GameObject.createBulldozer(-6.6f,0,gw,-1,this,null);
-        GameObject.createButtonTrash(11.5f,-22.8f,gw,true);
+        GameObject.createButtonTrash(11f,-21.8f,gw,true);
 
         renderView = new AndroidFastRenderView(this, gw);
         setContentView(renderView);
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         Log.i("Main thread", "resume");
+        gw.setTimeResume(System.currentTimeMillis());
         renderView.resume(); // starts game loop in a separate thread
     }
 
@@ -128,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         Log.i("Main thread", "pause");
+        gw.setTimerPause(System.currentTimeMillis());
         renderView.pause(); // stops the main loop
         // persistence example
     }

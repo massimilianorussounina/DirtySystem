@@ -1,11 +1,12 @@
 package com.example.dirtsystemec;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 public abstract class Sprite {
 
     protected int currentAnimation;
-    protected long lastTimeStamp;
+    protected long lastValue;
     protected final float coordinate_x;
     protected final float coordinate_y;
     protected final Spritesheet spritesheet;
@@ -13,11 +14,11 @@ public abstract class Sprite {
 
 
     public Sprite(GameWorld gw, Spritesheet spritesheet, float coordinateX, float coordinateY,float width, float height, int widthFrame,
-                  int heightFrame,int delay,int numberOfAnimations){
+                  int heightFrame,int delay,int numberOfAnimations,long lastValue){
         this.canvas = new Canvas(gw.buffer);
         this.spritesheet = spritesheet;
-        lastTimeStamp = System.currentTimeMillis();
-        currentAnimation = 0;
+        this.lastValue = System.currentTimeMillis();
+        this.currentAnimation = 0;
         this.coordinate_x = gw.toPixelsX(coordinateX);
         this.coordinate_y = gw.toPixelsY(coordinateY);
         float screen_semi_width = gw.toPixelsXLength(width) / 2;
@@ -38,21 +39,21 @@ class FireSprite extends Sprite {
 
     public FireSprite(GameWorld gameWorld, Spritesheet spritesheet, float coordinateX, float coordinateY, float width, float height, int widthFrame,
                       int heightFrame, int delay, int numberOfAnimations) {
-        super(gameWorld, spritesheet, coordinateX, coordinateY, width, height, widthFrame, heightFrame, delay, numberOfAnimations);
+        super(gameWorld, spritesheet, coordinateX, coordinateY, width, height, widthFrame, heightFrame, delay, numberOfAnimations,System.currentTimeMillis());
     }
 
 
     @Override
-    public void draw(long currentTimeStamp) {
+    public void draw(long currentValue) {
         canvas.save();
         canvas.rotate(90, coordinate_x, coordinate_y);
-        if (currentTimeStamp - lastTimeStamp > spritesheet.getDelay()[currentAnimation]) {
+        if (currentValue - lastValue > spritesheet.getDelay()[currentAnimation]) {
             if (currentAnimation >= spritesheet.getDelay().length - 1) {
                 currentAnimation = 0;
             } else {
                 currentAnimation = currentAnimation + 1;
             }
-            lastTimeStamp = currentTimeStamp;
+            lastValue = currentValue;
         }
         spritesheet.drawAnimation(canvas, currentAnimation, 0, coordinate_x, coordinate_y);
         canvas.restore();
@@ -64,21 +65,21 @@ class FireSprite extends Sprite {
 
         public SeaSprite(GameWorld gameWorld, Spritesheet spritesheet, float coordinateX, float coordinateY,float width, float height, int widthFrame,
                           int heightFrame,int delay,int numberOfAnimations){
-            super(gameWorld,spritesheet,coordinateX,coordinateY,width,height,widthFrame,heightFrame,delay,numberOfAnimations);
+            super(gameWorld,spritesheet,coordinateX,coordinateY,width,height,widthFrame,heightFrame,delay,numberOfAnimations,System.currentTimeMillis());
         }
 
 
         @Override
-        public void draw(long currentTimeStamp){
+        public void draw(long currentValue){
             canvas.save();
             canvas.rotate(90, coordinate_x, coordinate_y);
-            if(currentTimeStamp-lastTimeStamp > spritesheet.getDelay()[currentAnimation]){
+            if(currentValue-lastValue > spritesheet.getDelay()[currentAnimation]){
                 if(currentAnimation >= spritesheet.getDelay().length-1){
                     currentAnimation = 0;
                 }else{
                     currentAnimation = currentAnimation + 1;
                 }
-                lastTimeStamp = currentTimeStamp;
+                lastValue = currentValue;
             }
             spritesheet.drawAnimation(canvas,currentAnimation,0,coordinate_x,coordinate_y);
             canvas.restore();
@@ -87,6 +88,39 @@ class FireSprite extends Sprite {
 
 }
 
+class ScoreSprite extends Sprite{
 
+
+    public ScoreSprite(GameWorld gameWorld, Spritesheet spritesheet, float coordinateX, float coordinateY,float width, float height, int widthFrame,
+                     int heightFrame,int delay,int numberOfAnimations){
+        super(gameWorld,spritesheet,coordinateX,coordinateY,width,height,widthFrame,heightFrame,delay,numberOfAnimations,0);
+    }
+
+
+    @Override
+    public void draw(long currentValue){
+        canvas.save();
+        canvas.rotate(90, coordinate_x, coordinate_y);
+        long percent = 0;
+        if(currentValue != 0){
+           percent = (100*Math.abs(currentValue-lastValue))/currentValue;
+
+        }
+
+        if(percent >= spritesheet.getDelay()[currentAnimation]){
+            if(currentAnimation >= spritesheet.getDelay().length-1){
+                currentAnimation = 0;
+
+            }else{
+                currentAnimation = currentAnimation + 1;
+            }
+            lastValue = currentValue;
+        }
+        spritesheet.drawAnimation(canvas,currentAnimation,0,coordinate_x,coordinate_y);
+        canvas.restore();
+    }
+
+
+}
 
 

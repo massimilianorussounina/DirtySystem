@@ -175,18 +175,8 @@ public class GameObject extends Entity{
                 (coordinateXMin + (coordinateXMax - coordinateXMin)/2), coordinateYMax,(coordinateXMax - coordinateXMin),0.1f, 0,1);
 
 
-
-        PolygonPhysicsComponent polygonPhysicsComponentLeft = new PolygonPhysicsComponent("left",gameObjectEnclosure,BodyType.staticBody,
-                coordinateXMin, (coordinateYMin + (coordinateYMax - coordinateYMin)/2),0.1f,(coordinateYMax - coordinateYMin), 0,1);
-
-
-        PolygonPhysicsComponent polygonPhysicsComponentRight = new PolygonPhysicsComponent("right",gameObjectEnclosure,BodyType.staticBody,
-                coordinateXMax, (coordinateYMin + (coordinateYMax - coordinateYMin)/2),0.1f,(coordinateYMax - coordinateYMin), 0,1);
-
         gameObjectEnclosure.addComponent(polygonPhysicsComponentTop);
         gameObjectEnclosure.addComponent(polygonPhysicsComponentBottom);
-        gameObjectEnclosure.addComponent(polygonPhysicsComponentLeft);
-        gameObjectEnclosure.addComponent(polygonPhysicsComponentRight);
         gameWorld.addGameObject(gameObjectEnclosure);
     }
 
@@ -379,11 +369,33 @@ public class GameObject extends Entity{
 
     public static void createTimer(float coordinateX, float coordinateY,GameWorld gameWorld){
         GameObject gameObjectTimer = new GameObject(gameWorld,"timer");
-        TextDrawbleComponent textDrawbleComponentTimer = new TextDrawbleComponent("timer",gameObjectTimer,"05:00",Color.argb(255,255,255,255), gameWorld.activity, 40);
+        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("timer",gameObjectTimer,"05:00",Color.argb(255,255,255,255), gameWorld.activity, 40);
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("timer",coordinateX,coordinateY,gameObjectTimer);
-        gameObjectTimer.addComponent(textDrawbleComponentTimer);
+        gameObjectTimer.addComponent(textDrawableComponentTimer);
         gameObjectTimer.addComponent(staticPositionComponent);
         gameWorld.addGameObject(gameObjectTimer);
     }
+
+
+
+    public static void createScoreBar(float coordinateX, float coordinateY,GameWorld gameWorld) {
+
+        GameObject gameObjectSea = new GameObject(gameWorld,"scoreBar");
+
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("scoreBar",coordinateX,coordinateY,gameObjectSea);
+
+        BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
+        bitmapFactory.inScaled = false;
+        Bitmap bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.scorebar,bitmapFactory );
+        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("scoreBar",gameObjectSea,new ScoreSprite(gameWorld,new Spritesheet(bitmap,10),coordinateX,coordinateY,
+                2f,12f,66,405,10,10));
+
+        gameObjectSea.addComponent(staticPositionComponent);
+        gameObjectSea.addComponent(spriteDrawableComponent);
+
+
+        gameWorld.addGameObject(gameObjectSea);
+    }
+
 
 }

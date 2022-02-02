@@ -1,5 +1,7 @@
 package com.example.dirtsystemec;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+
 import android.app.Activity;
 import android.app.usage.UsageEvents;
 import android.content.Context;
@@ -26,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GameWorld {
 
-
+    private long score = 0;
     final static int bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
     Bitmap buffer;
     private final Canvas canvas;
@@ -56,7 +58,7 @@ public class GameWorld {
     float speed=7f;
     // Arguments are in physical simulation units.
 
-    private TextDrawbleComponent timerTex;
+    private TextDrawableComponent timerTex;
     private long startTime,currentTime,maxTime=300000l,timerPause=0,timeResume=0;
 
     public GameWorld(Box physicalSize, Box screenSize, Activity theActivity) {
@@ -83,8 +85,7 @@ public class GameWorld {
 
     public synchronized void update(float elapsedTime) {
         float positionYBulldozer;
-        GameObject gameObjectBulldozer= null;
-        // advance the physics simulation
+        GameObject gameObjectBulldozer = null;
         numFps++;
 
         /*    Inizio Fase AI   */
@@ -102,10 +103,29 @@ public class GameWorld {
         }
 
 
-        if(numFps == 60 ){
+        if(numFps == 10 ) {
+            if(timeResume!=0 && timerPause!=0){
+                startTime=startTime+(timeResume-timerPause);
+                timeResume=0;
+                timerPause=0;
+            }
+            currentTime = maxTime - (System.currentTimeMillis() - startTime);
+            timerTex.setText(String.format("%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(currentTime),
+                    TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
+            ));
+
+            score = (long) (score + (listBarrel.size() * 0.1f));
+        }
+
+
+
+        if(numFps == 20 ){
             if(verifyAction && listBarrel.size() == 0){
                 verifyAction = false;
             }
+
             if(!verifyAction){
                 for(GameObject gameObject: objects) {
                     if (gameObject.name.equals("bulldozer")) {
@@ -156,19 +176,7 @@ public class GameWorld {
 
         handleCollisions(contactListener.getCollisions());
         /* update Timer */
-        if(numFps == 30 ) {
-            if(timeResume!=0 && timerPause!=0){
-                startTime=startTime+(timeResume-timerPause);
-                timeResume=0;
-                timerPause=0;
-            }
-            currentTime = maxTime - (System.currentTimeMillis() - startTime);
-            timerTex.setText(String.format("%02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(currentTime),
-                    TimeUnit.MILLISECONDS.toSeconds(currentTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
-            ));
-        }
+
 
 
 
@@ -210,7 +218,7 @@ public class GameWorld {
         }else if(obj.name!=null && obj.name.equals("barrel")){
             objects.add(0,obj);
         }else if (obj.name!= null && obj.name.equals("timer")){
-            timerTex=(TextDrawbleComponent)obj.getComponent(ComponentType.Drawable).get(0);
+            timerTex=(TextDrawableComponent)obj.getComponent(ComponentType.Drawable).get(0);
             objects.add(obj);
         }
         else
@@ -222,9 +230,33 @@ public class GameWorld {
 
     private void handleCollisions(Collection<Collision> collisions) {
         for (Collision event: collisions) {
-            handleDeleteBarrel(event);
-            handleAddBarrel(event);
-            handleSoundCollisions(event);
+            Log.i("collision",event.a.name +" "+ event.b.name);
+            if(event.b.name.equals("barrel")){
+                if(!listBarrel.contains((GameObject) event.b.owner)){
+                    listBarrel.add((GameObject)event.b.owner);
+                    handleSoundCollisions(event);
+                }
+                if(event.a.name.equals("incinerator")){
+                    handleSoundCollisions(event);
+                    handleDeleteBarrel(event);
+                }else if(((GameObject)event.a.owner).name.equals("bulldozer")){
+                    handleSoundCollisions(event);
+                }
+            }else if(event.a.name.equals("barrel")){
+                if(!listBarrel.contains((GameObject)event.a.owner)){
+                    listBarrel.add((GameObject)event.a.owner);
+                    handleSoundCollisions(event);
+                }
+                if(event.b.name.equals("incinerator")){
+                    handleSoundCollisions(event);
+                    handleDeleteBarrel(event);
+                }else if(((GameObject)event.b.owner).name.equals("bulldozer")){
+                    handleSoundCollisions(event);
+                }
+            }else {
+                handleSoundCollisions(event);
+            }
+
         }
 
     }
@@ -282,23 +314,18 @@ public class GameWorld {
     public float toPixelsX(float x) { return (x-currentView.xmin)/currentView.width*bufferWidth; }
     public float toPixelsY(float y) { return (y-currentView.ymin)/currentView.height*bufferHeight; }
 
-    public float toPixelsXLength(float x)
-    {
+    public float toPixelsXLength(float x) {
         return x/currentView.width*bufferWidth;
     }
-    public float toPixelsYLength(float y)
-    {
+    public float toPixelsYLength(float y) {
         return y/currentView.height*bufferHeight;
     }
-
-    public synchronized void setGravity(float x, float y)
-    {
+    public synchronized void setGravity(float x, float y) {
         world.setGravity(x, y);
     }
 
     @Override
-    public void finalize()
-    {
+    public void finalize() {
         world.delete();
     }
 
@@ -361,82 +388,6 @@ public class GameWorld {
         }
     }
 
-    public void handleAddBarrel(Collision event){
-        if(event.b.name.equals("barrel")){
-            if(!listBarrel.contains((GameObject)event.b.owner)){
-                listBarrel.add((GameObject)event.b.owner);
-                handleSoundCollisions(event);
-            }
-        }else if(event.a.name.equals("barrel")){
-            if(!listBarrel.contains((GameObject)event.a.owner)){
-                listBarrel.add((GameObject)event.a.owner);
-                handleSoundCollisions(event);
-            }
-        }
-    }
-
-
-    private void accelerationAndDeceleration(){
-        if(bulldozer.body.getAngle()>=1.6f || bulldozer.body.getAngle() < 1.4f) {
-            int invert = ((DynamicPositionComponent) bulldozer.owner.getComponent(ComponentType.Position).get(0)).direction;
-            if (invert == -1 && bulldozer.body.getAngle() < 1.4f) {
-                flag=true;
-                for (Component c : bulldozer.owner.getComponent(ComponentType.Joint)) {
-                    if (c instanceof RevoluteJointComponent) {
-                        if (((RevoluteJointComponent) c).joint.isMotorEnabled())
-                            ((RevoluteJointComponent) c).joint.setMaxMotorTorque(0f);
-                    }
-                }
-
-            }
-            else if (invert == +1 && bulldozer.body.getAngle() >= 1.6f) {
-                flag=true;
-                for (Component c : bulldozer.owner.getComponent(ComponentType.Joint)) {
-                    if (c instanceof RevoluteJointComponent) {
-                        if (((RevoluteJointComponent) c).joint.isMotorEnabled())
-                            ((RevoluteJointComponent) c).joint.setMaxMotorTorque(0f);
-                    }
-                }
-            }
-            else if(flag) {
-                flag=false;
-                for (Component c : bulldozer.owner.getComponent(ComponentType.Joint)) {
-                    if (c instanceof RevoluteJointComponent) {
-                        if (((RevoluteJointComponent) c).joint.isMotorEnabled())
-                            ((RevoluteJointComponent) c).joint.setMaxMotorTorque(100f);
-                    }
-
-                }
-            }
-
-            if (speed >= 5) {
-                speed = speed - 0.05f;
-            }
-
-            for (Component c : bulldozer.owner.getComponent(ComponentType.Joint)) {
-                if (c instanceof RevoluteJointComponent) {
-                    if (((RevoluteJointComponent) c).joint.isMotorEnabled())
-                        ((RevoluteJointComponent) c).joint.setMotorSpeed(invert * speed);
-                }
-            }
-        }
-
-        else{
-            if(speed<=10){
-                speed=speed+0.05f;
-            }
-            int invert = ((DynamicPositionComponent)bulldozer.owner.getComponent(ComponentType.Position).get(0)).direction;
-            for(Component c:bulldozer.owner.getComponent(ComponentType.Joint)){
-                if(c instanceof RevoluteJointComponent) {
-                    if (((RevoluteJointComponent) c).joint.isMotorEnabled())
-                        ((RevoluteJointComponent) c).joint.setMotorSpeed(invert*speed);
-                         ((RevoluteJointComponent) c).joint.setMaxMotorTorque(100f);
-
-                }
-            }
-
-        }
-    }
 
     protected int searchBarrel(){
         int contRight = 0;
@@ -455,9 +406,6 @@ public class GameWorld {
                         contRight= contRight+1;
                     }
             }
-            System.out.println("left = "+contLeft);
-            System.out.println("right = "+contRight);
-
             if(contLeft > contRight){
                 return -1;
             }else{
@@ -541,12 +489,7 @@ public class GameWorld {
     }
 
 
-
-
-
-
-
-
-
-
+    public long getScore() {
+        return score;
+    }
 }

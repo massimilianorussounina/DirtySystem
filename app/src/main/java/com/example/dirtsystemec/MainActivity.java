@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         gw = new GameWorld(physicalSize, screenSize, this);
         gw.setGravity(-10,0);
 
-        GameObject.createTimer(11,-2.2f,gw);
+        GameObject.createTimer(11,-2.7f,gw);
 
         GameObject.createEnclosure(coordinateXMax,coordinateXMin,coordinateYMax,coordinateYMin,gw);
 
@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
         GameObject.createBulldozer(-6.6f,0,gw,-1,this,null);
         GameObject.createButtonTrash(11f,-21.8f,gw,true);
+        GameObject.createScoreBar(7.2f,22.5f,gw);
+
 
         renderView = new AndroidFastRenderView(this, gw);
         setContentView(renderView);

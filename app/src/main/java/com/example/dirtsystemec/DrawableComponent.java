@@ -184,14 +184,18 @@ class SpriteDrawableComponent extends DrawableComponent {
 
     @Override
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-        sprite.draw(System.currentTimeMillis());
+        if(sprite instanceof ScoreSprite){
+            sprite.draw(((GameObject)owner).gameWorld.getScore());
+        }else{
+            sprite.draw(System.currentTimeMillis());
+        }
     }
 }
 
-class TextDrawbleComponent extends DrawableComponent{
+class TextDrawableComponent extends DrawableComponent{
 
     Context context;
-    public TextDrawbleComponent (String name, GameObject gameObject, String text, int color, Context context, int size){
+    public TextDrawableComponent (String name, GameObject gameObject, String text, int color, Context context, int size){
         super(name);
         this.owner = gameObject;
         this.text=text;

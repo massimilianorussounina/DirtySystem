@@ -154,7 +154,6 @@ public class GameWorld {
 
         //accelerationAnddeceleration();
 
-
         handleCollisions(contactListener.getCollisions());
         /* update Timer */
         if(numFps == 30 ) {
@@ -232,6 +231,7 @@ public class GameWorld {
 
     private void handleSoundCollisions(Collision event){
         Sound sound = CollisionSounds.getSound(((GameObject)event.a.owner).name, ((GameObject)event.b.owner).name);
+
         if (sound!=null) {
             long currentTime = System.nanoTime();
             if (currentTime - timeOfLastSound > 500_000_000) {
@@ -362,13 +362,15 @@ public class GameWorld {
     }
 
     public void handleAddBarrel(Collision event){
-        if(event.a.name.equals("ground")  && event.b.name.equals("barrel")){
+        if(event.b.name.equals("barrel")){
             if(!listBarrel.contains((GameObject)event.b.owner)){
                 listBarrel.add((GameObject)event.b.owner);
+                handleSoundCollisions(event);
             }
-        }else if(event.a.name.equals("barrel")  && event.b.name.equals("ground")){
-            if(!listBarrel.contains((GameObject)event.b.owner)){
+        }else if(event.a.name.equals("barrel")){
+            if(!listBarrel.contains((GameObject)event.a.owner)){
                 listBarrel.add((GameObject)event.a.owner);
+                handleSoundCollisions(event);
             }
         }
     }

@@ -41,4 +41,12 @@ public class Contact {
     return (cPtr == 0) ? null : new Fixture(cPtr, false);
   }
 
+  public float getTangentSpeed() {
+    return liquidfunJNI.Contact_getTangentSpeed(swigCPtr, this);
+  }
+
+  public float getRestitution() {
+    return liquidfunJNI.Contact_getRestitution(swigCPtr, this);
+  }
+
 }

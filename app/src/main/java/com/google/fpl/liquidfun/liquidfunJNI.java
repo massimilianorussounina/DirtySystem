@@ -259,6 +259,8 @@ public class liquidfunJNI {
   public final static native void ContactListener_change_ownership(ContactListener obj, long cptr, boolean take_or_release);
   public final static native long Contact_getFixtureA(long jarg1, Contact jarg1_);
   public final static native long Contact_getFixtureB(long jarg1, Contact jarg1_);
+  public final static native float Contact_getTangentSpeed(long jarg1, Contact jarg1_);
+  public final static native float Contact_getRestitution(long jarg1, Contact jarg1_);
   public final static native void JointDef_type_set(long jarg1, JointDef jarg1_, int jarg2);
   public final static native int JointDef_type_get(long jarg1, JointDef jarg1_);
   public final static native void JointDef_bodyA_set(long jarg1, JointDef jarg1_, long jarg2, Body jarg2_);

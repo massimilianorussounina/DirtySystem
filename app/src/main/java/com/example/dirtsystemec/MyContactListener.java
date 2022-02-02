@@ -34,7 +34,7 @@ public class MyContactListener extends ContactListener {
                    b = (PhysicsComponent)userdataB;
 
         // TO DO: use an object pool instead
-        cache.add(new Collision(a, b));
+        cache.add(new Collision(a, b,contact));
 
         // Sound sound = CollisionSounds.getSound(a.getClass(), b.getClass());
         //if (sound!=null)

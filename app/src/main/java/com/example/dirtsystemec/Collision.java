@@ -1,14 +1,18 @@
 package com.example.dirtsystemec;
 
+import com.google.fpl.liquidfun.Contact;
+
 /** An unordered pair of game objects.
  *
  */
 public class Collision {
     PhysicsComponent a, b;
+    Contact contact;
 
-    public Collision(PhysicsComponent a, PhysicsComponent b) {
+    public Collision(PhysicsComponent a, PhysicsComponent b, Contact contact) {
         this.a = a;
         this.b = b;
+        this.contact=contact;
     }
 
     @Override

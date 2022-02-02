@@ -27,13 +27,16 @@ import java.util.concurrent.TimeUnit;
 
 
 public class GameWorld {
-
-    private long score = 0;
+    public final int[] maxScore = {500,800,1000,1500,2500,3500,5000,7500,11000,15000};
+    private int numberBarrel = 5;
+    private long score = 0,lastScore=0;
+    private long timeZeroBarrel;
+    private int level=1;
     final static int bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
     Bitmap buffer;
     private final Canvas canvas;
     //private BulldozerPhysicsComponent bulldozer;
-    private boolean buttonTrash = true;
+    private boolean buttonTrash = true, gameOverFlag=false;
     // Simulation
     List<GameObject> objects;
     private volatile boolean verifyAction = false;
@@ -57,10 +60,10 @@ public class GameWorld {
     boolean flag=false;
     float speed=7f;
     // Arguments are in physical simulation units.
-
-    private TextDrawableComponent timerTex;
-    private long startTime,currentTime,maxTime=300000l,timerPause=0,timeResume=0;
-
+    private GameObject gameOver;
+    private TextDrawableComponent timerTex,numberBarrelText,textScore;
+    private long startTime,currentTime,maxTime=300000,timerPause=0,timeResume=0;
+// 300000
     public GameWorld(Box physicalSize, Box screenSize, Activity theActivity) {
         this.physicalSize = physicalSize;
         this.screenSize = screenSize;
@@ -85,21 +88,22 @@ public class GameWorld {
 
     public synchronized void update(float elapsedTime) {
         float positionYBulldozer;
+
         GameObject gameObjectBulldozer = null;
         numFps++;
 
         /*    Inizio Fase AI   */
-
-        positionYBulldozer = bulldozer.body.getPositionY();
-        int direction = ((DynamicPositionComponent) bulldozer.owner.getComponent(ComponentType.Position).get(0)).direction;
-        if(positionYBulldozer > 19.9f && direction == 1){
-            System.out.println(positionYBulldozer);
-            rotationBulldozer(-8f,positionYBulldozer,this,-1,activity);
-            verifyAction = false;
-        }
-        else if(positionYBulldozer < - 19.9f && direction == -1){
-            rotationBulldozer(-8f,positionYBulldozer,this,1,activity);
-            verifyAction = false;
+        if(!gameOverFlag) {
+            positionYBulldozer = bulldozer.body.getPositionY();
+            int direction = ((DynamicPositionComponent) bulldozer.owner.getComponent(ComponentType.Position).get(0)).direction;
+            if (positionYBulldozer > 19.9f && direction == 1) {
+                System.out.println(positionYBulldozer);
+                rotationBulldozer(-8f, positionYBulldozer, this, -1, activity);
+                verifyAction = false;
+            } else if (positionYBulldozer < -19.9f && direction == -1) {
+                rotationBulldozer(-8f, positionYBulldozer, this, 1, activity);
+                verifyAction = false;
+            }
         }
 
 
@@ -109,14 +113,38 @@ public class GameWorld {
                 timeResume=0;
                 timerPause=0;
             }
-            currentTime = maxTime - (System.currentTimeMillis() - startTime);
-            timerTex.setText(String.format("%02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(currentTime),
-                    TimeUnit.MILLISECONDS.toSeconds(currentTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
-            ));
+            if(currentTime>=0) {
+                currentTime = maxTime - (System.currentTimeMillis() - startTime);
+                timerTex.setText(String.format("%02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(currentTime),
+                        TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
+                ));
+            }
+            else if (!gameOverFlag){
+                deleteBulldozer();
+                gameOverFlag=true;
+                gameOver=GameObject.createTextGameOver(0,-7.5f,this);
+            }
 
-            score = (long) (score + (listBarrel.size() * 0.1f));
+            score = (long) (score + (listBarrel.size() * 1.5f));
+            if(score >= maxScore[level]){
+                level=level+1;
+                speed= speed +(level*0.20f);
+                numberBarrel=numberBarrel+(5*level);
+            }
+            if((score-lastScore)>(maxScore[level]/10)){
+                numberBarrel=numberBarrel+1;
+                Log.i("lastscore",": "+(score-lastScore));
+                lastScore=score;
+                Log.i("agg barrel",": "+(100*level));
+
+            }
+            if(System.currentTimeMillis()-timeZeroBarrel>=3000 && numberBarrel==0){
+                numberBarrel = numberBarrel +level;
+            }
+            numberBarrelText.setText(String.format("%02d",numberBarrel));
+            textScore.setText("Score: "+score);
         }
 
 
@@ -221,6 +249,14 @@ public class GameWorld {
             timerTex=(TextDrawableComponent)obj.getComponent(ComponentType.Drawable).get(0);
             objects.add(obj);
         }
+        else if (obj.name!= null && obj.name.equals("numberBarrel")){
+            numberBarrelText=(TextDrawableComponent)obj.getComponent(ComponentType.Drawable).get(0);
+            objects.add(obj);
+        }
+        else if(obj.name!= null && obj.name.equals("textscore")){
+            textScore=(TextDrawableComponent)obj.getComponent(ComponentType.Drawable).get(0);
+            objects.add(obj);
+        }
         else
         {
             objects.add(obj);
@@ -232,31 +268,30 @@ public class GameWorld {
         for (Collision event: collisions) {
             Log.i("collision",event.a.name +" "+ event.b.name);
             if(event.b.name.equals("barrel")){
-                if(!listBarrel.contains((GameObject) event.b.owner)){
+                if(!listBarrel.contains((GameObject) event.b.owner) && event.a.name.equals("ground")){
                     listBarrel.add((GameObject)event.b.owner);
                     handleSoundCollisions(event);
                 }
                 if(event.a.name.equals("incinerator")){
                     handleSoundCollisions(event);
-                    handleDeleteBarrel(event);
                 }else if(((GameObject)event.a.owner).name.equals("bulldozer")){
                     handleSoundCollisions(event);
                 }
-            }else if(event.a.name.equals("barrel")){
-                if(!listBarrel.contains((GameObject)event.a.owner)){
+
+            }else if(event.a.name.equals("barrel") ){
+                if(!listBarrel.contains((GameObject)event.a.owner) && event.b.name.equals("ground")){
                     listBarrel.add((GameObject)event.a.owner);
                     handleSoundCollisions(event);
                 }
                 if(event.b.name.equals("incinerator")){
                     handleSoundCollisions(event);
-                    handleDeleteBarrel(event);
                 }else if(((GameObject)event.b.owner).name.equals("bulldozer")){
                     handleSoundCollisions(event);
                 }
             }else {
                 handleSoundCollisions(event);
             }
-
+            handleDeleteBarrel(event);
         }
 
     }
@@ -305,6 +340,33 @@ public class GameWorld {
 
 
     }
+    private void deleteBulldozer() {
+        List<Component> componentsAi = null;
+        List<Component> componentsPhysics = null;
+        GameObject gameObjectBulldozer = null;
+
+        for (GameObject gameObject : objects) {
+            if (gameObject.name.equals("bulldozer")) {
+                gameObjectBulldozer = gameObject;
+                break;
+            }
+        }
+
+        if (gameObjectBulldozer != null) {
+            componentsAi = gameObjectBulldozer.getComponent(ComponentType.AI);
+            componentsPhysics = gameObjectBulldozer.getComponent(ComponentType.Physics);
+            objects.remove(gameObjectBulldozer);
+
+            if (componentsPhysics != null) {
+                for (Component component : componentsPhysics) {
+                    world.destroyBody(((PhysicsComponent) component).body);
+                    ((PhysicsComponent) component).body.setUserData(null);
+                    ((PhysicsComponent) component).body.delete();
+                    ((PhysicsComponent) component).body = null;
+                }
+            }
+        }
+    }
 
     // Conversions between screen coordinates and physical coordinates
 
@@ -335,10 +397,24 @@ public class GameWorld {
 
     public void eventButton(float coordinateX, float coordinateY){
         int index = 0;
-
-        if(buttonTrash) {
-            if ((coordinateX <= 14.5f && coordinateX >= 9.75f) && (coordinateY >= -23.05f && coordinateY <= -20.55f)) {
-                buttonTrash = false;
+        if(!gameOverFlag) {
+            if (buttonTrash) {
+                if ((coordinateX <= 14.5f && coordinateX >= 9.75f) && (coordinateY >= -23.05f && coordinateY <= -20.55f) && numberBarrel > 0) {
+                    buttonTrash = false;
+                    for (GameObject g : objects) {
+                        if (g.name.equals("buttonTrash")) {
+                            break;
+                        } else {
+                            index++;
+                        }
+                    }
+                    if (index <= objects.size()) {
+                        objects.remove(index);
+                        GameObject.createButtonTrash(11f, -21.8f, this, buttonTrash);
+                    }
+                }
+            } else if (!((coordinateX <= 14.5f && coordinateX >= 9.75f) && (coordinateY >= -23.05f && coordinateY <= -20.55f) && numberBarrel > 0)) {
+                buttonTrash = true;
                 for (GameObject g : objects) {
                     if (g.name.equals("buttonTrash")) {
                         break;
@@ -350,21 +426,22 @@ public class GameWorld {
                     objects.remove(index);
                     GameObject.createButtonTrash(11f, -21.8f, this, buttonTrash);
                 }
+                GameObject.createBarrel(13f, coordinateY, this);
+                if (numberBarrel == 1)
+                    timeZeroBarrel = System.currentTimeMillis();
+                numberBarrel = numberBarrel - 1;
+                numberBarrelText.setText(String.format("%02d", numberBarrel));
             }
-        }else{
-            buttonTrash = true;
-            for (GameObject g: objects) {
-                if(g.name.equals("buttonTrash")){
-                    break;
-                }else{
-                    index++;
-                }
-            }
-            if(index <= objects.size()) {
-                objects.remove(index);
-                GameObject.createButtonTrash(11f,-21.8f,this,buttonTrash);
-            }
-            GameObject.createBarrel(13f,coordinateY,this);
+        }
+        else{
+            GameObject.createBulldozer(-6.6f,0,this,-1,activity,null);
+            score=0;
+            startTime= System.currentTimeMillis();
+            currentTime= maxTime - (System.currentTimeMillis() - startTime);
+            numberBarrel=5;
+            objects.remove(gameOver);
+            level=1;
+            gameOverFlag=false;
         }
 
     }
@@ -429,7 +506,7 @@ public class GameWorld {
             if(c instanceof RevoluteJointComponent) {
                 if (((RevoluteJointComponent) c).joint.isMotorEnabled())
                     ((RevoluteJointComponent) c).joint.setMotorSpeed(direction * speed);
-                ((RevoluteJointComponent) c).joint.setMaxMotorTorque(50f);
+                ((RevoluteJointComponent) c).joint.setMaxMotorTorque(20f);
             }
         }
     }
@@ -454,7 +531,7 @@ public class GameWorld {
                     if(componentBulldozer instanceof RevoluteJointComponent) {
                         if (((RevoluteJointComponent) componentBulldozer).joint.isMotorEnabled())
                             ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(direction * speed);
-                        ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(50f);
+                        ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
                     }
                 }
             }
@@ -472,7 +549,7 @@ public class GameWorld {
                     if(componentBulldozer instanceof RevoluteJointComponent) {
                         if (((RevoluteJointComponent) componentBulldozer).joint.isMotorEnabled())
                             ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(direction * speed);
-                        ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(50f);
+                        ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
                     }
                 }
             }

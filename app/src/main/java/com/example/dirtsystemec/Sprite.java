@@ -11,13 +11,14 @@ public abstract class Sprite {
     protected final float coordinate_y;
     protected final Spritesheet spritesheet;
     protected final Canvas canvas;
-
+    protected final GameWorld gameWorld;
 
     public Sprite(GameWorld gw, Spritesheet spritesheet, float coordinateX, float coordinateY,float width, float height, int widthFrame,
                   int heightFrame,int delay,int numberOfAnimations,long lastValue){
         this.canvas = new Canvas(gw.buffer);
+        this.gameWorld = gw;
         this.spritesheet = spritesheet;
-        this.lastValue = System.currentTimeMillis();
+        this.lastValue = lastValue;
         this.currentAnimation = 0;
         this.coordinate_x = gw.toPixelsX(coordinateX);
         this.coordinate_y = gw.toPixelsY(coordinateY);
@@ -101,13 +102,8 @@ class ScoreSprite extends Sprite{
     public void draw(long currentValue){
         canvas.save();
         canvas.rotate(90, coordinate_x, coordinate_y);
-        long percent = 0;
-        if(currentValue != 0){
-           percent = (100*Math.abs(currentValue-lastValue))/currentValue;
 
-        }
-
-        if(percent >= spritesheet.getDelay()[currentAnimation]){
+        if(currentValue >= gameWorld.maxScore[currentAnimation] ){
             if(currentAnimation >= spritesheet.getDelay().length-1){
                 currentAnimation = 0;
 

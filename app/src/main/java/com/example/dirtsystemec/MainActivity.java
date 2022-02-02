@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
         bulldozerMusic = audio.newMusic("soundTractor.mp3");
         bulldozerMusic.play();
         bulldozerMusic.setLooping(true);
-        bulldozerMusic.setVolume(0f);
+        bulldozerMusic.setVolume(0.5f);
         backgroundMusic = audio.newMusic("soundtrack.mp3");
         backgroundMusic.play();
         backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(0f);
+        backgroundMusic.setVolume(0.8f);
 
 
 
@@ -110,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
         GameObject.createBulldozer(-6.6f,0,gw,-1,this,null);
         GameObject.createButtonTrash(11f,-21.8f,gw,true);
         GameObject.createScoreBar(7.2f,22.5f,gw);
-
+        GameObject.createTextNumberBarrel(8.5f,-22.45f,gw);
+        GameObject.createTextscore(11.25f,-19f,gw);
 
         renderView = new AndroidFastRenderView(this, gw);
         setContentView(renderView);
@@ -125,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         Log.i("Main thread", "resume");
+        bulldozerMusic.play();
+        backgroundMusic.play();
         gw.setTimeResume(System.currentTimeMillis());
         renderView.resume(); // starts game loop in a separate thread
     }
@@ -133,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         Log.i("Main thread", "pause");
+        bulldozerMusic.pause();
+        backgroundMusic.pause();
         gw.setTimerPause(System.currentTimeMillis());
         renderView.pause(); // stops the main loop
         // persistence example

@@ -31,7 +31,7 @@ public class GameObject extends Entity{
 
         DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("barrel",coordinateX,coordinateY,gameObjectBarrel);
         BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("barrel",gameObjectBarrel,0.8f,0.8f,R.drawable.barrel,0,0,187,184);
-        CirclePhysicsComponent circlePhysicsComponent = new CirclePhysicsComponent("barrel",gameObjectBarrel,BodyType.dynamicBody,coordinateX,coordinateY,bitmapDrawableComponent.width/2f,bitmapDrawableComponent.height/2f,0.5f,0.1f,2f);
+        CirclePhysicsComponent circlePhysicsComponent = new CirclePhysicsComponent("barrel",gameObjectBarrel,BodyType.dynamicBody,coordinateX,coordinateY,bitmapDrawableComponent.width/2f,bitmapDrawableComponent.height/2f,2f,0.1f,2f);
 
 
         gameObjectBarrel.addComponent(dynamicPositionComponent);
@@ -91,7 +91,7 @@ public class GameObject extends Entity{
         GameObject gameObjectGround = new GameObject(gameWorld,"ground");
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("ground",coordinateX,coordinateY,gameObjectGround);
         BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("ground",gameObjectGround,9.0f,4.0f,R.drawable.ground,0,0,200,82);
-        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("ground",gameObjectGround,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width/2, bitmapDrawableComponent.height/2, 1f,0.1f,0.1f);
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("ground",gameObjectGround,BodyType.staticBody,coordinateX,coordinateY, bitmapDrawableComponent.width/2, bitmapDrawableComponent.height/2, 1f,0.0f,0.1f);
 
 
         gameObjectGround.addComponent(staticPositionComponent);
@@ -155,7 +155,7 @@ public class GameObject extends Entity{
         GameObject gameObjectBridge = new GameObject(gameWorld,"bridge");
         DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("bridge",bridgeCoordinateX,bridgeCoordinateY,gameObjectBridge);
         RectDrawableComponent rectDrawableComponent = new RectDrawableComponent("bridge",gameObjectBridge,4.8f,0.2f, Color.argb(255, 32, 32, 32));
-        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("bridge",gameObjectBridge,BodyType.staticBody,bridgeCoordinateX-1f,bridgeCoordinateY,rectDrawableComponent.width/2, rectDrawableComponent.height/2,4f,0.4f,0.4f);
+        PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("bridge",gameObjectBridge,BodyType.staticBody,bridgeCoordinateX-1f,bridgeCoordinateY,rectDrawableComponent.width/2, rectDrawableComponent.height/2,4f,0.0f,0.4f);
         gameObjectBridge.addComponent(dynamicPositionComponent);
         gameObjectBridge.addComponent(rectDrawableComponent);
         gameObjectBridge.addComponent(polygonPhysicsComponent);

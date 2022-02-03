@@ -27,6 +27,7 @@ import java.util.zip.Inflater;
 public class MainActivity extends Activity {
 
 
+    //private static final float coordinateXMin = -13.5f, coordinateXMax = 13.5f, coordinateYMin = -24, coordinateYMax = 24;
     private static final float coordinateXMin = -13.5f, coordinateXMax = 13.5f, coordinateYMin = -24, coordinateYMax = 24;
     public static String TAG;
     private AndroidFastRenderView renderView;

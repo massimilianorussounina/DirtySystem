@@ -19,6 +19,7 @@ import com.google.fpl.liquidfun.Joint;
 import com.google.fpl.liquidfun.RevoluteJoint;
 import com.google.fpl.liquidfun.World;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +33,7 @@ public class GameWorld {
     private long score = 0,lastScore=0;
     private long timeZeroBarrel;
     private int level=1;
-    final static int bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
+    final static float bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
     Bitmap buffer;
     private final Canvas canvas;
     //private BulldozerPhysicsComponent bulldozer;
@@ -69,7 +70,7 @@ public class GameWorld {
         this.screenSize = screenSize;
         this.activity = theActivity;
         this.handlerUI=handlerUI;
-        this.buffer = Bitmap.createBitmap(bufferWidth, bufferHeight, Bitmap.Config.ARGB_8888);
+        this.buffer = Bitmap.createBitmap((int)bufferWidth,(int) bufferHeight, Bitmap.Config.ARGB_8888);
         this.world = new World( 0.0f, 0.0f);  // gravity vector
         this.currentView = physicalSize;
         this.numFps = 0;
@@ -84,7 +85,7 @@ public class GameWorld {
         this.listBarrel = new ArrayList<>();
         this.canvas = new Canvas(buffer);
         Rect src = new Rect();
-        src.set(0,0,1920,1080);
+        src.set(0,0,(int)bufferHeight,1080);
     }
 
     public synchronized void update(float elapsedTime) {
@@ -238,7 +239,6 @@ public class GameWorld {
         if(obj.name!=null && obj.name.equals("bulldozer")) {
             gameObjectBulldozer = obj;
             objects.add(obj);
-
             for (Component psh : obj.getComponent(ComponentType.Physics)) {
                 if (((PhysicsComponent)psh).name.equals("chassis")){
                     bulldozer=(PhysicsComponent)psh;
@@ -268,7 +268,7 @@ public class GameWorld {
     private void handleCollisions(Collection<Collision> collisions) {
         for (Collision event: collisions) {
             Log.i("collision",event.a.name +" "+ event.b.name);
-            if(event.b.name.equals("barrel")){
+            if(event.b.name.equals("barrel") && !event.a.name.equals("barrel")){
                 if(!listBarrel.contains((GameObject) event.b.owner) && event.a.name.equals("ground")){
                     listBarrel.add((GameObject)event.b.owner);
                     handleSoundCollisions(event);
@@ -279,7 +279,7 @@ public class GameWorld {
                     handleSoundCollisions(event);
                 }
 
-            }else if(event.a.name.equals("barrel") ){
+            }else if(event.a.name.equals("barrel") && !event.b.name.equals("barrel") ){
                 if(!listBarrel.contains((GameObject)event.a.owner) && event.b.name.equals("ground")){
                     listBarrel.add((GameObject)event.a.owner);
                     handleSoundCollisions(event);
@@ -373,10 +373,27 @@ public class GameWorld {
     // Conversions between screen coordinates and physical coordinates
 
     public float toMetersX(float x) { return currentView.xmin + x * (currentView.width/screenSize.width); }
-    public float toMetersY(float y) { return currentView.ymin + y * (currentView.height/screenSize.height); }
+    public float toMetersY(float y) { Log.d("Metric Conversion View",""+ canvas.getClipBounds().bottom);
+    float metricY,offsetY;
+    metricY=(currentView.ymin + (y * (currentView.height/ screenSize.height)));
+    offsetY=Math.abs(metricY*((screenSize.height/bufferHeight)/100));
+    if(metricY >=0)
+        offsetY=offsetY*-1;
+    return metricY+offsetY;}
+    public double toMetersY2(float y) {
+        Log.d("Metric Conversion View",""+ screenSize.height);
+        return  (currentView.ymin + (y * ((double)currentView.height/(double)screenSize.height))); }
+
 
     public float toPixelsX(float x) { return (x-currentView.xmin)/currentView.width*bufferWidth; }
-    public float toPixelsY(float y) { return (y-currentView.ymin)/currentView.height*bufferHeight; }
+    public float toPixelsY(float y) {return ((y-currentView.ymin)/currentView.height)*bufferHeight;}
+    public double toPixelsY2(double y) {
+        Log.d("Conversion View",""+bufferHeight);
+        Log.d("Conversion Heigth",""+currentView.height);
+        Log.d("Conversion Ymin",""+currentView.ymin);
+        Log.d("Conversion Y",""+y);
+        return ((y-currentView.ymin)/currentView.height)*bufferHeight;
+    }
 
     public float toPixelsXLength(float x) {
         return x/currentView.width*bufferWidth;
@@ -400,43 +417,19 @@ public class GameWorld {
     public void eventButton(float coordinateX, float coordinateY){
         int index = 0;
         if(!gameOverFlag) {
-            if (buttonTrash) {
-                if ((coordinateX <= 14.5f && coordinateX >= 9.75f) && (coordinateY >= -23.05f && coordinateY <= -20.55f) && numberBarrel > 0) {
-                    buttonTrash = false;
-                    for (GameObject g : objects) {
-                        if (g.name.equals("buttonTrash")) {
-                            break;
-                        } else {
-                            index++;
-                        }
-                    }
-                    if (index <= objects.size()) {
-                        objects.remove(index);
-                        GameObject.createButtonTrash(11f, -21.8f, this, buttonTrash);
-                    }
-                }
-            } else if (!((coordinateX <= 14.5f && coordinateX >= 9.75f) && (coordinateY >= -23.05f && coordinateY <= -20.55f) && numberBarrel > 0)) {
-                buttonTrash = true;
-                for (GameObject g : objects) {
-                    if (g.name.equals("buttonTrash")) {
-                        break;
-                    } else {
-                        index++;
-                    }
-                }
-                if (index <= objects.size()) {
-                    objects.remove(index);
-                    GameObject.createButtonTrash(11f, -21.8f, this, buttonTrash);
-                }
-                GameObject.createBarrel(13f, coordinateY, this);
-                if (numberBarrel == 1)
-                    timeZeroBarrel = System.currentTimeMillis();
-                numberBarrel = numberBarrel - 1;
-                numberBarrelText.setText(String.format("%02d", numberBarrel));
-            }
             if ((coordinateX <= 12.5f && coordinateX >= 10f) && (coordinateY >= 20.8f && coordinateY <= 22.8f)) {
                 handlerUI.sendEmptyMessage(0);
-            }
+            }else {
+
+                if (numberBarrel == 1)
+                    timeZeroBarrel = System.currentTimeMillis();
+                if (numberBarrel > 0) {
+                    GameObject.createBarrel(13f, coordinateY, this);
+                    numberBarrel = numberBarrel - 1;
+                    numberBarrelText.setText(String.format("%02d", numberBarrel));
+                }
+
+            }   GameObject.createBarrel(13f, coordinateY, this);
         }
         else{
             GameObject.createBulldozer(-6.6f,0,this,-1,activity,null);

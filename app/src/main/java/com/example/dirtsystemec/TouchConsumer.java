@@ -60,14 +60,27 @@ public class TouchConsumer {
     }
 
     private void consumeTouchDown(Input.TouchEvent event) {
+       double  maleX,maleY;
         int pointerId = event.pointer;
 
         // if we are already dragging with another finger, discard this event
         if (mouseJoint != null) return;
 
-        float x = gw.toMetersX(event.x), y = gw.toMetersY(event.y);
+        Log.d("MultiTouchHandler Pixel", "touch down at " + event.x + ", " + event.y);
 
-        Log.d("MultiTouchHandler", "touch down at " + x + ", " + y);
+        float x = gw.toMetersX(event.x);
+        float y = gw.toMetersY(event.y);
+
+        Log.d("MultiTouchHandler metric", "touch down at " + x + ", " + y);
+        Log.d("MultiTouchHandler conversion", "touch down at " + gw.toPixelsX(x) + ", " + gw.toPixelsY(y));
+
+
+        maleX=event.x-gw.toPixelsX(x);
+        maleY= event.y-gw.toPixelsY(y);
+        Log.d("MultiTouchHandler Different", "touch down at " + maleX + ", " + maleY);
+        Log.d("MultiTouchHandler Different", "touch down at " + maleX + ", " + maleY);
+
+
 
         gw.eventButton(x,y);
 

@@ -20,6 +20,7 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
         this.gameworld = gw;
         this.framebuffer = gw.buffer;
         this.holder = getHolder();
+
     }
 
     /** Starts the game loop in a separate thread.

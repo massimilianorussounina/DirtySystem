@@ -50,7 +50,7 @@ public class GameWorld {
     private TouchConsumer touchConsumer;
     private TouchHandler touchHandler;
     private int numFps;
-
+    private HandlerUI handlerUI;
     private static final int VELOCITY_ITERATIONS = 8;
     private static final int POSITION_ITERATIONS = 3;
     private static final int PARTICLE_ITERATIONS = 3;
@@ -64,10 +64,11 @@ public class GameWorld {
     private TextDrawableComponent timerTex,numberBarrelText,textScore;
     private long startTime,currentTime,maxTime=300000,timerPause=0,timeResume=0;
 // 300000
-    public GameWorld(Box physicalSize, Box screenSize, Activity theActivity) {
+    public GameWorld(Box physicalSize, Box screenSize, Activity theActivity,HandlerUI handlerUI) {
         this.physicalSize = physicalSize;
         this.screenSize = screenSize;
         this.activity = theActivity;
+        this.handlerUI=handlerUI;
         this.buffer = Bitmap.createBitmap(bufferWidth, bufferHeight, Bitmap.Config.ARGB_8888);
         this.world = new World( 0.0f, 0.0f);  // gravity vector
         this.currentView = physicalSize;
@@ -303,7 +304,7 @@ public class GameWorld {
             long currentTime = System.nanoTime();
             if (currentTime - timeOfLastSound > 500_000_000) {
                 timeOfLastSound = currentTime;
-                sound.play(0.5f);
+                sound.play(MainActivity.volumeSoundEffect);
             }
         }
     }
@@ -432,6 +433,9 @@ public class GameWorld {
                     timeZeroBarrel = System.currentTimeMillis();
                 numberBarrel = numberBarrel - 1;
                 numberBarrelText.setText(String.format("%02d", numberBarrel));
+            }
+            if ((coordinateX <= 12.5f && coordinateX >= 10f) && (coordinateY >= 20.8f && coordinateY <= 22.8f)) {
+                handlerUI.sendEmptyMessage(0);
             }
         }
         else{

@@ -425,5 +425,14 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectSea);
     }
 
+    public static void createButtonPause(float coordinateX, float coordinateY,GameWorld gameWorld){
+        GameObject gameObjectButtonPause = new GameObject(gameWorld,"buttonPause");
+        BitmapDrawableComponent bitmapDrawableComponent;
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("buttonPause",coordinateX,coordinateY,gameObjectButtonPause);
+        bitmapDrawableComponent = new BitmapDrawableComponent("buttonTrash",gameObjectButtonPause,2f,2f,R.drawable.button_pause,0,0,50,50);
+        gameObjectButtonPause.addComponent(staticPositionComponent);
+        gameObjectButtonPause.addComponent(bitmapDrawableComponent);
+        gameWorld.addGameObject(gameObjectButtonPause);
+    }
 
 }

@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,8 +34,9 @@ public class MainActivity extends Activity {
     private Audio audio;
     private Music bulldozerMusic,backgroundMusic;
     private GameWorld gw;
-    private boolean flagStart=false;
     private MyThread myThread;
+    private HandlerUI handlerUI;
+    public static float  volumeMusic=0.8f, volumeSoundEffect=0.5f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class MainActivity extends Activity {
             });
         }
 
-
+        handlerUI=new HandlerUI(this);
 
         /* Inizializzazione Audio */
         audio = new AndroidAudio(this);
@@ -75,11 +78,11 @@ public class MainActivity extends Activity {
         bulldozerMusic = audio.newMusic("soundTractor.mp3");
         bulldozerMusic.play();
         bulldozerMusic.setLooping(true);
-        bulldozerMusic.setVolume(0.5f);
+        bulldozerMusic.setVolume(volumeSoundEffect);
         backgroundMusic = audio.newMusic("soundtrack.mp3");
         backgroundMusic.play();
         backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(0.8f);
+        backgroundMusic.setVolume(volumeMusic);
 
 
 
@@ -87,7 +90,7 @@ public class MainActivity extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Box physicalSize = new Box(coordinateXMin, coordinateYMin, coordinateXMax, coordinateYMax);
         Box screenSize   = new Box(0, 0, metrics.widthPixels, metrics.heightPixels);
-        gw = new GameWorld(physicalSize, screenSize, this);
+        gw = new GameWorld(physicalSize, screenSize, this,handlerUI);
         gw.setGravity(-10,0);
 
         GameObject.createTimer(11,-2.7f,gw);
@@ -122,6 +125,7 @@ public class MainActivity extends Activity {
         GameObject.createScoreBar(7.2f,22.5f,gw);
         GameObject.createTextNumberBarrel(8.5f,-22.45f,gw);
         GameObject.createTextscore(11.25f,-19f,gw);
+        GameObject.createButtonPause(11.5f,21f,gw);
 
         renderView = new AndroidFastRenderView(this, gw);
 
@@ -130,7 +134,6 @@ public class MainActivity extends Activity {
         gw.setTouchHandler(touchHandler);
         myThread = new MyThread(gw);
         myThread.start();
-        flagStart=true;
 
 
 
@@ -142,25 +145,26 @@ public class MainActivity extends Activity {
     public void onResume() {
         super.onResume();
         Log.i("Main thread", "resume");
-        if(flagStart) {
+            bulldozerMusic.setVolume(volumeSoundEffect);
+            backgroundMusic.setVolume(volumeMusic);
             bulldozerMusic.play();
             backgroundMusic.play();
             gw.setTimeResume(System.currentTimeMillis());
             renderView.resume(); // starts game loop in a separate thread
-        }
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.i("Main thread", "pause");
-        if(flagStart) {
+
             bulldozerMusic.pause();
             backgroundMusic.pause();
             gw.setTimerPause(System.currentTimeMillis());
             renderView.pause(); // stops the main loop
             // persistence example
-        }
+
     }
 
     @SuppressLint("NewApi")
@@ -176,6 +180,18 @@ public class MainActivity extends Activity {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    public void showMenu(){
+        Intent i= new Intent(this,StartActivity.class);
+        i.putExtra("FLAG", "true");
+        startActivity(i);
+
+
+    }
+
+    public  HandlerUI getHandlerUI(){
+        return handlerUI;
     }
 
 }

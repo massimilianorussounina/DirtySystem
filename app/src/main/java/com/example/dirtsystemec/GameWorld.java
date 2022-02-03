@@ -340,6 +340,7 @@ public class GameWorld {
 
 
     }
+
     private void deleteBulldozer() {
         List<Component> componentsAi = null;
         List<Component> componentsPhysics = null;

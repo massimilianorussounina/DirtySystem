@@ -3,18 +3,24 @@ package com.example.dirtsystemec;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ViewSwitcher;
 
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Music;
 import com.badlogic.androidgames.framework.impl.AndroidAudio;
 import com.badlogic.androidgames.framework.impl.MultiTouchHandler;
+
+import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private Audio audio;
     private Music bulldozerMusic,backgroundMusic;
     private GameWorld gw;
+    private boolean flagStart=false;
+    private MyThread myThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+
 
         /* Inizializzazione Audio */
         audio = new AndroidAudio(this);
@@ -103,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-       /* GameObject.createBarrel(10,1,gw);
+        /* GameObject.createBarrel(10,1,gw);
         GameObject.createBarrel(3f,-17.5f,gw); */
 
 
@@ -114,11 +124,17 @@ public class MainActivity extends AppCompatActivity {
         GameObject.createTextscore(11.25f,-19f,gw);
 
         renderView = new AndroidFastRenderView(this, gw);
+
         setContentView(renderView);
         MultiTouchHandler touchHandler = new MultiTouchHandler(renderView, 1, 1);
         gw.setTouchHandler(touchHandler);
-        MyThread myThread = new MyThread(gw);
+        myThread = new MyThread(gw);
         myThread.start();
+        flagStart=true;
+
+
+
+
     }
 
 
@@ -126,21 +142,25 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         Log.i("Main thread", "resume");
-        bulldozerMusic.play();
-        backgroundMusic.play();
-        gw.setTimeResume(System.currentTimeMillis());
-        renderView.resume(); // starts game loop in a separate thread
+        if(flagStart) {
+            bulldozerMusic.play();
+            backgroundMusic.play();
+            gw.setTimeResume(System.currentTimeMillis());
+            renderView.resume(); // starts game loop in a separate thread
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.i("Main thread", "pause");
-        bulldozerMusic.pause();
-        backgroundMusic.pause();
-        gw.setTimerPause(System.currentTimeMillis());
-        renderView.pause(); // stops the main loop
-        // persistence example
+        if(flagStart) {
+            bulldozerMusic.pause();
+            backgroundMusic.pause();
+            gw.setTimerPause(System.currentTimeMillis());
+            renderView.pause(); // stops the main loop
+            // persistence example
+        }
     }
 
     @SuppressLint("NewApi")

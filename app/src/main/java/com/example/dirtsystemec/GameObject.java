@@ -356,15 +356,15 @@ public class GameObject extends Entity{
 
 
 
-    public static void createButtonTrash(float coordinateX, float coordinateY,GameWorld gameWorld,boolean buttonTrash){
-        GameObject gameObjectButtonTrash = new GameObject(gameWorld,"buttonTrash");
+
+    public static void createBarrelIcon(float coordinateX, float coordinateY,GameWorld gameWorld){
+        GameObject gameObjectBarrelIcon = new GameObject(gameWorld,"barrelIcon");
         BitmapDrawableComponent bitmapDrawableComponent;
-        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("buttonTrash",coordinateX,coordinateY,gameObjectButtonTrash);
-        if(buttonTrash) bitmapDrawableComponent = new BitmapDrawableComponent("buttonTrash",gameObjectButtonTrash,2.4f,2.5f,R.drawable.trash_active,0,0,185,186);
-        else bitmapDrawableComponent = new BitmapDrawableComponent("buttonTrash",gameObjectButtonTrash,2.4f,2.5f,R.drawable.trash_disattive,0,0,185,186);
-        gameObjectButtonTrash.addComponent(staticPositionComponent);
-        gameObjectButtonTrash.addComponent(bitmapDrawableComponent);
-        gameWorld.addGameObject(gameObjectButtonTrash);
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("barrelIcon",coordinateX,coordinateY,gameObjectBarrelIcon);
+        bitmapDrawableComponent = new BitmapDrawableComponent("barrelIcon",gameObjectBarrelIcon,1.8f,2.5f,R.drawable.barrel_icon,0,0,58,80);
+        gameObjectBarrelIcon.addComponent(staticPositionComponent);
+        gameObjectBarrelIcon.addComponent(bitmapDrawableComponent);
+        gameWorld.addGameObject(gameObjectBarrelIcon);
     }
 
     public static void createTimer(float coordinateX, float coordinateY,GameWorld gameWorld){
@@ -386,16 +386,16 @@ public class GameObject extends Entity{
 
     public static void createTextscore(float coordinateX, float coordinateY,GameWorld gameWorld){
         GameObject gameObjectTimer = new GameObject(gameWorld,"textscore");
-        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("textscore",gameObjectTimer,"0",Color.argb(255,255,0,0), gameWorld.activity, 30);
+        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("textscore",gameObjectTimer,"0",Color.argb(255,255,0,0), gameWorld.activity, 25);
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("textscore",coordinateX,coordinateY,gameObjectTimer);
         gameObjectTimer.addComponent(textDrawableComponentTimer);
         gameObjectTimer.addComponent(staticPositionComponent);
         gameWorld.addGameObject(gameObjectTimer);
     }
 
-    public static GameObject createTextGameOver(float coordinateX, float coordinateY,GameWorld gameWorld){
+    public static GameObject createTextGameOver(float coordinateX, float coordinateY,GameWorld gameWorld,String text){
         GameObject gameObjectTimer = new GameObject(gameWorld,"gameover");
-        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("gameover",gameObjectTimer,"GAME OVER",Color.argb(255,255,0,0), gameWorld.activity, 70);
+        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("gameover",gameObjectTimer,text,Color.argb(255,255,0,0), gameWorld.activity, 70);
         StaticPositionComponent staticPositionComponent = new StaticPositionComponent("gameover",coordinateX,coordinateY,gameObjectTimer);
         gameObjectTimer.addComponent(textDrawableComponentTimer);
         gameObjectTimer.addComponent(staticPositionComponent);

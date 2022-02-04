@@ -61,12 +61,11 @@ public class TouchConsumer {
 
         // if we are already dragging with another finger, discard this event
         if (mouseJoint != null) return;
-        if(!gw.flagCollisionBarrel){
-            gw.flagCollisionBarrel = true;
+
             float x = gw.toMetersX(event.x);
             float y = gw.toMetersY(event.y);
             gw.eventTouch(x,y);
-        }
+
     }
 
 

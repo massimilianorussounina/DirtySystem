@@ -128,12 +128,19 @@ public class GameWorld {
             else if (!gameOverFlag){
                 deleteBulldozer();
                 gameOverFlag=true;
-                gameOver=GameObject.createTextGameOver(0,-7.5f,this);
+                gameOver=GameObject.createTextGameOver(0,-7.5f,this,"GAME OVER");
             }
 
-            score = (long) (score + (listBarrel.size() * 1.5f));
+            if(!gameOverFlag)
+                score = (long) (score + (listBarrel.size() * 1.5f));
             if(score >= maxScore[level]){
                 level=level+1;
+                if(level>10) {
+                    deleteBulldozer();
+                    gameOverFlag = true;
+                    gameOver=GameObject.createTextGameOver(0,-7.5f,this,"WIN");
+
+                }
                 speed= speed +(level*0.20f);
                 numberBarrel=numberBarrel+(5*level);
             }
@@ -268,12 +275,14 @@ public class GameWorld {
         for (Collision event: collisions) {
             Log.i("collision",event.a.name +" "+ event.b.name);
             if(event.b.name.equals("barrel") && !event.a.name.equals("barrel")){
-                if(flagCollisionBarrel) {
-                    flagCollisionBarrel=false;
-                }
+
                 if(!listBarrel.contains((GameObject) event.b.owner)) {
+                    if(flagCollisionBarrel) {
+                        flagCollisionBarrel=false;
+                    }
                     listBarrel.add((GameObject)event.b.owner);
                     handleSoundCollisions(event);
+
                 }
                 if(event.a.name.equals("incinerator")){
                     handleSoundCollisions(event);
@@ -283,10 +292,11 @@ public class GameWorld {
                 }
 
             }else if(event.a.name.equals("barrel") && !event.b.name.equals("barrel") ){
-                if(flagCollisionBarrel) {
-                    flagCollisionBarrel=false;
-                }
+
                 if(!listBarrel.contains((GameObject)event.a.owner)){
+                    if(flagCollisionBarrel) {
+                        flagCollisionBarrel=false;
+                    }
                     listBarrel.add((GameObject)event.a.owner);
                     handleSoundCollisions(event);
                 }
@@ -385,7 +395,7 @@ public class GameWorld {
     offsetY=Math.abs(metricY*((screenSize.height/bufferHeight)/100));
     if(metricY >=0)
         offsetY=offsetY*-1;
-    return metricY+offsetY;}
+    return metricY;}
 
 
     public float toPixelsX(float x) { return (x-currentView.xmin)/currentView.width*bufferWidth; }
@@ -414,10 +424,10 @@ public class GameWorld {
     public void eventTouch(float coordinateX, float coordinateY){
         int index = 0;
         if(!gameOverFlag) {
-            if ((coordinateX <= 12.5f && coordinateX >= 10f) && (coordinateY >= 20.8f && coordinateY <= 21.8f)) {
+            if ((coordinateX <= 13.5f && coordinateX >= 9f) && (coordinateY >= 20f && coordinateY <= 24)) {
                 handlerUI.sendEmptyMessage(0);
-            }else {
-
+            }else if(!flagCollisionBarrel && ((coordinateY>=-22 && coordinateY <=21.6))){
+                flagCollisionBarrel = true;
                 if (numberBarrel == 1)
                     timeZeroBarrel = System.currentTimeMillis();
                 if (numberBarrel > 0) {
@@ -429,6 +439,12 @@ public class GameWorld {
             }
         }
         else{
+            ArrayList<GameObject> temp = new ArrayList<GameObject>();
+            for(GameObject obj: objects){
+                if(!obj.name.equals("barrel"))
+                    temp.add(obj);
+            }
+            objects=temp;
             GameObject.createBulldozer(-6.6f,0,this,-1,activity,null);
             score=0;
             startTime= System.currentTimeMillis();

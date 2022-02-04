@@ -95,7 +95,9 @@ public class StartActivity extends Activity {
             public void onClick(View v) {
                 Intent i= new Intent(context,MainActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(i);
+
             }
         });
 

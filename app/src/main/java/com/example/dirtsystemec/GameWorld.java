@@ -408,7 +408,7 @@ public class GameWorld {
 
     public void eventTouch(float coordinateX, float coordinateY){
         if(!gameOverFlag) {
-            if ((coordinateX <= 13.5f && coordinateX >= 9f) && (coordinateY >= 20f && coordinateY <= 24)) {
+            if ((coordinateX <= 13.5f && coordinateX >= 9f) && (coordinateY >= 23f && coordinateY <= 26)) {
                 handlerUI.sendEmptyMessage(0);
             }else if(!flagCollisionBarrel && ((coordinateY>=-22 && coordinateY <=21.6))){
                 if (numberBarrel == 1)
@@ -419,7 +419,6 @@ public class GameWorld {
                     numberBarrel = numberBarrel - 1;
                     numberBarrelText.setText(String.format("%02d", numberBarrel));
                 }
-
             }
         }
         else{

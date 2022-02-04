@@ -65,7 +65,6 @@ public class TouchConsumer {
             float x = gw.toMetersX(event.x);
             float y = gw.toMetersY(event.y);
             gw.eventTouch(x,y);
-
     }
 
 

@@ -58,13 +58,15 @@ public class GameWorld {
     final Activity activity;
     private Bitmap bitmap;
     private final RectF dest = new RectF();
-    boolean flag=false;
+    boolean flagCollisionBarrel = false;
     float speed=7f;
     // Arguments are in physical simulation units.
     private GameObject gameOver;
     private TextDrawableComponent timerTex,numberBarrelText,textScore;
     private long startTime,currentTime,maxTime=300000,timerPause=0,timeResume=0;
-// 300000
+
+
+
     public GameWorld(Box physicalSize, Box screenSize, Activity theActivity,HandlerUI handlerUI) {
         this.physicalSize = physicalSize;
         this.screenSize = screenSize;
@@ -171,11 +173,9 @@ public class GameWorld {
                             if(action != null){
                                 if(action.equals(Action.burned)){
                                     int result = searchBarrel();
-                                    System.out.println("ti muovi verso "+ result);
                                     burnedBarrel(result,this,activity);
                                     verifyAction = true;
                                 }else if(action.equals(Action.waited)){
-                                    System.out.println("vai al centro");
                                     moveToCenter(this,activity);
                                 }
                             }
@@ -233,8 +233,7 @@ public class GameWorld {
 
     }
 
-    public synchronized void addGameObject(GameObject obj)
-    {
+    public synchronized void addGameObject(GameObject obj) {
 
         if(obj.name!=null && obj.name.equals("bulldozer")) {
             gameObjectBulldozer = obj;
@@ -269,30 +268,37 @@ public class GameWorld {
         for (Collision event: collisions) {
             Log.i("collision",event.a.name +" "+ event.b.name);
             if(event.b.name.equals("barrel") && !event.a.name.equals("barrel")){
-                if(!listBarrel.contains((GameObject) event.b.owner) && event.a.name.equals("ground")){
+                if(flagCollisionBarrel) {
+                    flagCollisionBarrel=false;
+                }
+                if(!listBarrel.contains((GameObject) event.b.owner)) {
                     listBarrel.add((GameObject)event.b.owner);
                     handleSoundCollisions(event);
                 }
                 if(event.a.name.equals("incinerator")){
                     handleSoundCollisions(event);
-                }else if(((GameObject)event.a.owner).name.equals("bulldozer")){
+                    handleDeleteBarrel(event);
+                }else {
                     handleSoundCollisions(event);
                 }
 
             }else if(event.a.name.equals("barrel") && !event.b.name.equals("barrel") ){
-                if(!listBarrel.contains((GameObject)event.a.owner) && event.b.name.equals("ground")){
+                if(flagCollisionBarrel) {
+                    flagCollisionBarrel=false;
+                }
+                if(!listBarrel.contains((GameObject)event.a.owner)){
                     listBarrel.add((GameObject)event.a.owner);
                     handleSoundCollisions(event);
                 }
                 if(event.b.name.equals("incinerator")){
                     handleSoundCollisions(event);
-                }else if(((GameObject)event.b.owner).name.equals("bulldozer")){
+                    handleDeleteBarrel(event);
+                }else{
                     handleSoundCollisions(event);
                 }
-            }else {
-                handleSoundCollisions(event);
+            }else{
+                handleDeleteBarrel(event);
             }
-            handleDeleteBarrel(event);
         }
 
     }
@@ -380,20 +386,11 @@ public class GameWorld {
     if(metricY >=0)
         offsetY=offsetY*-1;
     return metricY+offsetY;}
-    public double toMetersY2(float y) {
-        Log.d("Metric Conversion View",""+ screenSize.height);
-        return  (currentView.ymin + (y * ((double)currentView.height/(double)screenSize.height))); }
 
 
     public float toPixelsX(float x) { return (x-currentView.xmin)/currentView.width*bufferWidth; }
     public float toPixelsY(float y) {return ((y-currentView.ymin)/currentView.height)*bufferHeight;}
-    public double toPixelsY2(double y) {
-        Log.d("Conversion View",""+bufferHeight);
-        Log.d("Conversion Heigth",""+currentView.height);
-        Log.d("Conversion Ymin",""+currentView.ymin);
-        Log.d("Conversion Y",""+y);
-        return ((y-currentView.ymin)/currentView.height)*bufferHeight;
-    }
+
 
     public float toPixelsXLength(float x) {
         return x/currentView.width*bufferWidth;
@@ -414,10 +411,10 @@ public class GameWorld {
         this.touchHandler = touchHandler;
     }
 
-    public void eventButton(float coordinateX, float coordinateY){
+    public void eventTouch(float coordinateX, float coordinateY){
         int index = 0;
         if(!gameOverFlag) {
-            if ((coordinateX <= 12.5f && coordinateX >= 10f) && (coordinateY >= 20.8f && coordinateY <= 22.8f)) {
+            if ((coordinateX <= 12.5f && coordinateX >= 10f) && (coordinateY >= 20.8f && coordinateY <= 21.8f)) {
                 handlerUI.sendEmptyMessage(0);
             }else {
 
@@ -429,7 +426,7 @@ public class GameWorld {
                     numberBarrelText.setText(String.format("%02d", numberBarrel));
                 }
 
-            }   GameObject.createBarrel(13f, coordinateY, this);
+            }
         }
         else{
             GameObject.createBulldozer(-6.6f,0,this,-1,activity,null);
@@ -453,6 +450,7 @@ public class GameWorld {
             event.b.body.setUserData(null);
             event.b.body.delete();
             event.b.body = null;
+
         }else if(event.a.name.equals("barrel")  && event.b.name.equals("incinerator")){
             objects.remove((GameObject) event.a.owner);
             listBarrel.remove((GameObject) event.a.owner);
@@ -460,6 +458,7 @@ public class GameWorld {
             event.a.body.setUserData(null);
             event.a.body.delete();
             event.a.body = null;
+
         }
     }
 

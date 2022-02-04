@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
 
 
     //private static final float coordinateXMin = -13.5f, coordinateXMax = 13.5f, coordinateYMin = -24, coordinateYMax = 24;
-    private static final float coordinateXMin = -13.5f, coordinateXMax = 13.5f, coordinateYMin = -24, coordinateYMax = 24;
+    private static final float coordinateXMin = -13.5f, coordinateXMax = 13.5f, coordinateYMin = -24f, coordinateYMax = 24f;
     public static String TAG;
     private AndroidFastRenderView renderView;
     private int currentApiVersion;
@@ -122,7 +122,6 @@ public class MainActivity extends Activity {
 
 
         GameObject.createBulldozer(-6.6f,0,gw,-1,this,null);
-        GameObject.createButtonTrash(11f,-21.8f,gw,true);
         GameObject.createScoreBar(7.2f,22.5f,gw);
         GameObject.createTextNumberBarrel(8.5f,-22.45f,gw);
         GameObject.createTextscore(11.25f,-19f,gw);
@@ -152,7 +151,6 @@ public class MainActivity extends Activity {
             backgroundMusic.play();
             gw.setTimeResume(System.currentTimeMillis());
             renderView.resume(); // starts game loop in a separate thread
-
     }
 
     @Override

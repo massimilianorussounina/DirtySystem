@@ -45,10 +45,6 @@ public class TouchConsumer {
         switch (event.type) {
             case Input.TouchEvent.TOUCH_DOWN:
                 consumeTouchDown(event);
-
-
-
-
                 break;
             case Input.TouchEvent.TOUCH_UP:
                 consumeTouchUp(event);
@@ -65,43 +61,12 @@ public class TouchConsumer {
 
         // if we are already dragging with another finger, discard this event
         if (mouseJoint != null) return;
-
-        Log.d("MultiTouchHandler Pixel", "touch down at " + event.x + ", " + event.y);
-
-        float x = gw.toMetersX(event.x);
-        float y = gw.toMetersY(event.y);
-
-        Log.d("MultiTouchHandler metric", "touch down at " + x + ", " + y);
-        Log.d("MultiTouchHandler conversion", "touch down at " + gw.toPixelsX(x) + ", " + gw.toPixelsY(y));
-
-
-        maleX=event.x-gw.toPixelsX(x);
-        maleY= event.y-gw.toPixelsY(y);
-        Log.d("MultiTouchHandler Different", "touch down at " + maleX + ", " + maleY);
-        Log.d("MultiTouchHandler Different", "touch down at " + maleX + ", " + maleY);
-
-
-
-        gw.eventButton(x,y);
-
-
-
-        /*
-        touchedFixture = null;
-        gw.world.queryAABB(touchQueryCallback, x - POINTER_SIZE, y - POINTER_SIZE, x + POINTER_SIZE, y + POINTER_SIZE);
-        if (touchedFixture != null) {
-            // From fixture to GO
-            Body touchedBody = touchedFixture.getBody();
-            Object userData = touchedBody.getUserData();
-            if (userData != null) {
-                GameObject touchedGO = (GameObject) userData;
-                activePointerID = pointerId;
-                // Log.d("MultiTouchHandler", "touched game object " + touchedGO.name);
-                setupMouseJoint(x, y, touchedBody);
-                // splitBox(touchedGO, touchedBody);
-            }
+        if(!gw.flagCollisionBarrel){
+            gw.flagCollisionBarrel = true;
+            float x = gw.toMetersX(event.x);
+            float y = gw.toMetersY(event.y);
+            gw.eventTouch(x,y);
         }
-        */
     }
 
 
@@ -123,8 +88,6 @@ public class TouchConsumer {
             mouseJoint = null;
             activePointerID = 0;
         }
-        float x = gw.toMetersX(event.x), y = gw.toMetersY(event.y);
-
     }
 
     private void consumeTouchMove(Input.TouchEvent event) {

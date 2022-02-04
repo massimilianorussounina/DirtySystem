@@ -108,116 +108,110 @@ public class GameWorld {
                 rotationBulldozer(-8f, positionYBulldozer, this, 1, activity);
                 verifyAction = false;
             }
-        }
 
 
-        if(numFps == 10 ) {
-            if(timeResume!=0 && timerPause!=0){
-                startTime=startTime+(timeResume-timerPause);
-                timeResume=0;
-                timerPause=0;
-            }
-            if(currentTime>=0) {
-                currentTime = maxTime - (System.currentTimeMillis() - startTime);
-                timerTex.setText(String.format("%02d:%02d",
-                        TimeUnit.MILLISECONDS.toMinutes(currentTime),
-                        TimeUnit.MILLISECONDS.toSeconds(currentTime) -
-                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
-                ));
-            }
-            else if (!gameOverFlag){
-                deleteBulldozer();
-                gameOverFlag=true;
-                gameOver=GameObject.createTextGameOver(0,-7.5f,this,"GAME OVER");
-            }
-
-            if(!gameOverFlag)
-                score = (long) (score + (listBarrel.size() * 1.5f));
-            if(score >= maxScore[level]){
-                level=level+1;
-                if(level>10) {
+            if (numFps == 10) {
+                if (timeResume != 0 && timerPause != 0) {
+                    startTime = startTime + (timeResume - timerPause);
+                    timeResume = 0;
+                    timerPause = 0;
+                }
+                if (currentTime >= 0) {
+                    currentTime = maxTime - (System.currentTimeMillis() - startTime);
+                    timerTex.setText(String.format("%02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(currentTime),
+                            TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
+                    ));
+                } else if (!gameOverFlag) {
                     deleteBulldozer();
                     gameOverFlag = true;
-                    gameOver=GameObject.createTextGameOver(0,-7.5f,this,"WIN");
-
+                    gameOver = GameObject.createTextGameOver(0, -7.5f, this, "GAME OVER");
                 }
-                speed= speed +(level*0.20f);
-                numberBarrel=numberBarrel+(5*level);
-            }
-            if((score-lastScore)>(maxScore[level]/10)){
-                numberBarrel=numberBarrel+1;
-                Log.i("lastscore",": "+(score-lastScore));
-                lastScore=score;
-                Log.i("agg barrel",": "+(100*level));
 
-            }
-            if(System.currentTimeMillis()-timeZeroBarrel>=3000 && numberBarrel==0){
-                numberBarrel = numberBarrel +level;
-            }
-            numberBarrelText.setText(String.format("%02d",numberBarrel));
-            textScore.setText("Score: "+score);
-        }
+                if (!gameOverFlag)
+                    score = (long) (score + (listBarrel.size() * 1.5f));
+                if (score >= maxScore[level]) {
+                    level = level + 1;
+                    if (level > 10) {
+                        deleteBulldozer();
+                        gameOverFlag = true;
+                        gameOver = GameObject.createTextGameOver(0, -7.5f, this, "WIN");
 
-        if(listBarrel.size() == 0){
-            verifyAction = false;
-        }
-
-        if(numFps == 10 ){
-
-            if(!verifyAction){
-                for(GameObject gameObject: objects) {
-                    if (gameObject.name.equals("bulldozer")) {
-                        gameObjectBulldozer = gameObject;
-                        break;
                     }
+                    speed = speed + (level * 0.20f);
+                    numberBarrel = numberBarrel + (5 * level);
                 }
-                if(gameObjectBulldozer != null){
-                    List<Component> components = gameObjectBulldozer.getComponent(ComponentType.AI);
-                    if(components != null){
-                        for (Component component: components) {
-                            Action action = ((FsmAIComponent) component).fsm.stepAndGetAction(this);
-                            if(action != null){
-                                if(action.equals(Action.burned)){
-                                    int result = searchBarrel();
-                                    burnedBarrel(result,this,activity);
-                                    verifyAction = true;
-                                }else if(action.equals(Action.waited)){
-                                     moveToCenter(this,activity);
+                if ((score - lastScore) > (maxScore[level] / 10)) {
+                    numberBarrel = numberBarrel + 1;
+                    Log.i("lastscore", ": " + (score - lastScore));
+                    lastScore = score;
+                    Log.i("agg barrel", ": " + (100 * level));
+
+                }
+                if (System.currentTimeMillis() - timeZeroBarrel >= 3000 && numberBarrel == 0) {
+                    numberBarrel = numberBarrel + level;
+                }
+                numberBarrelText.setText(String.format("%02d", numberBarrel));
+                textScore.setText("Score: " + score);
+            }
+
+            if (listBarrel.size() == 0) {
+                verifyAction = false;
+            }
+
+            if (numFps == 10) {
+
+                if (!verifyAction) {
+                    for (GameObject gameObject : objects) {
+                        if (gameObject.name.equals("bulldozer")) {
+                            gameObjectBulldozer = gameObject;
+                            break;
+                        }
+                    }
+                    if (gameObjectBulldozer != null) {
+                        List<Component> components = gameObjectBulldozer.getComponent(ComponentType.AI);
+                        if (components != null) {
+                            for (Component component : components) {
+                                Action action = ((FsmAIComponent) component).fsm.stepAndGetAction(this);
+                                if (action != null) {
+                                    if (action.equals(Action.burned)) {
+                                        int result = searchBarrel();
+                                        burnedBarrel(result, this, activity);
+                                        verifyAction = true;
+                                    } else if (action.equals(Action.waited)) {
+                                        moveToCenter(this, activity);
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                numFps = 0;
             }
-            numFps = 0;
+
+
+
+            /*                      */
+            
+            /* Simulazione Fisica */
+            world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
+
+            /*                     */
+
+            /* Fase Collisioni    */
+
+
+            /*                  */
+
+            //accelerationAnddeceleration();
+
+            handleCollisions(contactListener.getCollisions());
+            /* update Timer */
+
+            for (Input.TouchEvent event : touchHandler.getTouchEvents())
+                touchConsumer.consumeTouchEvent(event);
         }
-
-
-
-        /*                      */
-
-
-
-        /* Simulazione Fisica */
-        world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
-
-       /*                     */
-
-        /* Fase Collisioni    */
-
-
-        /*                  */
-
-        //accelerationAnddeceleration();
-
-        handleCollisions(contactListener.getCollisions());
-        /* update Timer */
-
-
-
-
-        for (Input.TouchEvent event: touchHandler.getTouchEvents())
-            touchConsumer.consumeTouchEvent(event);
     }
 
 

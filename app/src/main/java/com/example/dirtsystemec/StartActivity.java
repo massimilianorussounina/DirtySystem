@@ -86,6 +86,7 @@ public class StartActivity extends Activity {
             @Override
             public void onClick(View view) {
                     flagStart = true;
+                    GameWorld.gameOverFlag=false;
                     Intent i= new Intent(context,MainActivity.class);
                     startActivity(i);
             }

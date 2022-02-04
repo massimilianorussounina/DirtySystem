@@ -123,10 +123,10 @@ public class MainActivity extends Activity {
 
         GameObject.createBulldozer(-6.6f,0,gw,-1,this,null);
         GameObject.createScoreBar(4.2f,22.5f,gw);
-        GameObject.createTextNumberBarrel(9.5f,-23.45f,gw);
+        GameObject.createTextNumberBarrel(9.2f,-23.45f,gw);
         GameObject.createTextscore(11.25f,-21f,gw);
         GameObject.createButtonPause(11f,22f,gw);
-        GameObject.createBarrelIcon(12f,-22.8f,gw);
+        GameObject.createBarrelIcon(11.7f,-22.8f,gw);
 
         renderView = new AndroidFastRenderView(this, gw);
 
@@ -182,15 +182,16 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void showMenu(){
+    public void showMenu(boolean flagResume){
         Intent i= new Intent(this,StartActivity.class);
-        i.putExtra("FLAG", "true");
+        i.putExtra("FLAG", String.valueOf(flagResume));
         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(i);
 
 
 
     }
+
 
     public  HandlerUI getHandlerUI(){
         return handlerUI;

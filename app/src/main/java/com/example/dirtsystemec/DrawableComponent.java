@@ -184,9 +184,9 @@ class SpriteDrawableComponent extends DrawableComponent {
 
     @Override
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-        if(sprite instanceof ScoreSprite){
-            sprite.draw(((GameObject)owner).gameWorld.getScore());
-        }else{
+        if (sprite instanceof ScoreSprite) {
+            sprite.draw(((GameObject) owner).gameWorld.getScore());
+        } else {
             sprite.draw(System.currentTimeMillis());
         }
     }

@@ -103,7 +103,7 @@ class ScoreSprite extends Sprite{
         canvas.save();
         canvas.rotate(90, coordinate_x, coordinate_y);
 
-        if(currentValue >= gameWorld.maxScore[currentAnimation] ){
+        if(currentValue >= gameWorld.maxScore[currentAnimation] && !GameWorld.gameOverFlag ){
             if(currentAnimation >= spritesheet.getDelay().length-1){
                 currentAnimation = 0;
 

@@ -28,7 +28,8 @@ import java.util.concurrent.TimeUnit;
 
 
 public class GameWorld {
-    public final int[] maxScore = {500,800,1000,1500,2500,3500,5000,7500,11000,15000};
+    public final int[] maxScore = {100,200,350,550,800,1100,1450,1850,2300,2800};
+  // public final int[] maxScore = {100,100,100,100,100,100,100,100,100,200};
     private int numberBarrel = 5;
     private long score = 0,lastScore=0;
     private long timeZeroBarrel;
@@ -37,7 +38,7 @@ public class GameWorld {
     Bitmap buffer;
     private final Canvas canvas;
     //private BulldozerPhysicsComponent bulldozer;
-    private boolean buttonTrash = true, gameOverFlag=false;
+    static boolean gameOverFlag=false;
     // Simulation
     List<GameObject> objects;
     private volatile boolean verifyAction = false;
@@ -97,18 +98,22 @@ public class GameWorld {
         numFps++;
 
         /*    Inizio Fase AI   */
-        if(!gameOverFlag) {
+        if (!gameOverFlag) {
             positionYBulldozer = bulldozer.body.getPositionY();
             int direction = ((DynamicPositionComponent) bulldozer.owner.getComponent(ComponentType.Position).get(0)).direction;
+
             if (positionYBulldozer > 19.9f && direction == 1) {
                 System.out.println(positionYBulldozer);
+                // moveToCenter(this,activity);
                 rotationBulldozer(-8f, positionYBulldozer, this, -1, activity);
                 verifyAction = false;
             } else if (positionYBulldozer < -19.9f && direction == -1) {
+                // moveToCenter(this,activity);
                 rotationBulldozer(-8f, positionYBulldozer, this, 1, activity);
                 verifyAction = false;
             }
 
+            Log.d("size lista barrel",": "+listBarrel.size());
 
             if (numFps == 10) {
                 if (timeResume != 0 && timerPause != 0) {
@@ -123,26 +128,22 @@ public class GameWorld {
                             TimeUnit.MILLISECONDS.toSeconds(currentTime) -
                                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime))
                     ));
-                } else if (!gameOverFlag) {
-                    deleteBulldozer();
-                    gameOverFlag = true;
-                    gameOver = GameObject.createTextGameOver(0, -7.5f, this, "GAME OVER");
                 }
 
                 if (!gameOverFlag)
                     score = (long) (score + (listBarrel.size() * 1.5f));
-                if (score >= maxScore[level]) {
-                    level = level + 1;
-                    if (level > 10) {
-                        deleteBulldozer();
-                        gameOverFlag = true;
-                        gameOver = GameObject.createTextGameOver(0, -7.5f, this, "WIN");
+                if (score >= maxScore[maxScore.length - 1]-1) {
+                    deleteBulldozer();
+                    gameOverFlag = true;
+                    gameOver = GameObject.createTextGameOver(0, -7.5f, this, "   WIN   ");
 
-                    }
-                    speed = speed + (level * 0.20f);
-                    numberBarrel = numberBarrel + (5 * level);
                 }
-                if ((score - lastScore) > (maxScore[level] / 10)) {
+                if (level < 10 && score >= maxScore[level]) {
+                    level = level + 1;
+                    speed = speed + (level * 0.20f);
+                    // numberBarrel = numberBarrel + (5 * level);
+                }
+                if ((score - lastScore) > 50) {
                     numberBarrel = numberBarrel + 1;
                     Log.i("lastscore", ": " + (score - lastScore));
                     lastScore = score;
@@ -189,11 +190,13 @@ public class GameWorld {
                 }
                 numFps = 0;
             }
-
-
+            if (currentTime<0) {
+                gameOverFlag = true;
+                gameOver = GameObject.createTextGameOver(0, -7.5f, this, "GAME OVER");
+            }
 
             /*                      */
-            
+
             /* Simulazione Fisica */
             world.step(elapsedTime, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
 
@@ -211,7 +214,13 @@ public class GameWorld {
 
             for (Input.TouchEvent event : touchHandler.getTouchEvents())
                 touchConsumer.consumeTouchEvent(event);
+        }else
+        {
+            deleteBulldozer();
+            for (Input.TouchEvent event : touchHandler.getTouchEvents())
+                touchConsumer.consumeTouchEvent(event);
         }
+
     }
 
 
@@ -284,7 +293,7 @@ public class GameWorld {
                 if (!listBarrel.contains((GameObject) event.b.owner)) {
                     flagCollisionBarrel = false;
                     listBarrel.add((GameObject) event.b.owner);
-                    handleSoundCollisions(event);
+                   handleSoundCollisions(event);
                     if (event.a.name.equals("incinerator")) handleDeleteBarrel(event);
                 } else if (event.a.name.equals("incinerator")) {
                     handleSoundCollisions(event);
@@ -300,7 +309,12 @@ public class GameWorld {
         Sound sound = CollisionSounds.getSound(((GameObject)event.a.owner).name, ((GameObject)event.b.owner).name);
 
         if (sound!=null) {
-            sound.play(MainActivity.volumeSoundEffect);
+
+            long currentTime = System.nanoTime();
+            if (currentTime - timeOfLastSound > 500_000_000) {
+                timeOfLastSound = currentTime;
+                sound.play(MainActivity.volumeSoundEffect);
+            }
         }
     }
 
@@ -416,20 +430,12 @@ public class GameWorld {
             }
         }
         else{
-            ArrayList<GameObject> temp = new ArrayList<GameObject>();
-            for(GameObject obj: objects){
-                if(!obj.name.equals("barrel"))
-                    temp.add(obj);
-            }
-            objects=temp;
-            GameObject.createBulldozer(-6.6f,0,this,-1,activity,null);
+            handlerUI.sendEmptyMessage(1);
             score=0;
             startTime= System.currentTimeMillis();
             currentTime= maxTime - (System.currentTimeMillis() - startTime);
             numberBarrel=5;
-            objects.remove(gameOver);
             level=1;
-            gameOverFlag=false;
         }
 
     }
@@ -576,4 +582,5 @@ public class GameWorld {
     public long getScore() {
         return score;
     }
+
 }

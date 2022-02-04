@@ -18,6 +18,7 @@ public class CollisionSounds {
         map.put(myHash("ground","barrel"), dropGroundSound);
         map.put(myHash("bulldozer","barrel"), metallicSound);
         map.put(myHash("incinerator","barrel"), burnedSound);
+        map.put(myHash("barrel","barrel"), metallicSound);
 
         map.put(myHash("barrel","ground"), dropGroundSound);
         map.put(myHash("barrel","bulldozer"), metallicSound);

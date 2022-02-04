@@ -158,12 +158,11 @@ public class GameWorld {
             textScore.setText("Score: "+score);
         }
 
+        if(listBarrel.size() == 0){
+            verifyAction = false;
+        }
 
-
-        if(numFps == 20 ){
-            if(verifyAction && listBarrel.size() == 0){
-                verifyAction = false;
-            }
+        if(numFps == 10 ){
 
             if(!verifyAction){
                 for(GameObject gameObject: objects) {
@@ -183,7 +182,7 @@ public class GameWorld {
                                     burnedBarrel(result,this,activity);
                                     verifyAction = true;
                                 }else if(action.equals(Action.waited)){
-                                    moveToCenter(this,activity);
+                                     moveToCenter(this,activity);
                                 }
                             }
                         }
@@ -273,55 +272,41 @@ public class GameWorld {
 
     private void handleCollisions(Collection<Collision> collisions) {
         for (Collision event: collisions) {
-            Log.i("collision",event.a.name +" "+ event.b.name);
-            if(event.b.name.equals("barrel") && !event.a.name.equals("barrel")){
 
-                if(!listBarrel.contains((GameObject) event.b.owner)) {
-                    if(flagCollisionBarrel) {
-                        flagCollisionBarrel=false;
-                    }
-                    listBarrel.add((GameObject)event.b.owner);
+            if (event.a.name.equals("barrel")) {
+
+                if (!listBarrel.contains((GameObject) event.a.owner)) {
+                    flagCollisionBarrel = false;
+                    listBarrel.add((GameObject) event.a.owner);
                     handleSoundCollisions(event);
-
-                }
-                if(event.a.name.equals("incinerator")){
+                    if (event.b.name.equals("incinerator")) handleDeleteBarrel(event);
+                } else if (event.b.name.equals("incinerator")) {
                     handleSoundCollisions(event);
                     handleDeleteBarrel(event);
-                }else {
+                } else {
                     handleSoundCollisions(event);
                 }
-
-            }else if(event.a.name.equals("barrel") && !event.b.name.equals("barrel") ){
-
-                if(!listBarrel.contains((GameObject)event.a.owner)){
-                    if(flagCollisionBarrel) {
-                        flagCollisionBarrel=false;
-                    }
-                    listBarrel.add((GameObject)event.a.owner);
+            } else if (event.b.name.equals("barrel")) {
+                if (!listBarrel.contains((GameObject) event.b.owner)) {
+                    flagCollisionBarrel = false;
+                    listBarrel.add((GameObject) event.b.owner);
                     handleSoundCollisions(event);
-                }
-                if(event.b.name.equals("incinerator")){
+                    if (event.a.name.equals("incinerator")) handleDeleteBarrel(event);
+                } else if (event.a.name.equals("incinerator")) {
                     handleSoundCollisions(event);
                     handleDeleteBarrel(event);
-                }else{
+                } else {
                     handleSoundCollisions(event);
                 }
-            }else{
-                handleDeleteBarrel(event);
             }
         }
-
     }
 
     private void handleSoundCollisions(Collision event){
         Sound sound = CollisionSounds.getSound(((GameObject)event.a.owner).name, ((GameObject)event.b.owner).name);
 
         if (sound!=null) {
-            long currentTime = System.nanoTime();
-            if (currentTime - timeOfLastSound > 500_000_000) {
-                timeOfLastSound = currentTime;
-                sound.play(MainActivity.volumeSoundEffect);
-            }
+            sound.play(MainActivity.volumeSoundEffect);
         }
     }
 
@@ -422,15 +407,14 @@ public class GameWorld {
     }
 
     public void eventTouch(float coordinateX, float coordinateY){
-        int index = 0;
         if(!gameOverFlag) {
             if ((coordinateX <= 13.5f && coordinateX >= 9f) && (coordinateY >= 20f && coordinateY <= 24)) {
                 handlerUI.sendEmptyMessage(0);
             }else if(!flagCollisionBarrel && ((coordinateY>=-22 && coordinateY <=21.6))){
-                flagCollisionBarrel = true;
                 if (numberBarrel == 1)
                     timeZeroBarrel = System.currentTimeMillis();
                 if (numberBarrel > 0) {
+                    flagCollisionBarrel = true;
                     GameObject.createBarrel(13f, coordinateY, this);
                     numberBarrel = numberBarrel - 1;
                     numberBarrelText.setText(String.format("%02d", numberBarrel));
@@ -466,7 +450,9 @@ public class GameWorld {
             event.b.body.setUserData(null);
             event.b.body.delete();
             event.b.body = null;
-
+            if(listBarrel.size() == 0){
+                verifyAction = false;
+            }
         }else if(event.a.name.equals("barrel")  && event.b.name.equals("incinerator")){
             objects.remove((GameObject) event.a.owner);
             listBarrel.remove((GameObject) event.a.owner);
@@ -474,7 +460,9 @@ public class GameWorld {
             event.a.body.setUserData(null);
             event.a.body.delete();
             event.a.body = null;
-
+            if(listBarrel.size() == 0){
+                verifyAction = false;
+            }
         }
     }
 
@@ -529,40 +517,53 @@ public class GameWorld {
         DynamicPositionComponent dynamicPositionComponent = (DynamicPositionComponent) (gameObjectBulldozer).getComponent(ComponentType.Position).get(0);
         int direction = (dynamicPositionComponent.direction);
 
-
         if(direction == -1){
-            if(positionYBulldozer >= direction *(0.5f) && positionYBulldozer < (1.8f)){
+            if(positionYBulldozer >= -0.5f && positionYBulldozer < 0.1f){
                 for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                     if(componentBulldozer instanceof RevoluteJointComponent) {
-                        if (((RevoluteJointComponent) componentBulldozer).joint.isMotorEnabled())
-                            ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(direction * speed);
                         ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(0f);
                     }
                 }
             }else{
-                for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
-                    if(componentBulldozer instanceof RevoluteJointComponent) {
-                        if (((RevoluteJointComponent) componentBulldozer).joint.isMotorEnabled())
-                            ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(direction * speed);
-                        ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
+                if (positionYBulldozer < -0.5f) {
+                    rotationBulldozer(-8f, positionYBulldozer, this, 1, activity);
+                    for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
+                        if(componentBulldozer instanceof RevoluteJointComponent) {
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(speed);
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);;
+                        }
+                    }
+                }else{
+                    for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
+                        if(componentBulldozer instanceof RevoluteJointComponent) {
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(-speed);
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
+                        }
                     }
                 }
             }
         }else{
-            if(positionYBulldozer <= direction *(3f) && positionYBulldozer > (-2f)){
+            if(positionYBulldozer >= -0.1f && positionYBulldozer < (3f)){
                 for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                     if(componentBulldozer instanceof RevoluteJointComponent) {
-                        if (((RevoluteJointComponent) componentBulldozer).joint.isMotorEnabled())
-                            ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(direction * speed);
                         ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(0f);
                     }
                 }
             }else{
-                for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
-                    if(componentBulldozer instanceof RevoluteJointComponent) {
-                        if (((RevoluteJointComponent) componentBulldozer).joint.isMotorEnabled())
-                            ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(direction * speed);
-                        ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
+                if (positionYBulldozer > 3) {
+                    rotationBulldozer(-8f, positionYBulldozer, this, -1, activity);
+                    for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
+                        if(componentBulldozer instanceof RevoluteJointComponent) {
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(-speed);
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
+                        }
+                    }
+                }else{
+                    for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
+                        if(componentBulldozer instanceof RevoluteJointComponent) {
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(speed);
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
+                        }
                     }
                 }
             }

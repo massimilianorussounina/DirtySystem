@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -21,7 +22,10 @@ import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Music;
 import com.badlogic.androidgames.framework.impl.AndroidAudio;
 import com.badlogic.androidgames.framework.impl.MultiTouchHandler;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.Inflater;
 
 public class MainActivity extends Activity {
@@ -38,6 +42,9 @@ public class MainActivity extends Activity {
     private MyThread myThread;
     private HandlerUI handlerUI;
     public static float  volumeMusic=0.8f, volumeSoundEffect=0.5f;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+    private boolean flagStart = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +78,19 @@ public class MainActivity extends Activity {
             });
         }
 
+
+        sharedPref = this.getPreferences(this.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        Bundle bundle = getIntent().getExtras();
+
+        if(bundle!=null) {
+            String flagString = bundle.getString("FLAG_START");
+            flagStart = Boolean.parseBoolean(flagString);
+
+        }
+
+
+
         handlerUI=new HandlerUI(this);
 
         /* Inizializzazione Audio */
@@ -92,6 +112,10 @@ public class MainActivity extends Activity {
         Box physicalSize = new Box(coordinateXMin, coordinateYMin, coordinateXMax, coordinateYMax);
         Box screenSize   = new Box(0, 0, metrics.widthPixels, metrics.heightPixels);
         gw = new GameWorld(physicalSize, screenSize, this,handlerUI);
+        Log.e("FLAG",String.valueOf(flagStart));
+        if(flagStart) {
+            loadData();
+        }
         gw.setGravity(-10,0);
 
         GameObject.createTimer(11,-2.7f,gw);
@@ -122,7 +146,7 @@ public class MainActivity extends Activity {
 
 
         GameObject.createBulldozer(-6.6f,0,gw,-1,this,null);
-        GameObject.createScoreBar(4.2f,22.5f,gw);
+        GameObject.createScoreBar(4.2f,22.5f,gw,0);
         GameObject.createTextNumberBarrel(9.2f,-23.45f,gw);
         GameObject.createTextscore(11.25f,-21f,gw);
         GameObject.createButtonPause(11f,22f,gw);
@@ -188,8 +212,59 @@ public class MainActivity extends Activity {
         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(i);
 
+    }
+
+    public void SaveData(){
+        Log.e("SAVE"," sto salvando ");
+        editor.putLong("SCORE",gw.score);
+        editor.putFloat("BULLDOZER",gw.positionYBulldozer);
+        editor.putInt("LEVEL",gw.level);
+        editor.putLong("TIME",gw.currentTime);
+        editor.putInt("NUM_BARREL",gw.numberBarrel);
+        editor.putBoolean("GAME_OVER",GameWorld.gameOverFlag);
+        Gson gson = new Gson();
+        List<Float> barrelList = new ArrayList<Float>();
+        for(GameObject obj: gw.listBarrel){
+            barrelList.add(((PhysicsComponent)obj.getComponent(ComponentType.Physics).get(0)).body.getPositionY());
+        }
+        String jsonText = gson.toJson(barrelList);
+        if(barrelList.isEmpty())
+            jsonText="0";
+        editor.putString("BARREL", jsonText);
+        editor.apply();
+        editor.commit();
+
+    }
+    private void loadData(){
+        float posX;
+        if(!sharedPref.getBoolean("GAME_OVER",true)) {
+            Log.e("SAVE SCORE :", "" + sharedPref.getLong("SCORE", 0));
+            Log.e("SAVE BULLDOZER :", "" + sharedPref.getFloat("BULLDOZER", 0));
+            Log.e("SAVE LEVEL :", "" + sharedPref.getInt("LEVEL", 1));
+            Log.e("SAVE TIME :", "" + sharedPref.getLong("TIME", 0));
+            Log.e("SAVE N_BARREL :", "" + sharedPref.getInt("NUM_BARREL", 5));
+            gw.score = sharedPref.getLong("SCORE", 0);
+            gw.level = sharedPref.getInt("LEVEL", 1);
+            gw.currentTime = sharedPref.getLong("TIME", 0);
 
 
+            Gson gson = new Gson();
+            String jsonText = sharedPref.getString("BARREL", null);
+            Float[] posY = gson.fromJson(jsonText, Float[].class);
+
+            for (int i = 0; i < posY.length; i++) {
+                if (posY[i] >= -2.4f && posY[i] <= 2.4f) {
+                    posX = -6.6f;
+                } else {
+                    posX = -5.6f;
+                }
+                GameObject.createBarrel(posX, posY[i].floatValue(), gw);
+
+            }
+
+            Log.e("GAME OVER", String.valueOf(GameWorld.gameOverFlag));
+            gw.startTime = System.currentTimeMillis() - (gw.maxTime - gw.currentTime);
+        }
     }
 
 

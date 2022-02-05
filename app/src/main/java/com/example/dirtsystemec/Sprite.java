@@ -93,8 +93,9 @@ class ScoreSprite extends Sprite{
 
 
     public ScoreSprite(GameWorld gameWorld, Spritesheet spritesheet, float coordinateX, float coordinateY,float width, float height, int widthFrame,
-                     int heightFrame,int delay,int numberOfAnimations){
-        super(gameWorld,spritesheet,coordinateX,coordinateY,width,height,widthFrame,heightFrame,delay,numberOfAnimations,0);
+                     int heightFrame,int delay,int numberOfAnimations,int lastValue){
+        super(gameWorld,spritesheet,coordinateX,coordinateY,width,height,widthFrame,heightFrame,delay,numberOfAnimations,lastValue);
+        currentAnimation=0;
     }
 
 
@@ -103,7 +104,7 @@ class ScoreSprite extends Sprite{
         canvas.save();
         canvas.rotate(90, coordinate_x, coordinate_y);
 
-        if(currentValue >= gameWorld.maxScore[currentAnimation] && !GameWorld.gameOverFlag ){
+       /* if(currentValue >= gameWorld.maxScore[currentAnimation] && !GameWorld.gameOverFlag ){
             if(currentAnimation >= spritesheet.getDelay().length-1){
                 currentAnimation = 0;
 
@@ -111,6 +112,12 @@ class ScoreSprite extends Sprite{
                 currentAnimation = currentAnimation + 1;
             }
             lastValue = currentValue;
+        }
+        */
+
+        if(currentAnimation < (gameWorld.level-1)){
+            spritesheet.drawAnimation(canvas,currentAnimation,0,coordinate_x,coordinate_y);
+            currentAnimation = currentAnimation + 1;
         }
         spritesheet.drawAnimation(canvas,currentAnimation,0,coordinate_x,coordinate_y);
         canvas.restore();

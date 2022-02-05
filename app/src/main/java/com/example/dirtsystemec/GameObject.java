@@ -406,7 +406,7 @@ public class GameObject extends Entity{
 
 
 
-    public static void createScoreBar(float coordinateX, float coordinateY,GameWorld gameWorld) {
+    public static void createScoreBar(float coordinateX, float coordinateY,GameWorld gameWorld,int lastValue) {
 
         GameObject gameObjectSea = new GameObject(gameWorld,"scoreBar");
 
@@ -416,7 +416,7 @@ public class GameObject extends Entity{
         bitmapFactory.inScaled = false;
         Bitmap bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.scorebar,bitmapFactory );
         SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("scoreBar",gameObjectSea,new ScoreSprite(gameWorld,new Spritesheet(bitmap,10),coordinateX,coordinateY,
-                2f,12f,66,405,10,10));
+                2f,12f,66,405,1,10,lastValue));
 
         gameObjectSea.addComponent(staticPositionComponent);
         gameObjectSea.addComponent(spriteDrawableComponent);

@@ -81,7 +81,6 @@ public class StartActivity extends Activity {
         buttonStart = findViewById(R.id.buttonStart);
         buttonResume.setTypeface(typeface);
         buttonStart.setTypeface(typeface);
-        buttonResume.setEnabled(flagStart);
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,9 +93,12 @@ public class StartActivity extends Activity {
         buttonResume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i= new Intent(context,MainActivity.class);
+                Log.e("START"," ok");
+                Intent i = new Intent(context, MainActivity.class);
+                i.putExtra("FLAG_START", String.valueOf(true));
                 i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(i);
+
             }
         });
 

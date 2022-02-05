@@ -30,10 +30,10 @@ import java.util.concurrent.TimeUnit;
 public class GameWorld {
     public final int[] maxScore = {100,200,350,550,800,1100,1450,1850,2300,2800};
   // public final int[] maxScore = {100,100,100,100,100,100,100,100,100,200};
-    private int numberBarrel = 5;
-    private long score = 0,lastScore=0;
+    protected int numberBarrel = 5;
+    protected long score = 0,lastScore=0;
     private long timeZeroBarrel;
-    private int level=1;
+    protected int level=1;
     final static float bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
     Bitmap buffer;
     private final Canvas canvas;
@@ -43,7 +43,7 @@ public class GameWorld {
     List<GameObject> objects;
     private volatile boolean verifyAction = false;
     private long timeOfLastSound = 0;
-    List<GameObject> listBarrel;
+    protected List<GameObject> listBarrel ;
     PhysicsComponent bulldozer;
     World world;
     protected GameObject gameObjectBulldozer;
@@ -64,7 +64,8 @@ public class GameWorld {
     // Arguments are in physical simulation units.
     private GameObject gameOver;
     private TextDrawableComponent timerTex,numberBarrelText,textScore;
-    private long startTime,currentTime,maxTime=300000,timerPause=0,timeResume=0;
+    protected long startTime,currentTime,maxTime=300000,timerPause=0,timeResume=0;
+    protected float positionYBulldozer;
 
 
 
@@ -92,7 +93,7 @@ public class GameWorld {
     }
 
     public synchronized void update(float elapsedTime) {
-        float positionYBulldozer;
+
 
         GameObject gameObjectBulldozer = null;
         numFps++;
@@ -141,6 +142,7 @@ public class GameWorld {
                 if (level < 10 && score >= maxScore[level]) {
                     level = level + 1;
                     speed = speed + (level * 0.20f);
+                    saveGame();
                     // numberBarrel = numberBarrel + (5 * level);
                 }
                 if ((score - lastScore) > 50) {
@@ -433,9 +435,11 @@ public class GameWorld {
             handlerUI.sendEmptyMessage(1);
             score=0;
             startTime= System.currentTimeMillis();
-            currentTime= maxTime - (System.currentTimeMillis() - startTime);
+            listBarrel= new ArrayList<>();
+            currentTime=0;
             numberBarrel=5;
             level=1;
+            saveGame();
         }
 
     }
@@ -567,6 +571,12 @@ public class GameWorld {
                 }
             }
         }
+    }
+
+    protected void saveGame(){
+
+        Log.e("SAVE"," Invio messaggio ");
+        handlerUI.sendEmptyMessage(2);
     }
 
 

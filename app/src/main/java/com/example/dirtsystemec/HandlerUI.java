@@ -14,12 +14,11 @@ public class HandlerUI extends Handler {
     @Override
     public void handleMessage(Message msg) {
         if(msg.what == 0){
-
             uiActivity.showMenu(true);
-        } else {
-
+        } else if(msg.what == 1) {
             uiActivity.showMenu(false);
-
+        }else{
+            uiActivity.SaveData();
         }
     }
 

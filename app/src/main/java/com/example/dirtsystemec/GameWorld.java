@@ -521,7 +521,7 @@ public class GameWorld {
         int direction = (dynamicPositionComponent.direction);
 
         if(direction == -1){
-            if(positionYBulldozer >= -0.5f && positionYBulldozer < 0.1f){
+            if(positionYBulldozer < 0.1f){
                 for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                     if(componentBulldozer instanceof RevoluteJointComponent) {
                         ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(0f);
@@ -546,7 +546,7 @@ public class GameWorld {
                 }
             }
         }else{
-            if(positionYBulldozer >= -0.1f && positionYBulldozer < (3f)){
+            if(positionYBulldozer >= -0.1f ){
                 for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                     if(componentBulldozer instanceof RevoluteJointComponent) {
                         ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(0f);

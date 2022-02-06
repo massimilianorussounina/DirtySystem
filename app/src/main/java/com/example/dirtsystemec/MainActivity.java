@@ -225,11 +225,14 @@ public class MainActivity extends Activity {
         Gson gson = new Gson();
         List<Float> barrelList = new ArrayList<Float>();
         for(GameObject obj: gw.listBarrel){
-            barrelList.add(((PhysicsComponent)obj.getComponent(ComponentType.Physics).get(0)).body.getPositionY());
+            try {
+
+                barrelList.add(((PhysicsComponent)obj.getComponent(ComponentType.Physics).get(0)).body.getPositionY());
+            } catch (Exception e) {
+                Log.e("Barile eliminato",e.getMessage());
+            }
         }
         String jsonText = gson.toJson(barrelList);
-        if(barrelList.isEmpty())
-            jsonText="0";
         editor.putString("BARREL", jsonText);
         editor.apply();
         editor.commit();

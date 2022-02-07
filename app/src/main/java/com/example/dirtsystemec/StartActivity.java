@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -19,11 +20,13 @@ public class StartActivity extends Activity {
 
     private Button buttonStart,buttonResume;
     private SeekBar seekBarMusic,seekBarSoundEffect;
-    private TextView textViewMusic,textViewSoundEffect;
+    private TextView textViewMusic,textViewSoundEffect,textViewPowered;
     private int currentApiVersion;
     public static String TAG;
     private Context context;
     private boolean flagStart=false;
+    private ImageView ground;
+    private long currenTime,finalTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +68,15 @@ public class StartActivity extends Activity {
 
         }
         Typeface typeface = Typeface.createFromAsset(getAssets(), "font/8bitfont.ttf");
+        textViewPowered = findViewById(R.id.textViewPowerBy);
         textViewMusic = findViewById(R.id.textViewMusic);
         textViewSoundEffect = findViewById(R.id.textViewSoundEffect);
+        textViewPowered.setTypeface(typeface);
         textViewMusic.setTypeface(typeface);
         textViewSoundEffect.setTypeface(typeface);
         seekBarMusic = findViewById(R.id.seekBarMusic);
         seekBarSoundEffect= findViewById(R.id.seekBarSoundEffect);
+        ground= findViewById(R.id.imageViewGround);
         seekBarMusic.setMax(100);
         seekBarSoundEffect.setMax(100);
         seekBarMusic.setMin(0);
@@ -81,6 +87,7 @@ public class StartActivity extends Activity {
         buttonStart = findViewById(R.id.buttonStart);
         buttonResume.setTypeface(typeface);
         buttonStart.setTypeface(typeface);
+
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -145,7 +145,7 @@ public class MainActivity extends Activity {
         GameObject.createBarrel(3f,-17.5f,gw); */
 
 
-        GameObject.createBulldozer(-6.6f,0,gw,-1,this,null);
+        GameObject.createBulldozer(-6.6f,0,gw,-1,this,null,gw.speed);
         GameObject.createScoreBar(4.2f,22.5f,gw,0);
         GameObject.createTextNumberBarrel(9.2f,-23.45f,gw);
         GameObject.createTextscore(11.25f,-21f,gw);
@@ -218,6 +218,7 @@ public class MainActivity extends Activity {
         Log.e("SAVE"," sto salvando ");
         editor.putLong("SCORE",gw.score);
         editor.putFloat("BULLDOZER",gw.positionYBulldozer);
+        editor.putFloat("SPEED",gw.speed);
         editor.putInt("LEVEL",gw.level);
         editor.putLong("TIME",gw.currentTime);
         editor.putInt("NUM_BARREL",gw.numberBarrel);
@@ -249,6 +250,7 @@ public class MainActivity extends Activity {
             gw.score = sharedPref.getLong("SCORE", 0);
             gw.level = sharedPref.getInt("LEVEL", 1);
             gw.currentTime = sharedPref.getLong("TIME", 0);
+            gw.speed = sharedPref.getFloat("SPEED", 7f);
 
 
             Gson gson = new Gson();

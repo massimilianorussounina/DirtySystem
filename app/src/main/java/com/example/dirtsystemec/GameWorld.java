@@ -60,7 +60,7 @@ public class GameWorld {
     private Bitmap bitmap;
     private final RectF dest = new RectF();
     boolean flagCollisionBarrel = false;
-    float speed=7f;
+    protected float speed=7f;
     // Arguments are in physical simulation units.
     private GameObject gameOver;
     private TextDrawableComponent timerTex,numberBarrelText,textScore;
@@ -346,7 +346,7 @@ public class GameWorld {
                     ((PhysicsComponent)component).body = null;
                 }
             }
-            GameObject.createBulldozer(coordinateX,coordinateY,gameWorld,direction,context,componentsAi);
+            GameObject.createBulldozer(coordinateX,coordinateY,gameWorld,direction,context,componentsAi,speed);
             verifyAction = false;
         }
 
@@ -439,6 +439,7 @@ public class GameWorld {
             currentTime=0;
             numberBarrel=5;
             level=1;
+            speed=7;
             saveGame();
         }
 

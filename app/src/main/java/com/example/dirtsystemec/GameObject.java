@@ -183,7 +183,7 @@ public class GameObject extends Entity{
 
 
 
-    public static void createBulldozer(float coordinateX, float coordinateY, GameWorld gameWorld, int invert, Context context, List<Component> componentAi){
+    public static void createBulldozer(float coordinateX, float coordinateY, GameWorld gameWorld, int invert, Context context, List<Component> componentAi,float speed){
         float width=2.8f;
         int photochassis;
         int photocabin;
@@ -267,7 +267,7 @@ public class GameObject extends Entity{
 
 
 
-            RevoluteJointComponent revoluteJointComponentOne = new RevoluteJointComponent(gameObjectBulldozer, listPolygonDamper.get(i).body, circlePhysicsComponentWheel.body,0,proportionalToBulldozer(0.7f,width),0,0,20f,true,invert*0f);
+            RevoluteJointComponent revoluteJointComponentOne = new RevoluteJointComponent(gameObjectBulldozer, listPolygonDamper.get(i).body, circlePhysicsComponentWheel.body,0,proportionalToBulldozer(0.7f,width),0,0,20f,true,(float) invert*speed);
             gameObjectBulldozer.addComponent(revoluteJointComponentOne);
 
 

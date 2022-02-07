@@ -68,6 +68,7 @@ public class OpeningActivity extends Activity {
             @Override
             public void run() {
                 Intent intent = new Intent(context, StartActivity.class);
+
                 startActivity(intent);
             }
         }, 1500);

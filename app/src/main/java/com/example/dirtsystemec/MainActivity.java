@@ -275,5 +275,9 @@ public class MainActivity extends Activity {
     public  HandlerUI getHandlerUI(){
         return handlerUI;
     }
+    @Override
+    public void onBackPressed() {
+
+    }
 
 }

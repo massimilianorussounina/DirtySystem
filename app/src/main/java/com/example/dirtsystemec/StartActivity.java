@@ -172,5 +172,9 @@ public class StartActivity extends Activity {
 
 
     }
+    @Override
+    public void onBackPressed() {
+
+    }
 
 }

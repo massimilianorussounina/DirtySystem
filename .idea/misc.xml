@@ -4,8 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Massi/AndroidStudioProjects/DyrtySystem2/app/src/main/res/layout/activity_main.xml" value="0.5541666666666667" />
-        <entry key="..\:/Users/Massi/AndroidStudioProjects/DyrtySystem2/app/src/main/res/layout/activity_start.xml" value="0.67" />
+        <entry key="..\:/Users/Massi/AndroidStudioProjects/DyrtySystem2/app/src/main/res/layout/activity_start.xml" value="0.9" />
         <entry key="..\:/Users/Massi/AndroidStudioProjects/DyrtySystem2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.5703125" />
+        <entry key="..\:/Users/gennaro/Desktop/DyrtySystem2/app/src/main/res/drawable/backgroun_end.xml" value="0.1" />
+        <entry key="..\:/Users/gennaro/Desktop/DyrtySystem2/app/src/main/res/drawable/background.xml" value="0.1" />
+        <entry key="..\:/Users/gennaro/Desktop/DyrtySystem2/app/src/main/res/drawable/background_center.xml" value="0.1" />
+        <entry key="..\:/Users/gennaro/Desktop/DyrtySystem2/app/src/main/res/drawable/background_start.xml" value="0.1" />
+        <entry key="..\:/Users/gennaro/Desktop/DyrtySystem2/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/gennaro/Desktop/DyrtySystem2/app/src/main/res/layout/activity_start.xml" value="0.309375" />
+        <entry key="..\:/Users/gennaro/Desktop/DyrtySystem2/app/src/main/res/layout/opening_activity.xml" value="0.33" />
       </map>
     </option>
   </component>

@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.Inflater;
 
 public class MainActivity extends Activity {
@@ -217,7 +218,6 @@ public class MainActivity extends Activity {
     public void SaveData(){
         Log.e("SAVE"," sto salvando ");
         editor.putLong("SCORE",gw.score);
-        editor.putFloat("BULLDOZER",gw.positionYBulldozer);
         editor.putFloat("SPEED",gw.speed);
         editor.putInt("LEVEL",gw.level);
         editor.putLong("TIME",gw.currentTime);
@@ -243,7 +243,6 @@ public class MainActivity extends Activity {
         float posX;
         if(!sharedPref.getBoolean("GAME_OVER",true)) {
             Log.e("SAVE SCORE :", "" + sharedPref.getLong("SCORE", 0));
-            Log.e("SAVE BULLDOZER :", "" + sharedPref.getFloat("BULLDOZER", 0));
             Log.e("SAVE LEVEL :", "" + sharedPref.getInt("LEVEL", 1));
             Log.e("SAVE TIME :", "" + sharedPref.getLong("TIME", 0));
             Log.e("SAVE N_BARREL :", "" + sharedPref.getInt("NUM_BARREL", 5));

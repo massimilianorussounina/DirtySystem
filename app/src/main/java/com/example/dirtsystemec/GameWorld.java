@@ -25,15 +25,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 public class GameWorld {
     public final int[] maxScore = {100,200,350,550,800,1100,1450,1850,2300,2800};
   // public final int[] maxScore = {100,100,100,100,100,100,100,100,100,200};
-    protected int numberBarrel = 5;
-    protected long score = 0,lastScore=0;
+    protected volatile int numberBarrel = 5;
+    protected volatile long score = 0;
+    protected long lastScore=0;
     private long timeZeroBarrel;
-    protected int level=1;
+    protected volatile int level=1;
     final static float bufferWidth = 1080, bufferHeight = 1920;    // actual pixels
     Bitmap buffer;
     private final Canvas canvas;
@@ -43,7 +45,7 @@ public class GameWorld {
     List<GameObject> objects;
     private volatile boolean verifyAction = false;
     private long timeOfLastSound = 0;
-    protected List<GameObject> listBarrel ;
+    protected volatile   List<GameObject> listBarrel ;
     PhysicsComponent bulldozer;
     World world;
     protected GameObject gameObjectBulldozer;
@@ -64,7 +66,7 @@ public class GameWorld {
     // Arguments are in physical simulation units.
     private GameObject gameOver;
     private TextDrawableComponent timerTex,numberBarrelText,textScore;
-    protected long startTime,currentTime,maxTime=300000,timerPause=0,timeResume=0;
+    protected volatile long startTime,currentTime,maxTime=300000,timerPause=0,timeResume=0;
     protected float positionYBulldozer;
 
 

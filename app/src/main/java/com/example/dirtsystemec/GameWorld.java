@@ -29,8 +29,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 public class GameWorld {
-    public final int[] maxScore = {100,200,350,550,800,1100,1450,1850,2300,2800};
+    public final int[] maxScore = {0,900,1580,2060,3110,3370,4270,4950,5430,6480};
   // public final int[] maxScore = {100,100,100,100,100,100,100,100,100,200};
+  public final int[] numBarrelLevel = {0,0,4,3,7,2,5,4,3,7,2};
     protected volatile int numberBarrel = 5;
     protected volatile long score = 0;
     protected long lastScore=0;
@@ -62,12 +63,14 @@ public class GameWorld {
     private Bitmap bitmap;
     private final RectF dest = new RectF();
     boolean flagCollisionBarrel = false;
-    protected float speed=7f;
+    protected volatile float speed=7f,torque=5f ;
     // Arguments are in physical simulation units.
     private GameObject gameOver;
     private TextDrawableComponent timerTex,numberBarrelText,textScore;
-    protected volatile long startTime,currentTime,maxTime=300000,timerPause=0,timeResume=0;
+    protected volatile long startTime,currentTime,maxTime=240000,timerPause=0,timeResume=0;
     protected float positionYBulldozer;
+    protected boolean zeroBarrel=false;
+    int countControl=0;
 
 
 
@@ -133,6 +136,35 @@ public class GameWorld {
                     ));
                 }
 
+                Log.i("speed",""+bulldozer.body.getLinearVelocity().getY()+" direction: "+direction);
+                Log.i("CDdirection", " direction :" + direction);
+                Log.i("CDposition", " : " + positionYBulldozer);
+
+                /*   if((((bulldozer.body.getLinearVelocity().getY()>1 || bulldozer.body.getLinearVelocity().getY()<1)&&  bulldozer.body.getLinearVelocity().getY()*direction<1) || (((int)(Math.abs(bulldozer.body.getLinearVelocity().getY()))==0) && !listBarrel.isEmpty()))) {
+                       if (countControl > 12) {
+                           torque = torque + 0.5f;
+                           speed = speed + 0.5f;
+                           Log.i("torque", " " + torque + " direction :" + direction);
+                               if (direction == 1) {
+                                   rotationBulldozer(-8,positionYBulldozer,this,-1,activity);
+                               } else if(direction == -1) {
+                                   rotationBulldozer(-8,positionYBulldozer,this,1,activity);
+                               }
+                           countControl = 0;
+                       }
+                       else{
+                           countControl++;
+                       }
+
+                    }
+                   else{
+                       countControl=0;
+                   }*/
+
+
+
+
+
                 if (!gameOverFlag)
                     score = (long) (score + (listBarrel.size() * 1.5f));
                 if (score >= maxScore[maxScore.length - 1]-1) {
@@ -143,20 +175,15 @@ public class GameWorld {
                 }
                 if (level < 10 && score >= maxScore[level]) {
                     level = level + 1;
-                    speed = speed + (level * 0.20f);
+                    numberBarrel=numBarrelLevel[level];
+                   // speed = speed + (level * 0.20f);
+                    if(level==5)
+                        speed=speed+3f;
                     saveGame();
                     // numberBarrel = numberBarrel + (5 * level);
                 }
-                if ((score - lastScore) > 50) {
-                    numberBarrel = numberBarrel + 1;
-                    Log.i("lastscore", ": " + (score - lastScore));
-                    lastScore = score;
-                    Log.i("agg barrel", ": " + (100 * level));
 
-                }
-                if (System.currentTimeMillis() - timeZeroBarrel >= 3000 && numberBarrel == 0) {
-                    numberBarrel = numberBarrel + level;
-                }
+
                 numberBarrelText.setText(String.format("%02d", numberBarrel));
                 textScore.setText("Score: " + score);
             }
@@ -194,7 +221,7 @@ public class GameWorld {
                 }
                 numFps = 0;
             }
-            if (currentTime<0) {
+            if (currentTime<0 ||  zeroBarrel) {
                 gameOverFlag = true;
                 gameOver = GameObject.createTextGameOver(0, -7.5f, this, "GAME OVER");
             }
@@ -291,9 +318,13 @@ public class GameWorld {
                     handleSoundCollisions(event);
                     handleDeleteBarrel(event);
                 } else {
+
                     handleSoundCollisions(event);
                 }
+
             } else if (event.b.name.equals("barrel")) {
+
+
                 if (!listBarrel.contains((GameObject) event.b.owner)) {
                     flagCollisionBarrel = false;
                     listBarrel.add((GameObject) event.b.owner);
@@ -305,6 +336,7 @@ public class GameWorld {
                 } else {
                     handleSoundCollisions(event);
                 }
+
             }
         }
     }
@@ -470,6 +502,8 @@ public class GameWorld {
                 verifyAction = false;
             }
         }
+        if(numberBarrel ==0 && listBarrel.isEmpty())
+            zeroBarrel=true;
     }
 
 
@@ -513,7 +547,7 @@ public class GameWorld {
             if(c instanceof RevoluteJointComponent) {
                 if (((RevoluteJointComponent) c).joint.isMotorEnabled())
                     ((RevoluteJointComponent) c).joint.setMotorSpeed(direction * speed);
-                ((RevoluteJointComponent) c).joint.setMaxMotorTorque(20f);
+                ((RevoluteJointComponent) c).joint.setMaxMotorTorque(torque);
             }
         }
     }
@@ -528,6 +562,7 @@ public class GameWorld {
                 for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                     if(componentBulldozer instanceof RevoluteJointComponent) {
                         ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(0f);
+                        ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(30f);
                     }
                 }
             }else{
@@ -536,14 +571,14 @@ public class GameWorld {
                     for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                         if(componentBulldozer instanceof RevoluteJointComponent) {
                             ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(speed);
-                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);;
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(torque);
                         }
                     }
                 }else{
                     for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                         if(componentBulldozer instanceof RevoluteJointComponent) {
                             ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(-speed);
-                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(torque);
                         }
                     }
                 }
@@ -553,6 +588,7 @@ public class GameWorld {
                 for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                     if(componentBulldozer instanceof RevoluteJointComponent) {
                         ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(0f);
+                        ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(30f);
                     }
                 }
             }else{
@@ -561,14 +597,14 @@ public class GameWorld {
                     for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                         if(componentBulldozer instanceof RevoluteJointComponent) {
                             ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(-speed);
-                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(torque);
                         }
                     }
                 }else{
                     for(Component componentBulldozer :gameObjectBulldozer.getComponent(ComponentType.Joint)){
                         if(componentBulldozer instanceof RevoluteJointComponent) {
                             ((RevoluteJointComponent) componentBulldozer).joint.setMotorSpeed(speed);
-                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(20f);
+                            ((RevoluteJointComponent) componentBulldozer).joint.setMaxMotorTorque(torque);
                         }
                     }
                 }

@@ -31,7 +31,7 @@ public class GameObject extends Entity{
 
         DynamicPositionComponent dynamicPositionComponent = new DynamicPositionComponent("barrel",coordinateX,coordinateY,gameObjectBarrel);
         BitmapDrawableComponent bitmapDrawableComponent = new BitmapDrawableComponent("barrel",gameObjectBarrel,0.8f,0.8f,R.drawable.barrel,0,0,184,187);
-        CirclePhysicsComponent circlePhysicsComponent = new CirclePhysicsComponent("barrel",gameObjectBarrel,BodyType.dynamicBody,coordinateX,coordinateY,bitmapDrawableComponent.width/2f,bitmapDrawableComponent.height/2f,2f,0.1f,2f);
+        CirclePhysicsComponent circlePhysicsComponent = new CirclePhysicsComponent("barrel",gameObjectBarrel,BodyType.dynamicBody,coordinateX,coordinateY,bitmapDrawableComponent.width/2f,bitmapDrawableComponent.height/2f,2f,0.1f,6f);
 
 
         gameObjectBarrel.addComponent(dynamicPositionComponent);
@@ -267,7 +267,7 @@ public class GameObject extends Entity{
 
 
 
-            RevoluteJointComponent revoluteJointComponentOne = new RevoluteJointComponent(gameObjectBulldozer, listPolygonDamper.get(i).body, circlePhysicsComponentWheel.body,0,proportionalToBulldozer(0.7f,width),0,0,20f,true,(float) invert*speed);
+            RevoluteJointComponent revoluteJointComponentOne = new RevoluteJointComponent(gameObjectBulldozer, listPolygonDamper.get(i).body, circlePhysicsComponentWheel.body,0,proportionalToBulldozer(0.7f,width),0,0,gameWorld.torque,true,(float) invert*speed);
             gameObjectBulldozer.addComponent(revoluteJointComponentOne);
 
 

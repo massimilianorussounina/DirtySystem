@@ -19,11 +19,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class FSMParser {
 
     private List<State> states;
-    private Context context;
+    private final Context context;
 
     public FSMParser(Context context) {
         this.context = context;
-        states = new ArrayList<>();
+        this.states = new ArrayList<>();
 
     }
 
@@ -73,7 +73,6 @@ public class FSMParser {
     }
 
 
-
     private void createStates(JsonObject jsonObject){
         String name = jsonObject.get("name").getAsString();
         String activeAction = jsonObject.get("action").getAsString();
@@ -92,6 +91,7 @@ public class FSMParser {
             states.add(state);
         }
     }
+
 
     private void createTransitions(JsonObject jsonObject) {
         String fromState = jsonObject.get("from").getAsString();
@@ -129,6 +129,5 @@ public class FSMParser {
 
         }
     }
-
 
 }

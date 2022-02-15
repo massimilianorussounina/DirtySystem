@@ -4,14 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-
-import java.util.ArrayList;
 import java.util.List;
+
 
 public abstract class DrawableComponent  extends Component{
 
@@ -25,23 +23,27 @@ public abstract class DrawableComponent  extends Component{
     protected float width, height,density;
     protected float screenSemiWidth, screenSemiHeight;
 
+
     DrawableComponent(String name){
         this.name = name;
     }
+
 
     @Override
     public ComponentType type(){
         return ComponentType.Drawable;
     }
 
+
     public abstract void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle);
 
+
     public void draw(Bitmap buffer){
+
         float coordinate_x,coordinate_y,angle;
         GameWorld gameWorld;
         Box view;
-
-        ArrayList physicsComponents = (ArrayList) owner.getComponent(ComponentType.Physics);
+        List<Component> physicsComponents = (List<Component>) owner.getComponent(ComponentType.Physics);
         PhysicsComponent physicsComponent = null;
 
         if(physicsComponents != null) {
@@ -82,9 +84,8 @@ public abstract class DrawableComponent  extends Component{
             }
         }
     }
+
 }
-
-
 
 
 class RectDrawableComponent extends DrawableComponent{
@@ -104,6 +105,7 @@ class RectDrawableComponent extends DrawableComponent{
 
     }
 
+
     @Override
     public void draw(Bitmap buffer, float coordinateX, float coordinateY, float angle) {
         canvas.save();
@@ -113,30 +115,9 @@ class RectDrawableComponent extends DrawableComponent{
     }
 }
 
-class CircleDrawableComponent extends  DrawableComponent{
-    float radius;
-    public CircleDrawableComponent (String name,GameObject gameObject, float radius, int color){
-        super(name);
-        this.owner = gameObject;
-        GameWorld gameWorld = gameObject.gameWorld;
-        this.canvas = new Canvas(gameWorld.buffer);
-        this.radius=gameWorld.toPixelsYLength(radius);
-        this.paint.setColor(color);
-        this.paint.setStyle(Paint.Style.FILL_AND_STROKE);
-    }
-
-    @Override
-    public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
-        canvas.save();
-        canvas.rotate((float) Math.toDegrees(angle), coordinate_x, coordinate_y);
-        canvas.drawCircle(coordinate_x,coordinate_y,this.radius,this.paint);
-        canvas.restore();
-    }
-}
-
-
 
 class BitmapDrawableComponent extends DrawableComponent {
+
 
     BitmapDrawableComponent(String name,GameObject gameObject, float width, float height,
                             int drawable, int left, int top, int right, int bottom){
@@ -154,6 +135,7 @@ class BitmapDrawableComponent extends DrawableComponent {
         src.set(left, top, right, bottom);
     }
 
+
     @Override
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
         canvas.save();
@@ -168,10 +150,10 @@ class BitmapDrawableComponent extends DrawableComponent {
 }
 
 
-
 class SpriteDrawableComponent extends DrawableComponent {
 
     private final Sprite sprite;
+
 
     public SpriteDrawableComponent(String name,GameObject gameObject,Sprite sprite){
         super(name);
@@ -192,14 +174,13 @@ class SpriteDrawableComponent extends DrawableComponent {
     }
 }
 
+
 class TextDrawableComponent extends DrawableComponent{
 
-    Context context;
     public TextDrawableComponent (String name, GameObject gameObject, String text, int color, Context context, int size){
         super(name);
         this.owner = gameObject;
         this.text=text;
-        this.context=context;
         GameWorld gameWorld = gameObject.gameWorld;
         this.canvas = new Canvas(gameWorld.buffer);
         this.paint.setColor(color);
@@ -209,6 +190,7 @@ class TextDrawableComponent extends DrawableComponent{
         paint.setTypeface(typeface);
     }
 
+
     @Override
     public void draw(Bitmap buffer, float coordinate_x, float coordinate_y, float angle) {
         canvas.save();
@@ -216,6 +198,7 @@ class TextDrawableComponent extends DrawableComponent{
         canvas.drawText(text, coordinate_x, coordinate_y, paint);
         canvas.restore();
     }
+
 
     public void setText(String text){
         this.text=text;

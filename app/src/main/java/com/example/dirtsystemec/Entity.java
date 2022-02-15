@@ -1,14 +1,13 @@
 package com.example.dirtsystemec;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Entity {
-    private final Map<ComponentType,ArrayList<Component>> components = new HashMap<>();
 
+    private final Map<ComponentType,ArrayList<Component>> components = new HashMap<>();
 
 
     public void addComponent(Component component){
@@ -24,6 +23,7 @@ public class Entity {
 
         components.put(component.type(),list);
     }
+
 
     public List<Component> getComponent(ComponentType type){
         return components.get(type);

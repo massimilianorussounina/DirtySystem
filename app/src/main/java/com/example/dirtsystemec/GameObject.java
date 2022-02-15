@@ -15,11 +15,6 @@ public class GameObject extends Entity{
     protected String name;
     protected GameWorld gameWorld;
 
-
-    GameObject(GameWorld gameWorld){
-        super();
-        this.gameWorld = gameWorld;
-    }
     GameObject(GameWorld gameWorld,String name){
         super();
         this.name= name;
@@ -53,7 +48,7 @@ public class GameObject extends Entity{
         BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
         bitmapFactory.inScaled = false;
         Bitmap bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.fire_spritesheet,bitmapFactory );
-        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("incinerator",gameObjectIncinerator,new FireSprite(gameWorld,new Spritesheet(bitmap,8),fireCoordinateX,fireCoordinateY,
+        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("incinerator",gameObjectIncinerator,new FireSprite(gameWorld,new SpriteSheet(bitmap,8),fireCoordinateX,fireCoordinateY,
                 2.5f,2.0f,49,75,200,8));
 
 
@@ -74,7 +69,7 @@ public class GameObject extends Entity{
         BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
         bitmapFactory.inScaled = false;
         Bitmap bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.sea,bitmapFactory );
-        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("sea",gameObjectSea,new SeaSprite(gameWorld,new Spritesheet(bitmap,15),seaCoordinateX,seaCoordinateY,
+        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("sea",gameObjectSea,new SeaSprite(gameWorld,new SpriteSheet(bitmap,15),seaCoordinateX,seaCoordinateY,
                 5.3f,2.0f,500,108,500,15));
         PolygonPhysicsComponent polygonPhysicsComponent = new PolygonPhysicsComponent("sea",gameObjectSea,BodyType.staticBody,coordinateX,coordinateY,spriteDrawableComponent.width, spriteDrawableComponent.height,2f);
 
@@ -181,8 +176,6 @@ public class GameObject extends Entity{
     }
 
 
-
-
     public static void createBulldozer(float coordinateX, float coordinateY, GameWorld gameWorld, int invert, Context context, List<Component> componentAi,float speed){
         float width=2.8f;
         int photochassis;
@@ -192,32 +185,27 @@ public class GameObject extends Entity{
         DynamicPositionComponent dynamicPositionComponentBulldozer = new DynamicPositionComponent("bulldozer",coordinateX, coordinateY,gameObjectBulldozer,invert);
         gameObjectBulldozer.addComponent(dynamicPositionComponentBulldozer);
 
-        // create Chassis Physics
 
         PolygonPhysicsComponent polygonPhysicsComponentChassis = new PolygonPhysicsComponent("chassis",gameObjectBulldozer,BodyType.dynamicBody
                 ,coordinateX,coordinateY,(width/2),proportionalToBulldozer(1.2f,width)/2,4f,0.1f,0);
         gameObjectBulldozer.addComponent(polygonPhysicsComponentChassis);
 
-        // create Cabin Physics
 
         PolygonPhysicsComponent polygonPhysicsComponentCabin = new PolygonPhysicsComponent("cabin",gameObjectBulldozer,BodyType.dynamicBody
                 ,coordinateX,coordinateY,(proportionalToBulldozer(2.3f,width))/2,proportionalToBulldozer(1.5f,width)/2,0.1f,0.1f,0f);
         gameObjectBulldozer.addComponent(polygonPhysicsComponentCabin);
 
-        // create Joint Cabin Chassis
 
         RevoluteJointComponent revoluteJointComponentBulldozer =  new RevoluteJointComponent(gameObjectBulldozer,polygonPhysicsComponentChassis.body,
                 polygonPhysicsComponentCabin.body,(invert*-proportionalToBulldozer(0.5f,width)),-proportionalToBulldozer(1.3f,width),0,0,0,
                 0,0);
         gameObjectBulldozer.addComponent(revoluteJointComponentBulldozer);
 
-        // select photo cabin chassis
+
         if(invert == 1){
             photochassis= R.drawable.chassis_dx;
             photocabin = R.drawable.cabin_dx;
-        }
-        else
-        {
+        } else {
             photochassis= R.drawable.chassis_sx;
             photocabin = R.drawable.cabin_sx;
         }
@@ -226,7 +214,7 @@ public class GameObject extends Entity{
         BitmapDrawableComponent bitmapDrawableComponentCabin = new BitmapDrawableComponent("cabin",gameObjectBulldozer,proportionalToBulldozer(2.3f,width),proportionalToBulldozer(1.5f,width),photocabin,0,0,100,65);
         gameObjectBulldozer.addComponent(bitmapDrawableComponentCabin);
 
-        // create Damper
+
         String[] damperName = {"damperOne","damperTwo","damperThree","damperFour"};
         ArrayList<PolygonPhysicsComponent> listPolygonDamper = new ArrayList<>();
         float[] coordinateSpawnDamper ={-proportionalToBulldozer(1.7f,width),+proportionalToBulldozer(1.7f,width),+proportionalToBulldozer(0.8f,width),-proportionalToBulldozer(0.8f,width)};
@@ -238,28 +226,26 @@ public class GameObject extends Entity{
             gameObjectBulldozer.addComponent(polygonPhysicsComponentDamper);
             listPolygonDamper.add(polygonPhysicsComponentDamper);
 
-            PrismaticJointComponet prismaticJointComponet = new PrismaticJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper.body,
+            PrismaticJointComponent prismaticJointComponent = new PrismaticJointComponent(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper.body,
                     coordinateXPrismaticChassis[i],proportionalToBulldozer(1f,width)/2+proportionalToBulldozer(0.0f,width),
                     0, proportionalToBulldozer(0.9f,width)
                     ,0,1,false,false,
                     0,polygonPhysicsComponentChassis.body.getMass()*8.5f );
 
-            gameObjectBulldozer.addComponent(prismaticJointComponet);
+            gameObjectBulldozer.addComponent(prismaticJointComponent);
 
-            DistanceJointComponet distanceJointComponet = new DistanceJointComponet(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper.body,
+            DistanceJointComponent distanceJointComponent = new DistanceJointComponent(gameObjectBulldozer, polygonPhysicsComponentChassis.body,polygonPhysicsComponentDamper.body,
                     coordinateXPrismaticChassis[i],proportionalToBulldozer(3.5f,width)/2+proportionalToBulldozer(0.0f,width),
                     0,proportionalToBulldozer(0.9f,width),
                     1f,4f,-proportionalToBulldozer(0.2f,width));
-            gameObjectBulldozer.addComponent(distanceJointComponet);
+            gameObjectBulldozer.addComponent(distanceJointComponent);
 
             BitmapDrawableComponent bitmapDrawableComponentDamper = new BitmapDrawableComponent(damperName[i],gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(1f,width),R.drawable.damper,0,0,31,63);
             gameObjectBulldozer.addComponent(bitmapDrawableComponentDamper);
         }
 
-        // add bitmap chassis
         gameObjectBulldozer.addComponent(bitmapDrawableComponentChassis);
 
-        //Create Wheels
         String[] wheelName = {"wheelOne","wheelTwo","wheelThree","wheelFour"};
         for(int i=0;i<4;i++){
             CirclePhysicsComponent circlePhysicsComponentWheel = new CirclePhysicsComponent(wheelName[i],gameObjectBulldozer,BodyType.dynamicBody,coordinateX-proportionalToBulldozer(0.7f,width),coordinateY+coordinateSpawnDamper[i],proportionalToBulldozer(0.5f,width),proportionalToBulldozer(0.5f,width),4,0.1f,1f);
@@ -278,7 +264,6 @@ public class GameObject extends Entity{
 
         }
 
-        //create Shovel
 
         PolygonPhysicsComponent polygonPhysicsComponentShovel1 = new PolygonPhysicsComponent("shovel1",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+invert*proportionalToBulldozer(3f,width),proportionalToBulldozer(1f,width)/2,proportionalToBulldozer(0.5f,width)/2,4f);
         gameObjectBulldozer.addComponent(polygonPhysicsComponentShovel1);
@@ -304,7 +289,6 @@ public class GameObject extends Entity{
             gameObjectBulldozer.addComponent(revoluteJointComponent7);
         }
 
-        //RectDrawableComponent rectDrawableComponent8= new RectDrawableComponent("shovel1",gameObjectBulldozer,proportionalToBulldozer(1f,width),proportionalToBulldozer(0.5f,width),Color.argb(255,0,0,255));
         BitmapDrawableComponent bitmapDrawableComponentShovel1 = new BitmapDrawableComponent("shovel1",gameObjectBulldozer,proportionalToBulldozer(1f,width),proportionalToBulldozer(0.5f,width),R.drawable.shovel1,0,0,63,31);
         gameObjectBulldozer.addComponent(bitmapDrawableComponentShovel1);
 
@@ -314,18 +298,17 @@ public class GameObject extends Entity{
         RevoluteJointComponent revoluteJointComponent8 = new RevoluteJointComponent(gameObjectBulldozer, polygonPhysicsComponentShovel1.body,polygonPhysicsComponentShovel2.body,0,0,invert*-proportionalToBulldozer(0.5f,width),-proportionalToBulldozer(0.7f,width),0,0,0);
         gameObjectBulldozer.addComponent(revoluteJointComponent8);
 
-        //RectDrawableComponent rectDrawableComponent9= new RectDrawableComponent("shovel2",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(2.1f,width),Color.argb(255,50,55,50));
         BitmapDrawableComponent bitmapDrawableComponentShovel2 = new BitmapDrawableComponent("shovel2",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),proportionalToBulldozer(2.1f,width),R.drawable.shovel2,0,0,31,133);
 
 
-        CirclePhysicsComponent circlePhysicsComponentShovel = new CirclePhysicsComponent("wheelshovel",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+invert*proportionalToBulldozer(3f,width),proportionalToBulldozer(1f,width)/2,0,0,0.1f,4f);
+        CirclePhysicsComponent circlePhysicsComponentShovel = new CirclePhysicsComponent("wheelShovel",gameObjectBulldozer,BodyType.dynamicBody,coordinateX,coordinateY+invert*proportionalToBulldozer(3f,width),proportionalToBulldozer(1f,width)/2,0,0,0.1f,4f);
         gameObjectBulldozer.addComponent(circlePhysicsComponentShovel);
 
         RevoluteJointComponent revoluteJointComponentShovel = new RevoluteJointComponent(gameObjectBulldozer,polygonPhysicsComponentShovel2.body,circlePhysicsComponentShovel.body,0,proportionalToBulldozer(0.9f,width),0,0,0,0,0);
         gameObjectBulldozer.addComponent(revoluteJointComponentShovel);
 
-        //CircleDrawableComponent circleDrawambleComponentShovel = new CircleDrawableComponent("wheelshovel",gameObjectBulldozer,proportionalToBulldozer(0.5f,width),Color.argb(55,0,0,255));
-        BitmapDrawableComponent bitmapDrawableComponentShovelWheel = new BitmapDrawableComponent("wheelshovel",gameObjectBulldozer,proportionalToBulldozer(1f,width),proportionalToBulldozer(1f,width),R.drawable.shovelwheel,0,0,50,50);
+
+        BitmapDrawableComponent bitmapDrawableComponentShovelWheel = new BitmapDrawableComponent("wheelShovel",gameObjectBulldozer,proportionalToBulldozer(1f,width),proportionalToBulldozer(1f,width),R.drawable.shovelwheel,0,0,50,50);
         gameObjectBulldozer.addComponent(bitmapDrawableComponentShovelWheel);
         gameObjectBulldozer.addComponent(bitmapDrawableComponentShovel2);
 
@@ -354,9 +337,6 @@ public class GameObject extends Entity{
     }
 
 
-
-
-
     public static void createBarrelIcon(float coordinateX, float coordinateY,GameWorld gameWorld){
         GameObject gameObjectBarrelIcon = new GameObject(gameWorld,"barrelIcon");
         BitmapDrawableComponent bitmapDrawableComponent;
@@ -367,6 +347,7 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectBarrelIcon);
     }
 
+
     public static void createTimer(float coordinateX, float coordinateY,GameWorld gameWorld){
         GameObject gameObjectTimer = new GameObject(gameWorld,"timer");
         TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("timer",gameObjectTimer,"05:00",Color.argb(255,255,255,255), gameWorld.activity, 40);
@@ -375,6 +356,8 @@ public class GameObject extends Entity{
         gameObjectTimer.addComponent(staticPositionComponent);
         gameWorld.addGameObject(gameObjectTimer);
     }
+
+
     public static void createTextNumberBarrel(float coordinateX, float coordinateY,GameWorld gameWorld){
         GameObject gameObjectTimer = new GameObject(gameWorld,"numberBarrel");
         TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("numberBarrel",gameObjectTimer,"5",Color.argb(255,255,255,255), gameWorld.activity, 30);
@@ -384,26 +367,26 @@ public class GameObject extends Entity{
         gameWorld.addGameObject(gameObjectTimer);
     }
 
-    public static void createTextscore(float coordinateX, float coordinateY,GameWorld gameWorld){
-        GameObject gameObjectTimer = new GameObject(gameWorld,"textscore");
-        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("textscore",gameObjectTimer,"0",Color.argb(255,255,0,0), gameWorld.activity, 25);
-        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("textscore",coordinateX,coordinateY,gameObjectTimer);
+
+    public static void createTextScore(float coordinateX, float coordinateY, GameWorld gameWorld){
+        GameObject gameObjectTimer = new GameObject(gameWorld,"textScore");
+        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("textScore",gameObjectTimer,"0",Color.argb(255,255,0,0), gameWorld.activity, 25);
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("textScore",coordinateX,coordinateY,gameObjectTimer);
         gameObjectTimer.addComponent(textDrawableComponentTimer);
         gameObjectTimer.addComponent(staticPositionComponent);
         gameWorld.addGameObject(gameObjectTimer);
     }
 
+
     public static GameObject createTextGameOver(float coordinateX, float coordinateY,GameWorld gameWorld,String text){
-        GameObject gameObjectTimer = new GameObject(gameWorld,"gameover");
-        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("gameover",gameObjectTimer,text,Color.argb(255,255,0,0), gameWorld.activity, 70);
-        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("gameover",coordinateX,coordinateY,gameObjectTimer);
+        GameObject gameObjectTimer = new GameObject(gameWorld,"gameOver");
+        TextDrawableComponent textDrawableComponentTimer = new TextDrawableComponent("gameOver",gameObjectTimer,text,Color.argb(255,255,0,0), gameWorld.activity, 70);
+        StaticPositionComponent staticPositionComponent = new StaticPositionComponent("gameOver",coordinateX,coordinateY,gameObjectTimer);
         gameObjectTimer.addComponent(textDrawableComponentTimer);
         gameObjectTimer.addComponent(staticPositionComponent);
         gameWorld.addGameObject(gameObjectTimer);
         return  gameObjectTimer;
     }
-
-
 
 
     public static void createScoreBar(float coordinateX, float coordinateY,GameWorld gameWorld,int lastValue) {
@@ -415,7 +398,7 @@ public class GameObject extends Entity{
         BitmapFactory.Options bitmapFactory = new BitmapFactory.Options();
         bitmapFactory.inScaled = false;
         Bitmap bitmap = BitmapFactory.decodeResource(gameWorld.activity.getResources(), R.drawable.scorebar,bitmapFactory );
-        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("scoreBar",gameObjectSea,new ScoreSprite(gameWorld,new Spritesheet(bitmap,10),coordinateX,coordinateY,
+        SpriteDrawableComponent spriteDrawableComponent = new SpriteDrawableComponent("scoreBar",gameObjectSea,new ScoreSprite(gameWorld,new SpriteSheet(bitmap,10),coordinateX,coordinateY,
                 2f,12f,66,405,1,10,lastValue));
 
         gameObjectSea.addComponent(staticPositionComponent);
@@ -424,6 +407,7 @@ public class GameObject extends Entity{
 
         gameWorld.addGameObject(gameObjectSea);
     }
+
 
     public static void createButtonPause(float coordinateX, float coordinateY,GameWorld gameWorld){
         GameObject gameObjectButtonPause = new GameObject(gameWorld,"buttonPause");

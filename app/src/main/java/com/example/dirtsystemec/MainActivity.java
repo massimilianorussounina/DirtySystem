@@ -1,22 +1,16 @@
 package com.example.dirtsystemec;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ViewSwitcher;
 
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Music;
@@ -26,22 +20,15 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.zip.Inflater;
 
 public class MainActivity extends Activity {
 
-
-    //private static final float coordinateXMin = -13.5f, coordinateXMax = 13.5f, coordinateYMin = -24, coordinateYMax = 24;
     private static final float coordinateXMin = -13.5f, coordinateXMax = 13.5f, coordinateYMin = -24f, coordinateYMax = 24f;
     public static String TAG;
     private AndroidFastRenderView renderView;
     private int currentApiVersion;
-    private Audio audio;
     private Music bulldozerMusic,backgroundMusic;
     private GameWorld gw;
-    private MyThread myThread;
-    private HandlerUI handlerUI;
     public static float  volumeMusic=0.8f, volumeSoundEffect=0.5f;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -91,11 +78,11 @@ public class MainActivity extends Activity {
         }
 
 
+        HandlerUI handlerUI = new HandlerUI(this);
 
-        handlerUI=new HandlerUI(this);
+        /* Initialization Audio */
 
-        /* Inizializzazione Audio */
-        audio = new AndroidAudio(this);
+        Audio audio = new AndroidAudio(this);
         CollisionSounds.init(audio);
         bulldozerMusic = audio.newMusic("soundTractor.mp3");
         bulldozerMusic.play();
@@ -112,7 +99,7 @@ public class MainActivity extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Box physicalSize = new Box(coordinateXMin, coordinateYMin, coordinateXMax, coordinateYMax);
         Box screenSize   = new Box(0, 0, metrics.widthPixels, metrics.heightPixels);
-        gw = new GameWorld(physicalSize, screenSize, this,handlerUI);
+        gw = new GameWorld(physicalSize, screenSize, this, handlerUI);
         Log.e("FLAG",String.valueOf(flagStart));
         if(flagStart) {
             loadData();
@@ -125,7 +112,6 @@ public class MainActivity extends Activity {
 
         GameObject.createBridge(-7.6f,0,-8.5f,4.5f,-2f,0f,-2f,1f,2f,1f
                 ,-8.5f,-4.5f,2f,0f,2f,1f,-2f,1f,gw);
-
 
 
         GameObject.createSea(-13.4f,0f,-12.5f,0f,gw);
@@ -141,15 +127,10 @@ public class MainActivity extends Activity {
         GameObject.createIncinerator(-12.5f,22.7f,-10.1f,22.7f,gw);
 
 
-
-        /* GameObject.createBarrel(10,1,gw);
-        GameObject.createBarrel(3f,-17.5f,gw); */
-
-
         GameObject.createBulldozer(-6.6f,0,gw,-1,this,null,gw.speed);
         GameObject.createScoreBar(4.2f,22.5f,gw,0);
         GameObject.createTextNumberBarrel(9.2f,-23.45f,gw);
-        GameObject.createTextscore(11.25f,-21f,gw);
+        GameObject.createTextScore(11.25f,-21f,gw);
         GameObject.createButtonPause(11f,22f,gw);
         GameObject.createBarrelIcon(11.7f,-22.8f,gw);
 
@@ -158,11 +139,8 @@ public class MainActivity extends Activity {
         setContentView(renderView);
         MultiTouchHandler touchHandler = new MultiTouchHandler(renderView, 1, 1);
         gw.setTouchHandler(touchHandler);
-        myThread = new MyThread(gw);
+        MyThread myThread = new MyThread(gw);
         myThread.start();
-
-
-
 
     }
 
@@ -170,27 +148,26 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("Main thread", "resume");
-            bulldozerMusic.setVolume(volumeSoundEffect);
-            backgroundMusic.setVolume(volumeMusic);
-            bulldozerMusic.play();
-            backgroundMusic.play();
-            gw.setTimeResume(System.currentTimeMillis());
-            renderView.resume(); // starts game loop in a separate thread
+
+        bulldozerMusic.setVolume(volumeSoundEffect);
+        backgroundMusic.setVolume(volumeMusic);
+        bulldozerMusic.play();
+        backgroundMusic.play();
+        gw.setTimeResume(System.currentTimeMillis());
+        renderView.resume();
     }
+
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i("Main thread", "pause");
 
-            bulldozerMusic.pause();
-            backgroundMusic.pause();
-            gw.setTimerPause(System.currentTimeMillis());
-            renderView.pause(); // stops the main loop
-            // persistence example
-
+        bulldozerMusic.pause();
+        backgroundMusic.pause();
+        gw.setTimerPause(System.currentTimeMillis());
+        renderView.pause();
     }
+
 
     @SuppressLint("NewApi")
     @Override
@@ -207,16 +184,17 @@ public class MainActivity extends Activity {
         }
     }
 
+
     public void showMenu(boolean flagResume){
         Intent i= new Intent(this,StartActivity.class);
         i.putExtra("FLAG", String.valueOf(flagResume));
         i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(i);
-
     }
 
+
     public void SaveData(){
-        Log.e("SAVE"," sto salvando ");
+        Log.e("SAVE"," Save Coming.. ");
         editor.putLong("SCORE",gw.score);
         editor.putFloat("SPEED",gw.speed);
         editor.putInt("LEVEL",gw.level);
@@ -230,7 +208,7 @@ public class MainActivity extends Activity {
 
                 barrelList.add(((PhysicsComponent)obj.getComponent(ComponentType.Physics).get(0)).body.getPositionY());
             } catch (Exception e) {
-                Log.e("Barile eliminato",e.getMessage());
+                Log.e("Barrel Delete",e.getMessage());
             }
         }
         String jsonText = gson.toJson(barrelList);
@@ -239,6 +217,8 @@ public class MainActivity extends Activity {
         editor.commit();
 
     }
+
+
     private void loadData(){
         float posX;
         if(!sharedPref.getBoolean("GAME_OVER",true)) {
@@ -269,15 +249,6 @@ public class MainActivity extends Activity {
             Log.e("GAME OVER", String.valueOf(GameWorld.gameOverFlag));
             gw.startTime = System.currentTimeMillis() - (gw.maxTime - gw.currentTime);
         }
-    }
-
-
-    public  HandlerUI getHandlerUI(){
-        return handlerUI;
-    }
-    @Override
-    public void onBackPressed() {
-
     }
 
 }

@@ -7,10 +7,14 @@ import android.util.Log;
 
 
 public class HandlerUI extends Handler {
-    private MainActivity uiActivity;
+
+    private final MainActivity uiActivity;
+
     public HandlerUI (MainActivity uiActivity){
         this.uiActivity=uiActivity;
     }
+
+
     @Override
     public void handleMessage(Message msg) {
         if(msg.what == 0){

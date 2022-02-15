@@ -18,15 +18,11 @@ import android.widget.TextView;
 
 public class StartActivity extends Activity {
 
-    private Button buttonStart,buttonResume;
-    private SeekBar seekBarMusic,seekBarSoundEffect;
-    private TextView textViewMusic,textViewSoundEffect,textViewPowered;
     private int currentApiVersion;
     public static String TAG;
     private Context context;
-    private boolean flagStart=false;
-    private ImageView ground;
-    private long currenTime,finalTime;
+    protected boolean flagStart = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,23 +64,22 @@ public class StartActivity extends Activity {
 
         }
         Typeface typeface = Typeface.createFromAsset(getAssets(), "font/8bitfont.ttf");
-        textViewPowered = findViewById(R.id.textViewPowerBy);
-        textViewMusic = findViewById(R.id.textViewMusic);
-        textViewSoundEffect = findViewById(R.id.textViewSoundEffect);
+        TextView textViewPowered = findViewById(R.id.textViewPowerBy);
+        TextView textViewMusic = findViewById(R.id.textViewMusic);
+        TextView textViewSoundEffect = findViewById(R.id.textViewSoundEffect);
         textViewPowered.setTypeface(typeface);
         textViewMusic.setTypeface(typeface);
         textViewSoundEffect.setTypeface(typeface);
-        seekBarMusic = findViewById(R.id.seekBarMusic);
-        seekBarSoundEffect= findViewById(R.id.seekBarSoundEffect);
-        ground= findViewById(R.id.imageViewGround);
+        SeekBar seekBarMusic = findViewById(R.id.seekBarMusic);
+        SeekBar seekBarSoundEffect = findViewById(R.id.seekBarSoundEffect);
         seekBarMusic.setMax(100);
         seekBarSoundEffect.setMax(100);
         seekBarMusic.setMin(0);
         seekBarSoundEffect.setMin(0);
         seekBarSoundEffect.setProgress((int)(MainActivity.volumeSoundEffect*100f));
         seekBarMusic.setProgress((int)(MainActivity.volumeMusic*100f));
-        buttonResume = findViewById(R.id.buttonResume);
-        buttonStart = findViewById(R.id.buttonStart);
+        Button buttonResume = findViewById(R.id.buttonResume);
+        Button buttonStart = findViewById(R.id.buttonStart);
         buttonResume.setTypeface(typeface);
         buttonStart.setTypeface(typeface);
 
@@ -144,6 +139,8 @@ public class StartActivity extends Activity {
             }
         });
     }
+
+
     @SuppressLint("NewApi")
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -158,6 +155,8 @@ public class StartActivity extends Activity {
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -169,12 +168,6 @@ public class StartActivity extends Activity {
     public void onPause() {
         super.onPause();
         Log.i("Main thread", "pause");
-
-
-    }
-    @Override
-    public void onBackPressed() {
-
     }
 
 }

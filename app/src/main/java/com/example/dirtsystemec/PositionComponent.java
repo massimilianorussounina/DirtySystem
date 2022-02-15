@@ -28,18 +28,19 @@ public abstract class PositionComponent extends Component{
 
 class StaticPositionComponent extends PositionComponent{
 
-
     StaticPositionComponent(String name,float coordinateX,float coordinateY,GameObject gameObject){
         super(name);
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.owner = gameObject;
     }
+
 }
 
 class DynamicPositionComponent extends PositionComponent{
 
     protected  int direction;
+
 
     DynamicPositionComponent(String name,float coordinateX,float coordinateY, GameObject gameObject, int direction){
         super(name);
@@ -49,12 +50,12 @@ class DynamicPositionComponent extends PositionComponent{
         this.direction = direction;
     }
 
+
     DynamicPositionComponent(String name,float coordinateX,float coordinateY, GameObject gameObject){
         super(name);
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.owner = gameObject;
-        this.direction = direction;
     }
 
 }
@@ -74,4 +75,5 @@ class TrianglePositionComponent extends PositionComponent{
         this.coordinateLocalThreeY = coordinateLocalThreeY;
         this.owner = gameObject;
     }
+
 }

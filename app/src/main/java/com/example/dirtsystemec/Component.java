@@ -1,8 +1,6 @@
 package com.example.dirtsystemec;
 
 
-
-
 enum ComponentType{
     Physics,
     AI,
@@ -13,6 +11,7 @@ enum ComponentType{
 
 
 public abstract class Component {
+
     protected Entity owner;
 
 
@@ -22,6 +21,7 @@ public abstract class Component {
     public Entity getOwner() {
         return owner;
     }
+
 
     public void setOwner(Entity owner) {
         this.owner = owner;

@@ -1,20 +1,18 @@
 package com.example.dirtsystemec;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 enum Action{
     burned,waited
 }
 
+
 class State{
 
     protected String name;
-
     protected Action activeAction;
-
     protected List<Transition> transitionsOut;
 
     public State(String name, Action activeAction){
@@ -23,9 +21,11 @@ class State{
         this.transitionsOut = new ArrayList<>();
     }
 
+
     public Action activeAction() {
         return activeAction;
     }
+
 
     public List<Transition> outGoingTransitions() {
         return transitionsOut;
@@ -36,17 +36,15 @@ class State{
         this.transitionsOut.add(transition);
     }
 
-
-
 }
 
 
 class Transition{
 
-
     protected Action action;
     protected State fromState;
     protected State targetState;
+
 
     public Transition(State fromState,State targetState,Action action){
         this.fromState = fromState;
@@ -54,11 +52,11 @@ class Transition{
         this.action = action;
     }
 
+
     public boolean isTriggered(GameWorld gameWorld) {
        Action action = targetState.activeAction();
 
         if(action.equals(Action.burned)){
-            System.out.println(gameWorld.listBarrel.size());
             return gameWorld.listBarrel.size() != 0;
         }else if(action.equals(Action.waited)){
             return gameWorld.listBarrel.size() == 0;
@@ -83,9 +81,9 @@ public class FSM {
         this.currentState = state;
     }
 
+
     public Action stepAndGetAction(GameWorld gameWorld){
         Transition transitionTrigger = null;
-        System.out.println(currentState.name);
 
         for (Transition transition: currentState.outGoingTransitions()) {
             if(transition.isTriggered(gameWorld)){
@@ -96,11 +94,9 @@ public class FSM {
 
         if(transitionTrigger != null){
             currentState = transitionTrigger.targetState();
-            System.out.println(currentState.name);
             return transitionTrigger.action;
         }
         else{
-            System.out.println(currentState.activeAction);
             return currentState.activeAction;
         }
     }
@@ -108,4 +104,5 @@ public class FSM {
     public State getCurrentState() {
         return currentState;
     }
+
 }

@@ -8,11 +8,11 @@ public class ScoreBarSprite {
     private long lastTimeStamp;
     private final float coordinate_x;
     private final float coordinate_y;
-    private final Spritesheet spritesheet;
+    private final SpriteSheet spritesheet;
     private final Canvas canvas;
 
 
-    public ScoreBarSprite(GameWorld gw, Spritesheet spritesheet, float x, float y){
+    public ScoreBarSprite(GameWorld gw, SpriteSheet spritesheet, float x, float y){
         this.canvas = new Canvas(gw.buffer);
         this.spritesheet = spritesheet;
         this.lastTimeStamp = System.currentTimeMillis();
@@ -26,6 +26,7 @@ public class ScoreBarSprite {
             spritesheet.setAnimation(i,2000);
         }
     }
+
 
     public void draw(long currentTimeStamp){
         canvas.save();

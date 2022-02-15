@@ -66,10 +66,11 @@ class RevoluteJointComponent extends JointComponent{
     }
 }
 
-class PrismaticJointComponet extends JointComponent{
 
-    public PrismaticJointComponet(GameObject gameObject,Body bodyOne,Body bodyTwo,float coordinateOneX, float coordinateOneY,
-                                  float coordinateTwoX, float coordinateTwoY, float localAxisA_x, float localAxisA_y, boolean enableMotor, boolean enableLimit, float upperTranslation, float maxMotorForce){
+class PrismaticJointComponent extends JointComponent{
+
+    public PrismaticJointComponent(GameObject gameObject, Body bodyOne, Body bodyTwo, float coordinateOneX, float coordinateOneY,
+                                   float coordinateTwoX, float coordinateTwoY, float localAxisA_x, float localAxisA_y, boolean enableMotor, boolean enableLimit, float upperTranslation, float maxMotorForce){
 
         super();
         this.owner = gameObject;
@@ -90,18 +91,20 @@ class PrismaticJointComponet extends JointComponent{
     }
 }
 
-class DistanceJointComponet extends  JointComponent{
-    public DistanceJointComponet(GameObject gameObject,Body bodyOne,Body bodyTwo,float coordinateOneX, float coordinateOneY,
-                                 float coordinateTwoX, float coordinateTwoY,float dampingRatio, float frequencyHz, float length){
-        DistanceJointDef mollaDef = new DistanceJointDef();
-        mollaDef.setBodyA(bodyOne);
-        mollaDef.setBodyB(bodyTwo);
-        mollaDef.setLocalAnchorA(coordinateOneX, coordinateOneY);
-        mollaDef.setLocalAnchorB(coordinateTwoX ,coordinateTwoY);
-        mollaDef.setDampingRatio(dampingRatio);
-        mollaDef.setFrequencyHz(frequencyHz);
-        mollaDef.setLength(length);
-        gameObject.gameWorld.world.createJoint(mollaDef);
-        mollaDef.delete();
+
+class DistanceJointComponent extends  JointComponent{
+
+    public DistanceJointComponent(GameObject gameObject, Body bodyOne, Body bodyTwo, float coordinateOneX, float coordinateOneY,
+                                  float coordinateTwoX, float coordinateTwoY, float dampingRatio, float frequencyHz, float length){
+        DistanceJointDef SpringDef = new DistanceJointDef();
+        SpringDef.setBodyA(bodyOne);
+        SpringDef.setBodyB(bodyTwo);
+        SpringDef.setLocalAnchorA(coordinateOneX, coordinateOneY);
+        SpringDef.setLocalAnchorB(coordinateTwoX ,coordinateTwoY);
+        SpringDef.setDampingRatio(dampingRatio);
+        SpringDef.setFrequencyHz(frequencyHz);
+        SpringDef.setLength(length);
+        gameObject.gameWorld.world.createJoint(SpringDef);
+        SpringDef.delete();
     }
 }

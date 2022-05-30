@@ -2,7 +2,6 @@
 Progetto di Game Design and Development anno accademico 2021/2022
 ## Authors
 
-- Gennaro Sorrentino
 - Massimiliano Russo
 
 ## Description 
